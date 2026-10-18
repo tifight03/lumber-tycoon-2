@@ -256,6 +256,12 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .acc-in{display:block;width:100%;margin:8px 0;padding:11px 14px;border-radius:12px;border:3px solid var(--bark);background:#fff;color:#123127;font:700 16px var(--body)}
 .acc-in:focus-visible{outline:3px solid var(--gold)}
 .linkb{background:none;border:0;color:inherit;text-decoration:underline;font:inherit;cursor:pointer;padding:6px 0}
+.acc-top{position:absolute;top:12px;left:12px;z-index:3;max-width:calc(100% - 78px);min-height:42px;padding:6px 16px;border-radius:999px;border:3px solid var(--bark);background:var(--gold);color:var(--bark);font:800 13px/1.15 var(--body);cursor:pointer;box-shadow:0 4px 0 var(--bark);text-align:left}
+.acc-top:active{transform:translateY(2px);box-shadow:0 2px 0 var(--bark)}
+.hero{padding-top:70px}
+@media(max-width:520px){.hero{padding-top:68px}}
+.stay{display:flex;align-items:center;gap:10px;margin:8px 2px;font-weight:700;font-size:14px;cursor:pointer}
+.stay input{width:20px;height:20px;accent-color:var(--ribbon)}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="light"] body{color:#123127;background:
  radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
@@ -275,7 +281,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 :root[data-theme="light"] :focus-visible{outline-color:var(--ribbon)}
 </style></head><body>
 
-<header class="hero"><button id="themeBtn" class="theme-btn" type="button"></button><div class="hero-in">
+<header class="hero"><button id="accBtn" class="acc-top" type="button"></button><button id="themeBtn" class="theme-btn" type="button"></button><div class="hero-in">
  <div class="hero-text">
   <span class="tagline">Roblox · Lumber Tycoon 2</span>
   <h1 data-i18n="h1">Tous les gifts de Lumberland</h1>
@@ -315,7 +321,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <section class="dash">
   <div class="dash-top">
    <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
-   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="listBtn" class="dbtn" type="button" data-i18n="myList">📋 Ma liste</button><button id="accBtn" class="dbtn" type="button"></button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">💾 Sauvegarde</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
   </div>
   <p class="tl-title" data-i18n="tlTitle"></p>
   <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
@@ -346,11 +352,12 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
   <input class="acc-in" id="accPseudo" type="text" maxlength="20" autocomplete="nickname" autocapitalize="none" hidden>
   <input class="acc-in" id="accEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="none">
   <input class="acc-in" id="accPass" type="password" autocomplete="current-password">
+  <label class="stay" id="accStayL"><input type="checkbox" id="accStay" checked><span id="accStayT"></span></label>
   <div class="actions"><button class="btn" id="accGo" type="button"></button></div>
   <p class="bk-txt"><button class="linkb" id="accForgot" type="button"></button></p>
   <p class="bk-txt"><button class="linkb" id="accSwitch" type="button"></button></p>
  </div>
- <div class="actions" id="accOut" hidden><button class="btn alt" id="accLogout" type="button"></button></div>
+ <div class="actions" id="accOut" hidden><button class="btn alt" id="accImp" type="button"></button><button class="btn alt" id="accLogout" type="button"></button></div>
  <p class="bk-txt" id="accMsg" role="status"></p>
  <div class="actions"><button class="btn alt" id="accClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
@@ -390,7 +397,7 @@ const T={
  fr:{
   toLight:'Passer en mode clair',toDark:'Passer en mode sombre',
   xmasDays:n=>'🎄 Noël dans '+n+' jours',xmasTomorrow:'🎄 Noël, c’est demain !',xmasToday:'🎄 Joyeux Noël !',
-  install:'📲 Installer',bkBtn:'💾 Sauvegarde',bkTitle:'Sauvegarde de ta collection',
+  install:'📲 Installer',bkBtn:'⬇ Télécharger ma liste',bkTitle:'Sauvegarde de ta collection',
   bkText:'Exporte tes favoris et tes gifts obtenus dans un joli PDF, puis réimporte ce même PDF sur un autre appareil ou après avoir vidé le navigateur.',
   bkExport:'⬇ Exporter',bkImport:'⬆ Importer',bkMerge:'Fusionner',bkReplace:'Remplacer',
   bkFound:(o,f)=>'Fichier lu : '+o+(o>1?' obtenus':' obtenu')+', '+f+(f>1?' favoris':' favori')+'. Fusionner garde aussi ce que tu as déjà ; Remplacer efface ta collection actuelle.',
@@ -420,7 +427,7 @@ const T={
  en:{
   toLight:'Switch to light mode',toDark:'Switch to dark mode',
   xmasDays:n=>'🎄 Christmas in '+n+' days',xmasTomorrow:'🎄 Christmas is tomorrow!',xmasToday:'🎄 Merry Christmas!',
-  install:'📲 Install',bkBtn:'💾 Backup',bkTitle:'Back up your collection',
+  install:'📲 Install',bkBtn:'⬇ Download my list',bkTitle:'Back up your collection',
   bkText:'Export your favorites and owned gifts as a nicely styled PDF, then import that same PDF on another device or after clearing your browser.',
   bkExport:'⬇ Export',bkImport:'⬆ Import',bkMerge:'Merge',bkReplace:'Replace',
   bkFound:(o,f)=>'File read: '+o+' owned, '+f+(f===1?' favorite':' favorites')+'. Merge keeps what you already have too; Replace erases your current collection.',
@@ -486,7 +493,7 @@ async function j(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+
 
 function paint(name,url){
  (live.get(name)||[]).forEach(el=>{
-  el.img.onerror=()=>{el.img.remove();el.pic.classList.add('empty');el.pic.textContent='🎁';el.status.textContent=t('imgFail')};
+  el.img.onerror=()=>{if(!el.img.dataset.r){el.img.dataset.r='1';setTimeout(()=>{el.img.src=url+(url.includes('?')?'&':'?')+'r='+Date.now()},1500);return}el.img.remove();el.pic.classList.add('empty');el.pic.textContent='🎁';el.status.textContent=t('imgFail')};
   el.img.src=url;
   if(!el.pic.contains(el.img))el.pic.replaceChildren(el.img);
   el.pic.classList.remove('empty');el.status.textContent=t('imgWiki');
@@ -647,6 +654,7 @@ function updTimeline(){
 function yearInfo(list){const k=list.filter(g=>owned.has(g.name)).length;return t('gifts',list.length)+(k?' · '+k+' ✓':'')}
 function updYearCounts(){document.querySelectorAll('.year-head span[data-y]').forEach(sp=>{sp.textContent=yearInfo(shownList.filter(g=>g&&String(g.year)===sp.dataset.y))})}
 function toggleOwned(name){
+ if(needAuth())return;
  owned.has(name)?owned.delete(name):owned.add(name);saveOwned();
  if(yearFilter==='owned'||yearFilter==='missing'){render();syncLb();return}
  const card=[...out.querySelectorAll('.tag')].find(c=>c.dataset.g===name);
@@ -717,7 +725,8 @@ $('installBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.pro
 /* ---------- Sauvegarde / restauration ---------- */
 const bk=$('bk'),byNorm=new Map(gifts.map(g=>[norm(g.name),g.name]));let pendingBk=null;
 const cleanList=a=>[...new Set(a.map(n=>typeof n==='string'?byNorm.get(norm(n)):undefined).filter(Boolean))];
-$('bkBtn').onclick=()=>{pendingBk=null;$('bkInfo').textContent='';$('bkChoice').hidden=true;bk.showModal()};
+const openBk=()=>{pendingBk=null;$('bkInfo').textContent='';$('bkChoice').hidden=true;bk.showModal()};
+$('bkBtn').onclick=()=>exportPdf();
 $('bkClose').onclick=()=>bk.close();
 bk.addEventListener('click',e=>{if(e.target===bk)bk.close()});
 /* ---------- PDF stylé (sans librairie) ---------- */
@@ -865,12 +874,13 @@ function buildPdf(data){
  const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;
  return u;
 }
-$('bkExport').onclick=()=>{
+const exportPdf=()=>{
  const data={app:'lt2-gifts',version:1,exported:new Date().toISOString(),favs:[...favs],owned:[...owned]};
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([buildPdf(data)],{type:'application/pdf'}));
  a.download='lt2-gifts-'+data.exported.slice(0,10)+'.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
  toastMsg(t('bkExported'));
 };
+$('bkExport').onclick=exportPdf;
 $('bkImport').onclick=()=>$('bkFile').click();
 $('bkFile').onchange=async e=>{
  const f=e.target.files[0];e.target.value='';if(!f)return;
@@ -895,10 +905,10 @@ $('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true)
 
 /* ---------- Comptes (Firebase) ---------- */
 /* Remplace les COLLE_ICI par la config de ton projet Firebase (voir les explications). */
-const FIREBASE_CONFIG={apiKey:'COLLE_ICI',authDomain:'COLLE_ICI',projectId:'COLLE_ICI',appId:'COLLE_ICI'};
+const FIREBASE_CONFIG={apiKey:'AIzaSyBR66ZKwTASN-BpnV4EKbTysuwIoLqw9R8',authDomain:'lt2-gift.firebaseapp.com',projectId:'lt2-gift',appId:'1:9437134338:web:eab0b48f7179cf643a311b'};
 const cloudOn=()=>!/COLLE/.test(FIREBASE_CONFIG.apiKey+FIREBASE_CONFIG.projectId);
 const ACC_T={
- fr:{btn:'👤 Compte',btnIn:p=>'👤 '+p,title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
+ fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
   forgot:'Mot de passe oublié ?',goSignup:'Pas de compte ? Crée-en un',goLogin:'Déjà un compte ? Connecte-toi',back:'← Retour à la connexion',sendReset:'Envoyer le mail de réinitialisation',
   resetSent:'Mail envoyé ! Regarde ta boîte de réception (et tes spams).',logout:'Se déconnecter',
   textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
@@ -909,7 +919,7 @@ const ACC_T={
   e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
    'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
    'auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion internet.',def:'Une erreur est survenue. Réessaie.'}},
- en:{btn:'👤 Account',btnIn:p=>'👤 '+p,title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
+ en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
   forgot:'Forgot password?',goSignup:'No account? Create one',goLogin:'Already have an account? Log in',back:'← Back to log in',sendReset:'Send the reset email',
   resetSent:'Email sent! Check your inbox (and spam).',logout:'Log out',
   textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
@@ -923,13 +933,13 @@ const ACC_T={
 };
 const at=(k,...a)=>{const v=(ACC_T[lang]||ACC_T.fr)[k];return typeof v==='function'?v(...a):v};
 const accDlg=$('acc'),accMsg=m=>{$('accMsg').textContent=m||''};
-let fb=null,fbUser=null,accMode='login',pushT=0;
+let fb=null,fbUser=null,accMode='login',pushT=0,authKnown=false,accReason='';
 const accName=u=>u?(u.displayName||(u.email||'').split('@')[0]):'';
 function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn')}
 function renderAcc(){
  const m=fbUser?'in':accMode,on=cloudOn();
  $('accTitle').textContent=at('title');
- $('accText').textContent=!on?at('off'):m==='in'?at('textIn',accName(fbUser)):m==='reset'?at('textReset'):at('textOut');
+ $('accText').textContent=!on?at('off'):m==='in'?at('textIn',accName(fbUser)):m==='reset'?at('textReset'):(accReason||at('textOut'));
  $('accForm').hidden=!on||m==='in';$('accOut').hidden=m!=='in';
  $('accPseudo').hidden=m!=='signup';$('accPass').hidden=m==='reset';
  $('accPseudo').placeholder=at('pseudo');$('accEmail').placeholder=at('email');$('accPass').placeholder=at('pass');
@@ -937,7 +947,8 @@ function renderAcc(){
  $('accGo').textContent=m==='signup'?at('signup'):m==='reset'?at('sendReset'):at('login');
  $('accForgot').hidden=m!=='login';$('accForgot').textContent=at('forgot');
  $('accSwitch').textContent=m==='login'?at('goSignup'):m==='signup'?at('goLogin'):at('back');
- $('accLogout').textContent=at('logout');
+ $('accLogout').textContent=at('logout');$('accImp').textContent=at('imp');
+ $('accStayT').textContent=at('stay');$('accStayL').hidden=m!=='login'&&m!=='signup';
 }
 async function loadFb(){
  if(fb)return true;if(!cloudOn())return false;
@@ -955,7 +966,7 @@ async function pushNow(){
  try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',favs:[...favs],owned:[...owned],updated:Date.now()})}catch(e){}
 }
 async function onUser(u){
- fbUser=u;updAccBtn();if(accDlg.open)renderAcc();
+ fbUser=u;authKnown=true;updAccBtn();if(accDlg.open)renderAcc();
  if(!u){cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
  try{
   const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
@@ -971,7 +982,15 @@ async function onUser(u){
   if(!snap.exists()||last!==u.uid)pushNow();
  }catch(e){}
 }
-$('accBtn').onclick=()=>{accMode='login';accMsg('');renderAcc();accDlg.showModal();if(cloudOn()&&!fb)loadFb()};
+function openAcc(reason){accReason=reason||'';accMode='login';accMsg('');renderAcc();if(!accDlg.open)accDlg.showModal();if(cloudOn()&&!fb)loadFb()}
+function needAuth(){
+ if(!cloudOn()||fbUser)return false;
+ let hint='';try{hint=localStorage.getItem('lt2uid')||''}catch(e){}
+ if(!authKnown&&hint)return false;
+ openAcc(at('promptFav'));return true;
+}
+$('accBtn').onclick=()=>openAcc('');
+$('accImp').onclick=()=>{accDlg.close();openBk()};
 $('accClose').onclick=()=>accDlg.close();
 accDlg.addEventListener('click',e=>{if(e.target===accDlg)accDlg.close()});
 $('accForgot').onclick=()=>{accMode='reset';accMsg('');renderAcc()};
@@ -989,6 +1008,7 @@ $('accGo').onclick=async()=>{
  $('accGo').disabled=true;
  try{
   const M=fb.m;fb.auth.languageCode=lang==='en'?'en':'fr';
+  if(accMode!=='reset')await M.setPersistence(fb.auth,$('accStay').checked?M.browserLocalPersistence:M.browserSessionPersistence);
   if(accMode==='signup'){
    const c=await M.createUserWithEmailAndPassword(fb.auth,email,pass);
    await M.updateProfile(c.user,{displayName:pseudo});
@@ -1010,7 +1030,7 @@ function makeCard(g,q){
  const card=document.createElement('article');card.className='tag';card.style.setProperty('--yc',yc(g.year));card.dataset.g=g.name;
  const fav=document.createElement('button');fav.type='button';fav.className='fav';
  const setFav=()=>{const on=favs.has(g.name);fav.textContent=on?'♥':'♡';fav.classList.toggle('on',on);fav.setAttribute('aria-pressed',String(on));fav.setAttribute('aria-label',on?t('favRemove',g.name):t('favAdd',g.name))};
- setFav();fav.onclick=e=>{e.stopPropagation();favs.has(g.name)?favs.delete(g.name):favs.add(g.name);saveFavs();setFav();if(yearFilter==='fav')render()};
+ setFav();fav.onclick=e=>{e.stopPropagation();if(needAuth())return;favs.has(g.name)?favs.delete(g.name):favs.add(g.name);saveFavs();setFav();if(yearFilter==='fav')render()};
  card.append(fav);
  const pic=document.createElement('button');pic.type='button';pic.className='pic empty';pic.textContent='🎁';pic.setAttribute('aria-label',t('zoom',g.name));
  const img=document.createElement('img');img.alt=t('imgOf',g.name);img.loading='lazy';img.referrerPolicy='no-referrer';
@@ -1122,7 +1142,7 @@ $('byYear').onclick=()=>setSort('year');$('byName').onclick=()=>setSort('name');
 $('themeBtn').onclick=()=>setTheme(theme==='light'?'dark':'light',true);
 $('vGrid').onclick=()=>setView('grid');$('vList').onclick=()=>setView('list');
 $('shareBtn').onclick=()=>copyOrAsk(location.href.split('#')[0]+'#'+stateParams(true),t('copied'));
-$('listBtn').onclick=()=>copyOrAsk(listText(),t('listCopied'));
+
 $('langFr').onclick=()=>setLang('fr');$('langEn').onclick=()=>setLang('en');
 $('rand').onclick=()=>{const l=shownList.length?shownList:gifts;const g=l[Math.floor(Math.random()*l.length)];if(g)openLb(g,imgFor(g))};
 $('retry').onclick=()=>{document.body.classList.remove('imgdone');tried.clear();thumbs.clear();cState='idle';hideBanner();render();loadAll();loadContents()};

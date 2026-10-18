@@ -1,7 +1,7 @@
 /* Service worker — Lumber Tycoon 2, galerie des gifts
    - la page et les icônes sont gardées pour ouvrir le site hors ligne ;
    - les réponses du wiki, les images et les polices sont gardées au fil de l'eau. */
-const V = 'lt2-v3';
+const V = 'lt2-v6';
 const SHELL = V + '-shell', RUNTIME = V + '-runtime';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 const API_HOST = 'lumber-tycoon-2.fandom.com';
@@ -45,7 +45,16 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Images et polices : cache d'abord, mise à jour en arrière-plan.
+  // Images du wiki : réseau d'abord (une image ratée n'est jamais « collée » en cache), cache si hors ligne.
+  if (url.hostname === 'static.wikia.nocookie.net') {
+    e.respondWith(
+      fetch(req).then(res => store(RUNTIME, req, res))
+        .catch(() => caches.match(req).then(m => m || Response.error()))
+    );
+    return;
+  }
+
+  // Polices : cache d'abord, mise à jour en arrière-plan.
   if (ASSET_HOSTS.includes(url.hostname)) {
     e.respondWith(
       caches.match(req).then(m => {
