@@ -278,6 +278,42 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .sug-mail{font-size:13px;font-weight:700;color:#7a1b10;word-break:break-all}
 .sug-date{font-size:12px;opacity:.7;width:100%}
 .sug-body{margin:8px 0 4px;white-space:pre-wrap;word-break:break-word;font-weight:600;line-height:1.4}
+.cnt-badge{display:inline-block;min-width:20px;margin-left:6px;padding:2px 6px;border-radius:999px;background:var(--ribbon);color:#fff;font:800 11px/1.3 var(--body);text-align:center;vertical-align:middle;animation:cntpulse 1.6s ease-in-out infinite}
+@keyframes cntpulse{50%{transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.cnt-badge{animation:none}}
+.sugbox h4{margin:16px 0 6px}
+.sug-item.fresh{border-color:var(--ribbon);background:#fff3df}
+.sug-new{background:var(--ribbon);color:#fff;font:800 10px/1 var(--body);padding:3px 7px;border-radius:999px;letter-spacing:.5px}
+.st-pill{font:800 11px/1 var(--body);padding:4px 9px;border-radius:999px}
+.st-new{background:#6b7280;color:#fff}.st-progress{background:#f2b632;color:#3b2a1a}.st-done{background:#1f8f5a;color:#fff}
+.sug-reply{margin-top:8px;padding:8px 10px;border-radius:10px;background:#1f8f5a22;border-left:4px solid #1f8f5a}
+.sug-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.sug-lbl{font-size:13px;font-weight:800}
+.sug-sel{font:700 14px var(--body);padding:6px 10px;border-radius:10px;border:2px solid var(--bark);background:#fff;color:#123127}
+.sug-reply-ta{min-height:0;margin:8px 0;font-size:14px}
+.sug-rbtn{font-size:13px;padding:6px 16px;margin-right:10px}
+.st-hero{text-align:center;margin:4px 0 8px}
+.st-big{font:400 52px/1 var(--display);color:#1f8f5a}
+.st-sub{font-weight:700;font-size:14px;opacity:.85}
+.st-bar{height:14px;border-radius:999px;background:#dcc59d;overflow:hidden;border:2px solid var(--bark)}
+.st-bar i{display:block;height:100%;width:0;background:#1f8f5a;border-radius:999px;transition:width .6s}
+.st-goal-l{display:block;margin:14px 0 0;font-weight:800}
+.st-goalrow{display:flex;gap:12px;align-items:center;font-weight:700}
+.st-goalrow .acc-in{width:100px;margin:6px 0}
+.st-yrow{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;margin:7px 0;font-weight:800;font-size:13px}
+.st-ybar{height:12px;border-radius:999px;background:#0001;overflow:hidden}
+.st-ybar i{display:block;height:100%;border-radius:999px;transition:width .6s}
+.st-badges{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.st-badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;padding:10px 8px;border:2px dashed #0004;border-radius:12px;opacity:.45;filter:grayscale(1)}
+.st-badge.on{opacity:1;filter:none;border:2px solid var(--bark);background:#ffffffaa}
+.st-bic{font-size:28px}
+.st-badge small{font-size:11px;opacity:.8}
+.adm-badge{cursor:pointer}
+.adm-card{background:#ffffffaa;border:2px solid var(--bark);border-radius:14px;padding:10px 12px;margin:10px 0}
+.adm-line{margin:3px 0;font-weight:700;word-break:break-all}
+.st-ban{background:#b91d31;color:#fff}
+.warn-h{color:#b91d31;text-align:center}
+.warn-item{background:#ffe6df;border:2px solid var(--ribbon);border-radius:14px;padding:10px 12px;margin:10px 0}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="light"] body{color:#123127;background:
  radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
@@ -337,7 +373,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <section class="dash">
   <div class="dash-top">
    <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
-   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="sugBtn" class="dbtn" type="button"></button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="sugBtn" class="dbtn" type="button"></button><button id="stBtn" class="dbtn" type="button"></button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
   </div>
   <p class="tl-title" data-i18n="tlTitle"></p>
   <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
@@ -361,6 +397,43 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <div class="actions"><button class="btn alt" id="ctClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
 
+<dialog id="adm"><div class="lb sugbox">
+ <h3 id="admTitle"></h3>
+ <input class="acc-in" id="admName" type="text" maxlength="20" autocomplete="off" autocapitalize="none">
+ <div class="actions"><button class="btn" id="admFind" type="button"></button></div>
+ <div id="admRes" hidden>
+  <div class="adm-card">
+   <div class="adm-line"><b id="admPseudo"></b> <span class="st-pill" id="admState"></span></div>
+   <div class="adm-line" id="admMail"></div>
+   <div class="adm-line" id="admWarn"></div>
+  </div>
+  <textarea class="acc-in" id="admMsg" rows="3" maxlength="500"></textarea>
+  <div class="actions"><button class="btn alt" id="admWarnBtn" type="button"></button><button class="btn" id="admBanBtn" type="button"></button></div>
+ </div>
+ <h4 id="admBansT"></h4><div id="admBans"></div>
+ <p class="bk-txt" id="admStatus" role="status"></p>
+ <div class="actions"><button class="btn alt" id="admClose" type="button" autofocus data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<dialog id="warn"><div class="lb sugbox">
+ <h3 class="warn-h" id="warnTitle"></h3>
+ <div id="warnList"></div>
+ <p class="bk-txt" id="warnNote"></p>
+ <div class="actions"><button class="btn" id="warnOk" type="button" autofocus></button></div>
+</div></dialog>
+
+<dialog id="stats"><div class="lb sugbox">
+ <h3 id="stTitle"></h3>
+ <div class="st-hero"><div class="st-big" id="stBig"></div><div class="st-sub" id="stSub"></div></div>
+ <div class="st-bar"><i id="stBarFill"></i></div>
+ <label class="st-goal-l" id="stGoalL" for="stGoalIn"></label>
+ <div class="st-goalrow"><input class="acc-in" id="stGoalIn" type="number" inputmode="numeric" min="1"><span id="stGoalTxt"></span></div>
+ <div class="st-bar"><i id="stGoalFill"></i></div>
+ <h4 id="stYearsT"></h4><div id="stYears"></div>
+ <h4 id="stBadgesT"></h4><div class="st-badges" id="stBadges"></div>
+ <div class="actions"><button class="btn alt" id="stClose" type="button" autofocus data-i18n="close">Fermer</button></div>
+</div></dialog>
+
 <dialog id="sug"><div class="lb sugbox">
  <h3 id="sugTitle"></h3>
  <p class="bk-txt" id="sugText"></p>
@@ -369,10 +442,8 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
   <p class="bk-txt sug-count" id="sugCount"></p>
   <div class="actions"><button class="btn" id="sugSend" type="button"></button></div>
  </div>
- <div id="sugInbox" hidden>
-  <div class="actions"><button class="btn alt" id="sugRefresh" type="button"></button></div>
-  <div id="sugList"></div>
- </div>
+ <div id="sugMineW" hidden><h4 id="sugMineT"></h4><div id="sugMine"></div></div>
+ <div id="sugInbox" hidden><div id="sugList"></div></div>
  <p class="bk-txt" id="sugMsg" role="status"></p>
  <div class="actions"><button class="btn alt" id="sugClose" type="button" autofocus data-i18n="close">Fermer</button></div>
 </div></dialog>
@@ -389,7 +460,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
   <p class="bk-txt"><button class="linkb" id="accForgot" type="button"></button></p>
   <p class="bk-txt"><button class="linkb" id="accSwitch" type="button"></button></p>
  </div>
- <div class="actions" id="accOut" hidden><button class="btn alt" id="accImp" type="button"></button><button class="btn alt" id="accLogout" type="button"></button></div>
+ <div class="actions" id="accOut" hidden><button class="btn alt" id="accAdm" type="button" hidden></button><button class="btn alt" id="accImp" type="button"></button><button class="btn alt" id="accLogout" type="button"></button></div>
  <p class="bk-txt" id="accMsg" role="status"></p>
  <div class="actions"><button class="btn alt" id="accClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
@@ -688,11 +759,15 @@ function yearInfo(list){const k=list.filter(g=>owned.has(g.name)).length;return 
 function updYearCounts(){document.querySelectorAll('.year-head span[data-y]').forEach(sp=>{sp.textContent=yearInfo(shownList.filter(g=>g&&String(g.year)===sp.dataset.y))})}
 function toggleOwned(name){
  if(needAuth())return;
+ const was=achSnap();
  owned.has(name)?owned.delete(name):owned.add(name);saveOwned();
- if(yearFilter==='owned'||yearFilter==='missing'){render();syncLb();return}
- const card=[...out.querySelectorAll('.tag')].find(c=>c.dataset.g===name);
- if(card){card.classList.toggle('owned',owned.has(name));renderOwnBtn(card.querySelector('.own'),name)}
- syncLb();updProgress();updTimeline();updYearCounts();
+ if(yearFilter==='owned'||yearFilter==='missing'){render();syncLb()}
+ else{
+  const card=[...out.querySelectorAll('.tag')].find(c=>c.dataset.g===name);
+  if(card){card.classList.toggle('owned',owned.has(name));renderOwnBtn(card.querySelector('.own'),name)}
+  syncLb();updProgress();updTimeline();updYearCounts();
+ }
+ afterChange(was);
 }
 function itemHitsOf(g,q){const c=contents.get(g.name);return q&&c?c.items.filter(i=>i.toLowerCase().includes(q)):[]}
 
@@ -941,7 +1016,7 @@ $('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true)
 const FIREBASE_CONFIG={apiKey:'AIzaSyBR66ZKwTASN-BpnV4EKbTysuwIoLqw9R8',authDomain:'lt2-gift.firebaseapp.com',projectId:'lt2-gift',appId:'1:9437134338:web:eab0b48f7179cf643a311b'};
 const cloudOn=()=>!/COLLE/.test(FIREBASE_CONFIG.apiKey+FIREBASE_CONFIG.projectId);
 const ACC_T={
- fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',promptSug:'Connecte-toi ou crée un compte pour envoyer une suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Suggestions reçues',sugTitle:'Suggestions & remarques',sugTitleAdmin:'Suggestions reçues',sugText:'Une idée pour améliorer le site, un bug, une remarque ? Écris-la ici, elle sera envoyée au créateur du site.',sugPh:'Écris ta suggestion ou ta remarque ici…',sugSend:'Envoyer',sugSent:'Merci ! Ta suggestion a bien été envoyée.',sugShort:'Écris au moins quelques mots.',sugFail:'Impossible pour le moment. Vérifie ta connexion et réessaie.',sugWait:'Attends quelques secondes avant d’envoyer un autre message.',inboxEmpty:'Aucune suggestion pour le moment.',inboxRefresh:'↻ Actualiser',inboxN:n=>n+(n>1?' messages':' message'),del:'Supprimer',delAsk:'Supprimer ce message ?',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
+ fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',admBtn:'🛡️ Outils admin',admTitle:'🛡️ Outils admin',admName:'Nom d’utilisateur',admFind:'Rechercher',admNotFound:'Utilisateur introuvable.',admActive:'Actif',admBannedS:'Banni',admWarnsN:(n,o)=>'⚠️ Avertissements : '+n+(o?' ('+o+' pas encore lu'+(o>1?'s':'')+')':''),admNoEmail:'Adresse mail inconnue : il doit se reconnecter une fois. Le bannissement agit quand même sur son compte.',admWarnPh:'Message d’avertissement…',admWarnBtn:'⚠️ Avertir',admBanBtn:'🚫 Bannir',admUnbanBtn:'✅ Débannir',admBanAsk:p=>'Bannir '+p+' ? Il ne pourra plus utiliser le site avec ce compte ni se réinscrire avec cette adresse mail.',admBanned:'Compte banni.',admUnbanned:'Compte débanni.',admWarned:'Avertissement envoyé.',admSelf:'Tu ne peux pas te bannir toi-même.',admBansT:n=>'Comptes bannis ('+n+')',admNone:'Aucun compte banni.',warnDefault:'Ton comportement ne respecte pas les règles du site. Si cela continue, ton compte risque d’être banni.',warnTitle:'⚠️ Avertissement',warnNote:'Un nouvel écart peut entraîner le bannissement de ton compte.',warnOk:'J’ai compris',banned:'Ce compte a été banni : tu ne peux plus l’utiliser.',emailBanned:'Cette adresse mail est bannie.',st_new:'Reçue',st_progress:'En cours',st_done:'Faite',mineT:'Mes suggestions',mineEmpty:'Tu n’as pas encore envoyé de suggestion.',replyFrom:'Réponse du créateur :',newTag:'NOUVEAU',unreadN:n=>n+(n>1?' non lus':' non lu'),replyPh:'Écrire une réponse…',replyBtn:'Répondre',stLbl:'Statut :',stBtn:'📊 Statistiques',stTitle:'Mes statistiques',stOwnedN:(n,t,f)=>n+' / '+t+' gifts obtenus · '+f+(f>1?' favoris':' favori'),stGoalL:'🎯 Mon objectif (nombre de gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progression par année',stBadgesT:'🏅 Badges',celAll:'👑 Collection complète ! Bravo !',celYear:y=>'🎉 Année '+y+' complète !',celBadge:n=>'🏅 Nouveau badge : '+n,promptSug:'Connecte-toi ou crée un compte pour envoyer une suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Suggestions reçues',sugTitle:'Suggestions & remarques',sugTitleAdmin:'Suggestions reçues',sugText:'Une idée pour améliorer le site, un bug, une remarque ? Écris-la ici, elle sera envoyée au créateur du site.',sugPh:'Écris ta suggestion ou ta remarque ici…',sugSend:'Envoyer',sugSent:'Merci ! Ta suggestion a bien été envoyée.',sugShort:'Écris au moins quelques mots.',sugFail:'Impossible pour le moment. Vérifie ta connexion et réessaie.',sugWait:'Attends quelques secondes avant d’envoyer un autre message.',inboxEmpty:'Aucune suggestion pour le moment.',inboxRefresh:'↻ Actualiser',inboxN:n=>n+(n>1?' messages':' message'),del:'Supprimer',delAsk:'Supprimer ce message ?',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
   forgot:'Mot de passe oublié ?',goSignup:'Pas de compte ? Crée-en un',goLogin:'Déjà un compte ? Connecte-toi',back:'← Retour à la connexion',sendReset:'Envoyer le mail de réinitialisation',
   resetSent:'Mail envoyé ! Regarde ta boîte de réception (et tes spams).',logout:'Se déconnecter',
   textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
@@ -952,7 +1027,7 @@ const ACC_T={
   e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
    'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
    'auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion internet.',def:'Une erreur est survenue. Réessaie.'}},
- en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',promptSug:'Log in or create an account to send a suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Received suggestions',sugTitle:'Suggestions & feedback',sugTitleAdmin:'Received suggestions',sugText:'An idea to improve the site, a bug, a remark? Write it here, it will be sent to the site’s creator.',sugPh:'Write your suggestion or remark here…',sugSend:'Send',sugSent:'Thanks! Your suggestion has been sent.',sugShort:'Write at least a few words.',sugFail:'Not possible right now. Check your connection and try again.',sugWait:'Wait a few seconds before sending another message.',inboxEmpty:'No suggestions yet.',inboxRefresh:'↻ Refresh',inboxN:n=>n+(n>1?' messages':' message'),del:'Delete',delAsk:'Delete this message?',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
+ en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',admBtn:'🛡️ Admin tools',admTitle:'🛡️ Admin tools',admName:'Username',admFind:'Search',admNotFound:'User not found.',admActive:'Active',admBannedS:'Banned',admWarnsN:(n,o)=>'⚠️ Warnings: '+n+(o?' ('+o+' not read yet)':''),admNoEmail:'Email unknown: they must log in once. The ban still applies to their account.',admWarnPh:'Warning message…',admWarnBtn:'⚠️ Warn',admBanBtn:'🚫 Ban',admUnbanBtn:'✅ Unban',admBanAsk:p=>'Ban '+p+'? They will no longer be able to use the site with this account or sign up again with this email.',admBanned:'Account banned.',admUnbanned:'Account unbanned.',admWarned:'Warning sent.',admSelf:'You can’t ban yourself.',admBansT:n=>'Banned accounts ('+n+')',admNone:'No banned accounts.',warnDefault:'Your behavior doesn’t follow the site rules. If this continues, your account may be banned.',warnTitle:'⚠️ Warning',warnNote:'Another offense may lead to your account being banned.',warnOk:'I understand',banned:'This account has been banned: you can no longer use it.',emailBanned:'This email address is banned.',st_new:'Received',st_progress:'In progress',st_done:'Done',mineT:'My suggestions',mineEmpty:'You haven’t sent any suggestion yet.',replyFrom:'Reply from the creator:',newTag:'NEW',unreadN:n=>n+' unread',replyPh:'Write a reply…',replyBtn:'Reply',stLbl:'Status:',stBtn:'📊 Statistics',stTitle:'My statistics',stOwnedN:(n,t,f)=>n+' / '+t+' gifts owned · '+f+(f>1?' favorites':' favorite'),stGoalL:'🎯 My goal (number of gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progress by year',stBadgesT:'🏅 Badges',celAll:'👑 Complete collection! Well done!',celYear:y=>'🎉 Year '+y+' complete!',celBadge:n=>'🏅 New badge: '+n,promptSug:'Log in or create an account to send a suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Received suggestions',sugTitle:'Suggestions & feedback',sugTitleAdmin:'Received suggestions',sugText:'An idea to improve the site, a bug, a remark? Write it here, it will be sent to the site’s creator.',sugPh:'Write your suggestion or remark here…',sugSend:'Send',sugSent:'Thanks! Your suggestion has been sent.',sugShort:'Write at least a few words.',sugFail:'Not possible right now. Check your connection and try again.',sugWait:'Wait a few seconds before sending another message.',inboxEmpty:'No suggestions yet.',inboxRefresh:'↻ Refresh',inboxN:n=>n+(n>1?' messages':' message'),del:'Delete',delAsk:'Delete this message?',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
   forgot:'Forgot password?',goSignup:'No account? Create one',goLogin:'Already have an account? Log in',back:'← Back to log in',sendReset:'Send the reset email',
   resetSent:'Email sent! Check your inbox (and spam).',logout:'Log out',
   textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
@@ -968,7 +1043,14 @@ const at=(k,...a)=>{const v=(ACC_T[lang]||ACC_T.fr)[k];return typeof v==='functi
 const accDlg=$('acc'),accMsg=m=>{$('accMsg').textContent=m||''};
 let fb=null,fbUser=null,accMode='login',pushT=0,authKnown=false,accReason='',isAdm=false;
 const accName=u=>u?(u.displayName||(u.email||'').split('@')[0]):'';
-function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn');if(fbUser&&isAdm){const b=document.createElement('span');b.className='adm-badge';b.textContent='👑 ADMIN';$('accBtn').append(' ',b)}$('sugBtn').textContent=isAdm?at('sugBtnAdmin'):at('sugBtn')}
+function updAccBtn(){
+ const ab=$('accBtn');ab.textContent=fbUser?at('btnIn',accName(fbUser)):at('btn');
+ if(fbUser&&isAdm){const b=document.createElement('span');b.className='adm-badge';b.textContent='👑 ADMIN';b.title='Outils admin';b.onclick=e=>{e.stopPropagation();openAdm()};ab.append(' ',b)}
+ const sb=$('sugBtn');sb.textContent=isAdm?at('sugBtnAdmin'):at('sugBtn');
+ const c=isAdm?unread:myNew;
+ if(c>0){const k=document.createElement('span');k.className='cnt-badge';k.textContent=c>99?'99+':String(c);sb.append(k)}
+ $('stBtn').textContent=at('stBtn');
+}
 function renderAcc(){
  const m=fbUser?'in':accMode,on=cloudOn();
  $('accTitle').textContent=at('title');
@@ -980,7 +1062,7 @@ function renderAcc(){
  $('accGo').textContent=m==='signup'?at('signup'):m==='reset'?at('sendReset'):at('login');
  $('accForgot').hidden=m!=='login';$('accForgot').textContent=at('forgot');
  $('accSwitch').textContent=m==='login'?at('goSignup'):m==='signup'?at('goLogin'):at('back');
- $('accLogout').textContent=at('logout');$('accImp').textContent=at('imp');
+ $('accLogout').textContent=at('logout');$('accAdm').hidden=!isAdm;$('accAdm').textContent=at('admBtn');$('accImp').textContent=at('imp');
  $('accStayT').textContent=at('stay');$('accStayL').hidden=m!=='login'&&m!=='signup';
 }
 async function loadFb(){
@@ -996,7 +1078,7 @@ async function loadFb(){
 }
 async function pushNow(){
  if(!fbUser||!fb)return;
- try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',favs:[...favs],owned:[...owned],updated:Date.now()})}catch(e){}
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',email:fbUser.email||'',favs:[...favs],owned:[...owned],goal:goal||0,updated:Date.now()})}catch(e){}
 }
 async function ensureUsername(u){
  const n=u&&u.displayName;if(!n||!fb||!/^[A-Za-z0-9_.-]{3,20}$/.test(n))return;
@@ -1005,8 +1087,9 @@ async function ensureUsername(u){
 }
 async function onUser(u){
  fbUser=u;authKnown=true;if(!u)isAdm=false;updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();
- if(u){checkAdmin();ensureUsername(u)}
- if(!u){cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
+ if(u&&await checkBan(u))return;
+ if(u){checkAdmin();ensureUsername(u);loadMine();checkWarnings(u)}
+ if(!u){resetInbox();cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
  try{
   const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
   let last='';try{last=localStorage.getItem('lt2uid')||''}catch(e){}
@@ -1015,10 +1098,11 @@ async function onUser(u){
    if(last===u.uid){favs=new Set(cf);owned=new Set(co)}
    else{cf.forEach(x=>favs.add(x));co.forEach(x=>owned.add(x))}
    saveFavs();saveOwned();render();syncLb();
+   if(typeof d.goal==='number'&&d.goal>0){goal=d.goal;try{localStorage.setItem('lt2goal',String(goal))}catch(e){}}
   }
   try{localStorage.setItem('lt2uid',u.uid)}catch(e){}
   cloudPush=()=>{clearTimeout(pushT);pushT=setTimeout(pushNow,800)};
-  if(!snap.exists()||last!==u.uid)pushNow();
+  if(!snap.exists()||last!==u.uid||!snap.data().email)pushNow();
  }catch(e){}
 }
 function openAcc(reason){accReason=reason||'';accMode='login';accMsg('');renderAcc();if(!accDlg.open)accDlg.showModal();if(cloudOn()&&!fb)loadFb()}
@@ -1049,6 +1133,7 @@ $('accGo').onclick=async()=>{
   const M=fb.m;fb.auth.languageCode=lang==='en'?'en':'fr';
   if(accMode!=='reset')await M.setPersistence(fb.auth,$('accStay').checked?M.browserLocalPersistence:M.browserSessionPersistence);
   if(accMode==='signup'){
+   if(await isEmailBanned(email)){accMsg(at('emailBanned'));return}
    const key=pseudo.toLowerCase();
    const ex=await M.getDoc(M.doc(fb.db,'usernames',key));
    if(ex.exists()){accMsg(at('pseudoTaken'));return}
@@ -1058,6 +1143,7 @@ $('accGo').onclick=async()=>{
    await M.updateProfile(c.user,{displayName:pseudo});
    fbUser=c.user;updAccBtn();renderAcc();pushNow();toastMsg(at('created'));
   }else if(accMode==='login'){
+   if(await isEmailBanned(email)){accMsg(at('emailBanned'));return}
    await M.signInWithEmailAndPassword(fb.auth,email,pass);
    $('accPass').value='';accDlg.close();toastMsg(at('logged'));
   }else{
@@ -1067,46 +1153,110 @@ $('accGo').onclick=async()=>{
  finally{$('accGo').disabled=false}
 };
 /* ---------- Suggestions ---------- */
-const sugDlg=$('sug'),sugMsg=m=>{$('sugMsg').textContent=m||''};let lastSug=0;
-async function checkAdmin(){
+const mk=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
+const sugDlg=$('sug'),sugMsg=m=>{$('sugMsg').textContent=m||''};
+let lastSug=0,unsubInbox=null,inboxDocs=[],unread=0,freshIds=new Set(),marking=false,myDocs=[],myNew=0,newReplyIds=new Set();
+const drafts=new Map(),ST_KEYS=['new','progress','done'];
+const stLabel=s=>at('st_'+(ST_KEYS.includes(s)?s:'new'));
+const fmtDate=ms=>new Date(ms||0).toLocaleString(lang==='en'?'en-US':'fr-FR',{dateStyle:'short',timeStyle:'short'});
+const seenKey=()=>'lt2seen_'+(fbUser?fbUser.uid:'');
+function checkAdmin(){
+ if(unsubInbox||!fb||!fbUser)return;
+ const M=fb.m;
+ unsubInbox=M.onSnapshot(M.query(M.collection(fb.db,'suggestions'),M.orderBy('created','desc'),M.limit(100)),snap=>{
+  isAdm=true;inboxDocs=snap.docs;unread=inboxDocs.filter(d=>d.data().read!==true).length;
+  updAccBtn();if(accDlg.open)renderAcc();if(sugDlg.open)renderSug();
+ },()=>{unsubInbox=null;isAdm=false;inboxDocs=[];unread=0;updAccBtn()});
+}
+function resetInbox(){if(unsubInbox){unsubInbox();unsubInbox=null}isAdm=false;inboxDocs=[];unread=0;myDocs=[];myNew=0;newReplyIds=new Set()}
+async function loadMine(){
  if(!fb||!fbUser)return;
- let ok=false;
- try{await fb.m.getDocs(fb.m.query(fb.m.collection(fb.db,'suggestions'),fb.m.limit(1)));ok=true}catch(e){}
- isAdm=ok;updAccBtn();
- if(sugDlg.open){renderSug();if(isAdm)loadInbox()}
+ try{
+  const M=fb.m,snap=await M.getDocs(M.query(M.collection(fb.db,'suggestions'),M.where('uid','==',fbUser.uid)));
+  myDocs=snap.docs.sort((a,b)=>(b.data().created||0)-(a.data().created||0));
+  let seen=0;try{seen=+(localStorage.getItem(seenKey())||0)}catch(e){}
+  const nw=myDocs.filter(d=>{const x=d.data();return x.reply&&(x.repliedAt||0)>seen});
+  newReplyIds=new Set(nw.map(d=>d.id));myNew=nw.length;
+  updAccBtn();if(sugDlg.open)renderMine();
+ }catch(e){}
+}
+function markSeen(){
+ if(!fbUser||!sugDlg.open)return;
+ try{localStorage.setItem(seenKey(),String(Date.now()))}catch(e){}
+ myNew=0;updAccBtn();
+}
+function renderMine(){
+ const L=$('sugMine');L.textContent='';
+ if(!myDocs.length){L.textContent=at('mineEmpty');return}
+ myDocs.forEach(d=>{
+  const x=d.data(),it=mk('div','sug-item'),h=mk('div','sug-head');
+  h.append(mk('span','st-pill st-'+(ST_KEYS.includes(x.status)?x.status:'new'),stLabel(x.status)),mk('span','sug-date',fmtDate(x.created)));
+  it.append(h,mk('div','sug-body',x.text||''));
+  if(x.reply){
+   const r=mk('div','sug-reply'),t1=mk('b','',at('replyFrom'));
+   if(newReplyIds.has(d.id))t1.append(' ',mk('span','sug-new',at('newTag')));
+   r.append(t1,mk('div','sug-body',x.reply));it.append(r);
+  }
+  L.append(it);
+ });
+}
+async function upd(d,patch){try{await fb.m.updateDoc(d.ref,patch)}catch(e){sugMsg(at('sugFail'))}}
+async function markRead(){
+ if(marking||!isAdm||!sugDlg.open)return;
+ const todo=inboxDocs.filter(d=>d.data().read!==true);if(!todo.length)return;
+ marking=true;
+ try{const b=fb.m.writeBatch(fb.db);todo.slice(0,400).forEach(d=>b.update(d.ref,{read:true,status:d.data().status||'new'}));await b.commit()}catch(e){}
+ marking=false;
+}
+function renderInbox(){
+ const L=$('sugList');L.textContent='';
+ inboxDocs.forEach(d=>{if(d.data().read!==true)freshIds.add(d.id)});
+ sugMsg(inboxDocs.length?at('inboxN',inboxDocs.length)+(freshIds.size?' · '+at('unreadN',freshIds.size):''):'');
+ if(!inboxDocs.length){L.textContent=at('inboxEmpty');return}
+ inboxDocs.forEach(d=>{
+  const x=d.data(),fresh=freshIds.has(d.id),it=mk('div','sug-item'+(fresh?' fresh':'')),h=mk('div','sug-head');
+  h.append(mk('span','sug-name','👤 '+(x.pseudo||'—')),mk('span','sug-mail','✉ '+(x.email||'')));
+  if(fresh)h.append(mk('span','sug-new',at('newTag')));
+  h.append(mk('span','sug-date',fmtDate(x.created)));
+  const sel=mk('select','sug-sel');
+  ST_KEYS.forEach(k=>{const o=mk('option','',at('st_'+k));o.value=k;sel.append(o)});
+  sel.value=ST_KEYS.includes(x.status)?x.status:'new';
+  sel.onchange=()=>upd(d,{status:sel.value});
+  const ta=mk('textarea','acc-in sug-reply-ta');ta.rows=2;ta.maxLength=1000;ta.placeholder=at('replyPh');
+  ta.value=drafts.has(d.id)?drafts.get(d.id):(x.reply||'');
+  ta.oninput=()=>drafts.set(d.id,ta.value);
+  const rb=mk('button','btn sug-rbtn',at('replyBtn'));rb.type='button';
+  rb.onclick=async()=>{
+   const txt=ta.value.trim();
+   await upd(d,{reply:txt,repliedAt:Date.now(),status:(sel.value==='new'&&txt)?'progress':sel.value});
+   drafts.delete(d.id);
+  };
+  const del=mk('button','linkb',at('del'));del.type='button';
+  del.onclick=async()=>{if(!confirm(at('delAsk')))return;try{await fb.m.deleteDoc(d.ref)}catch(e){sugMsg(at('sugFail'))}};
+  const row=mk('div','sug-row');row.append(mk('span','sug-lbl',at('stLbl')),sel);
+  it.append(h,mk('div','sug-body',x.text||''),row,ta,rb,del);
+  L.append(it);
+ });
+ markRead();
 }
 function renderSug(){
  $('sugTitle').textContent=isAdm?at('sugTitleAdmin'):at('sugTitle');
  $('sugText').textContent=at('sugText');$('sugText').hidden=isAdm;
- $('sugForm').hidden=isAdm;$('sugInbox').hidden=!isAdm;
- $('sugTa').placeholder=at('sugPh');$('sugSend').textContent=at('sugSend');$('sugRefresh').textContent=at('inboxRefresh');
+ $('sugForm').hidden=isAdm;$('sugInbox').hidden=!isAdm;$('sugMineW').hidden=isAdm||!fbUser;
+ $('sugTa').placeholder=at('sugPh');$('sugSend').textContent=at('sugSend');$('sugMineT').textContent=at('mineT');
  $('sugCount').textContent=$('sugTa').value.length+' / 1000';
+ if(isAdm)renderInbox();else renderMine();
 }
-async function loadInbox(){
- const L=$('sugList'),M=fb&&fb.m;if(!M)return;
- try{
-  const snap=await M.getDocs(M.query(M.collection(fb.db,'suggestions'),M.orderBy('created','desc'),M.limit(100)));
-  L.textContent='';sugMsg(at('inboxN',snap.size));
-  if(snap.empty){sugMsg('');L.textContent=at('inboxEmpty');return}
-  snap.forEach(d=>{
-   const x=d.data(),it=document.createElement('div');it.className='sug-item';
-   const h=document.createElement('div');h.className='sug-head';
-   const n=document.createElement('span');n.className='sug-name';n.textContent='👤 '+(x.pseudo||'—');
-   const m=document.createElement('span');m.className='sug-mail';m.textContent='✉ '+(x.email||'');
-   const dt=document.createElement('span');dt.className='sug-date';dt.textContent=new Date(x.created||0).toLocaleString(lang==='en'?'en-US':'fr-FR',{dateStyle:'short',timeStyle:'short'});
-   h.append(n,m,dt);
-   const b=document.createElement('div');b.className='sug-body';b.textContent=x.text||'';
-   const del=document.createElement('button');del.type='button';del.className='linkb';del.textContent=at('del');
-   del.onclick=async()=>{if(!confirm(at('delAsk')))return;try{await M.deleteDoc(M.doc(fb.db,'suggestions',d.id));it.remove()}catch(e){sugMsg(at('sugFail'))}};
-   it.append(h,b,del);L.append(it);
-  });
- }catch(e){sugMsg(at('sugFail'))}
+function openSug(){
+ sugMsg('');freshIds=new Set();renderSug();
+ if(!sugDlg.open)sugDlg.showModal();
+ if(cloudOn()&&!fb)loadFb();
+ if(fbUser&&!isAdm)loadMine().then(markSeen);
 }
-function openSug(){sugMsg('');renderSug();if(!sugDlg.open)sugDlg.showModal();if(cloudOn()&&!fb)loadFb();if(isAdm)loadInbox()}
 $('sugBtn').onclick=openSug;
 $('sugClose').onclick=()=>sugDlg.close();
 sugDlg.addEventListener('click',e=>{if(e.target===sugDlg)sugDlg.close()});
-$('sugRefresh').onclick=loadInbox;
+sugDlg.addEventListener('close',()=>{freshIds=new Set()});
 $('sugTa').addEventListener('input',()=>{$('sugCount').textContent=$('sugTa').value.length+' / 1000'});
 $('sugTa').addEventListener('focus',()=>{if(needAuth(at('promptSug')))$('sugTa').blur()});
 $('sugSend').onclick=async()=>{
@@ -1118,20 +1268,203 @@ $('sugSend').onclick=async()=>{
  $('sugSend').disabled=true;
  try{
   await ensureUsername(fbUser);
-  await fb.m.addDoc(fb.m.collection(fb.db,'suggestions'),{uid:fbUser.uid,pseudo:accName(fbUser),email:fbUser.email||'',text:text.slice(0,1000),created:Date.now()});
-  lastSug=Date.now();$('sugTa').value='';$('sugCount').textContent='0 / 1000';sugMsg(at('sugSent'));
+  await fb.m.addDoc(fb.m.collection(fb.db,'suggestions'),{uid:fbUser.uid,pseudo:accName(fbUser),email:fbUser.email||'',text:text.slice(0,1000),created:Date.now(),read:false,status:'new'});
+  lastSug=Date.now();$('sugTa').value='';$('sugCount').textContent='0 / 1000';sugMsg(at('sugSent'));loadMine();
  }catch(e){sugMsg(at('sugFail'))}
  finally{$('sugSend').disabled=false}
 };
+
+/* ---------- Statistiques, badges, confettis ---------- */
+let goal=0;try{goal=parseInt(localStorage.getItem('lt2goal')||'0',10)||0}catch(e){}
+const saveGoal=()=>{try{localStorage.setItem('lt2goal',String(goal))}catch(e){}cloudPush()};
+const yearsAsc=()=>[...years].sort((a,b)=>a-b);
+const yearsDone=()=>years.filter(y=>gifts.filter(g=>g.year===y).every(g=>owned.has(g.name)));
+const BADGES=[
+ {id:'first',ic:'🎁',fr:['Premier gift','Obtiens 1 gift'],en:['First gift','Get 1 gift'],ok:()=>owned.size>=1},
+ {id:'g10',ic:'🌲',fr:['Bûcheron','Obtiens 10 gifts'],en:['Lumberjack','Get 10 gifts'],ok:()=>owned.size>=10},
+ {id:'g25',ic:'🪓',fr:['Chasseur de gifts','Obtiens 25 gifts'],en:['Gift hunter','Get 25 gifts'],ok:()=>owned.size>=25},
+ {id:'g50',ic:'🏆',fr:['Grand collectionneur','Obtiens 50 gifts'],en:['Big collector','Get 50 gifts'],ok:()=>owned.size>=50},
+ {id:'year',ic:'⭐',fr:['Année complète','Termine tous les gifts d’une année'],en:['Complete year','Finish every gift of a year'],ok:()=>yearsDone().length>=1},
+ {id:'year3',ic:'🌟',fr:['3 années complètes','Termine 3 années'],en:['3 complete years','Finish 3 years'],ok:()=>yearsDone().length>=3},
+ {id:'fav5',ic:'❤️',fr:['Fan de gifts','Mets 5 favoris'],en:['Gift fan','Add 5 favorites'],ok:()=>favs.size>=5},
+ {id:'all',ic:'👑',fr:['Collection complète','Obtiens tous les gifts'],en:['Complete collection','Get every gift'],ok:()=>gifts.length>0&&owned.size>=gifts.length}
+];
+const bTxt=b=>b[lang]||b.fr;
+const achSnap=()=>({b:new Set(BADGES.filter(x=>x.ok()).map(x=>x.id)),y:new Set(yearsDone())});
+function confetti(n){
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ const c=document.createElement('canvas'),d=window.devicePixelRatio||1,W=innerWidth,H=innerHeight;
+ c.width=W*d;c.height=H*d;c.setAttribute('popover','manual');
+ c.style.cssText='position:fixed;inset:0;width:100%;height:100%;margin:0;padding:0;border:0;background:transparent;overflow:hidden;pointer-events:none';
+ document.body.append(c);try{c.showPopover()}catch(e){c.style.zIndex='99999'}
+ const g=c.getContext('2d');g.scale(d,d);
+ const cols=['#f2b632','#d7263d','#1f8f5a','#38bdf8','#a855f7','#fb7185','#ffffff'];
+ const P=Array.from({length:n},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.38,vx:(Math.random()-.5)*15,vy:-Math.random()*13-4,s:5+Math.random()*7,r:Math.random()*6.28,vr:(Math.random()-.5)*.4,c:cols[(Math.random()*cols.length)|0]}));
+ const t0=performance.now();
+ (function f(t){
+  const e=t-t0;g.clearRect(0,0,W,H);
+  P.forEach(p=>{p.vy+=.32;p.vx*=.992;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.globalAlpha=Math.max(0,1-e/3200);g.fillStyle=p.c;g.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);g.restore()});
+  if(e<3200)requestAnimationFrame(f);else c.remove();
+ })(t0);
+}
+function afterChange(was){
+ const now=achSnap(),msgs=[];let big=false;
+ if(now.b.has('all')&&!was.b.has('all')){msgs.push(at('celAll'));big=true}
+ [...now.y].filter(y=>!was.y.has(y)).forEach(y=>{msgs.push(at('celYear',y));big=true});
+ BADGES.filter(b=>b.id!=='all'&&now.b.has(b.id)&&!was.b.has(b.id)).forEach(b=>msgs.push(at('celBadge',bTxt(b)[0])));
+ if(!msgs.length)return;
+ confetti(big?200:110);
+ msgs.forEach((m,i)=>setTimeout(()=>toastMsg(m),i*2100));
+}
+const stDlg=$('stats');
+function renderStats(){
+ const tot=gifts.length,n=owned.size,pct=tot?Math.round(n/tot*100):0;
+ $('stTitle').textContent=at('stTitle');
+ $('stBig').textContent=pct+' %';$('stSub').textContent=at('stOwnedN',n,tot,favs.size);$('stBarFill').style.width=pct+'%';
+ const g=goal>0?Math.min(goal,tot):tot,gp=g?Math.min(100,Math.round(n/g*100)):0;
+ $('stGoalL').textContent=at('stGoalL');$('stGoalIn').value=g;$('stGoalIn').max=tot;
+ $('stGoalTxt').textContent=at('stGoalTxt',Math.min(n,g),g,gp);$('stGoalFill').style.width=gp+'%';
+ $('stYearsT').textContent=at('stYearsT');
+ const Y=$('stYears');Y.textContent='';
+ yearsAsc().forEach(y=>{
+  const l=gifts.filter(x=>x.year===y),k=l.filter(x=>owned.has(x.name)).length,p=l.length?Math.round(k/l.length*100):0;
+  const row=mk('div','st-yrow'),bar=mk('div','st-ybar'),f=mk('i');f.style.width=p+'%';f.style.background=yc(y);bar.append(f);
+  row.append(mk('span','st-y',String(y)),bar,mk('span','st-yv',k+'/'+l.length+' · '+p+'%'));Y.append(row);
+ });
+ const B=$('stBadges');B.textContent='';
+ $('stBadgesT').textContent=at('stBadgesT')+' ('+BADGES.filter(b=>b.ok()).length+'/'+BADGES.length+')';
+ BADGES.forEach(b=>{
+  const on=b.ok(),c=mk('div','st-badge'+(on?' on':''));
+  c.append(mk('span','st-bic',b.ic),mk('b','',bTxt(b)[0]),mk('small','',bTxt(b)[1]));B.append(c);
+ });
+}
+$('stBtn').onclick=()=>{renderStats();if(!stDlg.open)stDlg.showModal()};
+$('stClose').onclick=()=>stDlg.close();
+stDlg.addEventListener('click',e=>{if(e.target===stDlg)stDlg.close()});
+$('stGoalIn').addEventListener('change',()=>{const v=parseInt($('stGoalIn').value,10);if(v>=1){goal=Math.min(v,gifts.length);saveGoal()}renderStats()});
+/* ---------- Outils admin : avertir / bannir ---------- */
+const admDlg=$('adm'),warnDlg=$('warn');let admUser=null,warnDocs=[];
+const admSay=m=>{$('admStatus').textContent=m||''};
+const emailKeyOk=e=>e&&!e.includes('/');
+async function isEmailBanned(email){
+ try{const e=(email||'').trim().toLowerCase();if(!emailKeyOk(e)||!fb)return false;return (await fb.m.getDoc(fb.m.doc(fb.db,'bannedEmails',e))).exists()}catch(err){return false}
+}
+async function checkBan(u){
+ try{
+  const b=await fb.m.getDoc(fb.m.doc(fb.db,'bans',u.uid));
+  if(b.exists()){await fb.m.signOut(fb.auth);openAcc(at('banned'));return true}
+ }catch(e){}
+ return false;
+}
+async function checkWarnings(u){
+ try{
+  const M=fb.m,snap=await M.getDocs(M.query(M.collection(fb.db,'warnings'),M.where('uid','==',u.uid)));
+  warnDocs=snap.docs.filter(d=>d.data().ack!==true).sort((a,b)=>(a.data().created||0)-(b.data().created||0));
+  if(warnDocs.length)showWarn();
+ }catch(e){}
+}
+function showWarn(){
+ $('warnTitle').textContent=at('warnTitle');$('warnNote').textContent=at('warnNote');$('warnOk').textContent=at('warnOk');
+ const L=$('warnList');L.textContent='';
+ warnDocs.forEach(d=>{const x=d.data(),it=mk('div','warn-item');it.append(mk('div','sug-date',fmtDate(x.created)),mk('div','sug-body',x.message||''));L.append(it)});
+ if(!warnDlg.open)warnDlg.showModal();
+}
+$('warnOk').onclick=async()=>{
+ try{const b=fb.m.writeBatch(fb.db);warnDocs.forEach(d=>b.update(d.ref,{ack:true,ackAt:Date.now()}));await b.commit()}catch(e){}
+ warnDocs=[];warnDlg.close();
+};
+function renderAdmUser(){
+ const u=admUser;if(!u)return;
+ $('admRes').hidden=false;$('admPseudo').textContent='👤 '+u.pseudo;
+ const st=$('admState');st.textContent=u.banned?at('admBannedS'):at('admActive');st.className='st-pill '+(u.banned?'st-ban':'st-done');
+ $('admMail').textContent=u.email?'✉ '+u.email:at('admNoEmail');
+ $('admWarn').textContent=at('admWarnsN',u.warns,u.warnsOpen);
+ $('admWarnBtn').textContent=at('admWarnBtn');$('admBanBtn').textContent=u.banned?at('admUnbanBtn'):at('admBanBtn');
+}
+async function admFind(){
+ admSay('');$('admRes').hidden=true;admUser=null;
+ const name=$('admName').value.trim().toLowerCase();
+ if(!/^[a-z0-9_.-]{3,20}$/.test(name)){admSay(at('admNotFound'));return}
+ const M=fb.m,db=fb.db;
+ try{
+  const un=await M.getDoc(M.doc(db,'usernames',name));
+  if(!un.exists()){admSay(at('admNotFound'));return}
+  const uid=un.data().uid;
+  const [ud,bd,wq]=await Promise.all([M.getDoc(M.doc(db,'users',uid)),M.getDoc(M.doc(db,'bans',uid)),M.getDocs(M.query(M.collection(db,'warnings'),M.where('uid','==',uid)))]);
+  const u=ud.exists()?ud.data():{},b=bd.exists()?bd.data():{};
+  admUser={uid,pseudo:u.pseudo||b.pseudo||name,email:u.email||b.email||'',banned:bd.exists(),warns:wq.size,warnsOpen:wq.docs.filter(d=>d.data().ack!==true).length};
+  $('admMsg').value=at('warnDefault');renderAdmUser();
+ }catch(e){admSay(at('sugFail'))}
+}
+async function admWarn(){
+ if(!admUser)return;
+ const msg=$('admMsg').value.trim();
+ if(msg.length<3){admSay(at('sugShort'));return}
+ try{
+  await fb.m.addDoc(fb.m.collection(fb.db,'warnings'),{uid:admUser.uid,pseudo:admUser.pseudo,message:msg.slice(0,500),created:Date.now(),ack:false});
+  admUser.warns++;admUser.warnsOpen++;renderAdmUser();admSay(at('admWarned'));
+ }catch(e){admSay(at('sugFail'))}
+}
+async function unban(uid,email){
+ try{
+  const M=fb.m,b=M.writeBatch(fb.db),em=(email||'').toLowerCase();
+  b.delete(M.doc(fb.db,'bans',uid));if(emailKeyOk(em))b.delete(M.doc(fb.db,'bannedEmails',em));
+  await b.commit();admSay(at('admUnbanned'));return true;
+ }catch(e){admSay(at('sugFail'));return false}
+}
+async function admBan(){
+ if(!admUser)return;
+ if(admUser.uid===fbUser.uid){admSay(at('admSelf'));return}
+ if(admUser.banned){
+  if(await unban(admUser.uid,admUser.email)){admUser.banned=false;renderAdmUser();loadBans()}
+  return;
+ }
+ if(!confirm(at('admBanAsk',admUser.pseudo)))return;
+ try{
+  const M=fb.m,b=M.writeBatch(fb.db),em=(admUser.email||'').toLowerCase();
+  b.set(M.doc(fb.db,'bans',admUser.uid),{uid:admUser.uid,pseudo:admUser.pseudo,email:admUser.email||'',created:Date.now()});
+  if(emailKeyOk(em))b.set(M.doc(fb.db,'bannedEmails',em),{uid:admUser.uid,created:Date.now()});
+  await b.commit();admUser.banned=true;renderAdmUser();loadBans();admSay(at('admBanned')+(emailKeyOk(em)?'':' '+at('admNoEmail')));
+ }catch(e){admSay(at('sugFail'))}
+}
+async function loadBans(){
+ const L=$('admBans');
+ try{
+  const snap=await fb.m.getDocs(fb.m.collection(fb.db,'bans'));
+  $('admBansT').textContent=at('admBansT',snap.size);L.textContent='';
+  if(snap.empty){L.textContent=at('admNone');return}
+  snap.docs.sort((a,b)=>(b.data().created||0)-(a.data().created||0)).forEach(d=>{
+   const x=d.data(),uid=x.uid||d.id,row=mk('div','adm-card');
+   row.append(mk('div','adm-line','🚫 '+(x.pseudo||'—')),mk('div','adm-line',x.email?'✉ '+x.email:'✉ —'));
+   const b=mk('button','linkb',at('admUnbanBtn'));b.type='button';
+   b.onclick=async()=>{if(await unban(uid,x.email)){if(admUser&&admUser.uid===uid){admUser.banned=false;renderAdmUser()}loadBans()}};
+   row.append(b);L.append(row);
+  });
+ }catch(e){}
+}
+function openAdm(){
+ if(!isAdm||!fb)return;
+ $('admTitle').textContent=at('admTitle');$('admName').placeholder=at('admName');$('admFind').textContent=at('admFind');$('admMsg').placeholder=at('admWarnPh');
+ admSay('');$('admRes').hidden=true;admUser=null;
+ if(!admDlg.open)admDlg.showModal();
+ loadBans();
+}
+$('admFind').onclick=admFind;
+$('admName').addEventListener('keydown',e=>{if(e.key==='Enter')admFind()});
+$('admWarnBtn').onclick=admWarn;
+$('admBanBtn').onclick=admBan;
+$('admClose').onclick=()=>admDlg.close();
+admDlg.addEventListener('click',e=>{if(e.target===admDlg)admDlg.close()});
+$('accAdm').onclick=()=>{accDlg.close();openAdm()};
 updAccBtn();setTimeout(updAccBtn,0);
-['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug()},0)));
+['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();if($('stats').open)renderStats()},0)));
 if(cloudOn())loadFb();
 
 function makeCard(g,q){
  const card=document.createElement('article');card.className='tag';card.style.setProperty('--yc',yc(g.year));card.dataset.g=g.name;
  const fav=document.createElement('button');fav.type='button';fav.className='fav';
  const setFav=()=>{const on=favs.has(g.name);fav.textContent=on?'♥':'♡';fav.classList.toggle('on',on);fav.setAttribute('aria-pressed',String(on));fav.setAttribute('aria-label',on?t('favRemove',g.name):t('favAdd',g.name))};
- setFav();fav.onclick=e=>{e.stopPropagation();if(needAuth())return;favs.has(g.name)?favs.delete(g.name):favs.add(g.name);saveFavs();setFav();if(yearFilter==='fav')render()};
+ setFav();fav.onclick=e=>{e.stopPropagation();if(needAuth())return;const was=achSnap();favs.has(g.name)?favs.delete(g.name):favs.add(g.name);saveFavs();setFav();if(yearFilter==='fav')render();afterChange(was)};
  card.append(fav);
  const pic=document.createElement('button');pic.type='button';pic.className='pic empty';pic.textContent='🎁';pic.setAttribute('aria-label',t('zoom',g.name));
  const img=document.createElement('img');img.alt=t('imgOf',g.name);img.loading='lazy';img.referrerPolicy='no-referrer';
