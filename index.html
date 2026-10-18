@@ -1393,8 +1393,19 @@ async function mkOfferPins(){
  const l=[...mkAsk.values()];mkAsk.clear();
  for(const d of l){if(mkPinIds.has(d.id))continue;if(confirm('Épingler l’annonce de '+d.data().pseudo+' pour la retrouver facilement ?'))await mkPin(d)}
 }
+async function mkAccept(from,fromPseudo){
+ const M=fb.m,me=fbUser.uid,u=[from,me],p=[fromPseudo,accName(fbUser)];if(u[0]>u[1]){u.reverse();p.reverse()}
+ const ref=M.doc(fb.db,'friendships',u[0]+'_'+u[1]);let ok=true;
+ try{await M.setDoc(ref,{users:u,p,created:Date.now()})}catch(e){try{ok=(await M.getDoc(ref)).exists()}catch(_){ok=false}}
+ if(!ok){mkSay('Impossible d’accepter.');return false}
+ for(const id of [from+'_'+me,me+'_'+from])try{await M.deleteDoc(M.doc(fb.db,'friendReqs',id))}catch(e){}
+ return true;
+}
 async function mkSendReq(uid,pseudo){
- if(!mkNeed())return;const M=fb.m;
+ if(!mkNeed())return;const M=fb.m,me=fbUser.uid,fid=[uid,me].sort().join('_');
+ try{if((await M.getDoc(M.doc(fb.db,'friendships',fid))).exists()){mkSay('Vous êtes déjà amis.');return}}catch(e){}
+ try{const rv=await M.getDoc(M.doc(fb.db,'friendReqs',uid+'_'+me));
+  if(rv.exists()){if(await mkAccept(uid,rv.data().fromPseudo||pseudo)){mkSay('Vous êtes maintenant amis avec '+pseudo+' 🎉');if(!$('mkF').hidden)mkFriends()}return}}catch(e){}
  try{await M.setDoc(M.doc(fb.db,'friendReqs',fbUser.uid+'_'+uid),{from:fbUser.uid,to:uid,fromPseudo:accName(fbUser),created:Date.now()});mkSay('Demande envoyée à '+pseudo+'.')}
  catch(e){mkSay('Demande impossible (déjà envoyée ?).')}
 }
@@ -1410,15 +1421,14 @@ async function mkFriends(){
   const [rq,fr]=await Promise.all([M.getDocs(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me))),M.getDocs(M.query(M.collection(fb.db,'friendships'),M.where('users','array-contains',me)))]);
   $('mkReq').replaceChildren(...rq.docs.map(d=>{const x=d.data(),r=mkE('div','mk-row'),ok=mkE('button','btn','✔'),no=mkE('button','btn alt','✖');
    r.append(mkE('span',null,'➕ '+x.fromPseudo),ok,no);
-   ok.onclick=async()=>{const u=[x.from,me],p=[x.fromPseudo,accName(fbUser)];if(u[0]>u[1]){u.reverse();p.reverse()}
-    try{await M.setDoc(M.doc(fb.db,'friendships',u[0]+'_'+u[1]),{users:u,p,created:Date.now()});await M.deleteDoc(d.ref);mkFriends()}catch(e){mkSay('Impossible d’accepter.')}};
+   ok.onclick=async()=>{if(await mkAccept(x.from,x.fromPseudo))mkFriends()};
    no.onclick=async()=>{try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}};return r}));
   $('mkFr').replaceChildren(...(fr.docs.length?fr.docs.map(d=>{const x=d.data(),o=x.users[0]===me?1:0,r=mkE('div','mk-row'),b=mkE('button','btn alt','💬 '+x.p[o]),rm=mkE('button','mk-x','✕');
    b.onclick=()=>mkChat(d,x.p[o]);rm.onclick=async()=>{if(confirm('Retirer cet ami ?')){try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}}};r.append(b,rm);return r}):[mkE('p','bk-txt','Pas encore d’amis.')]));
  }catch(e){mkSay('Chargement des amis impossible.')}
 }
 function mkChat(d,name){
- const M=fb.m;if(mkChatUnsub)mkChatUnsub();mkChatDoc=d;
+ const M=fb.m;if(mkChatUnsub)mkChatUnsub();mkChatDoc=d;$('mkMsgs').replaceChildren();
  $('mkChat').hidden=false;$('mkFr').hidden=true;$('mkReq').hidden=true;$('mkChatT').textContent='💬 '+name;
  mkChatUnsub=M.onSnapshot(M.query(M.collection(d.ref,'messages'),M.orderBy('created','asc'),M.limit(100)),s=>{
   const box=$('mkMsgs');box.replaceChildren(...s.docs.map(m=>{const x=m.data();return mkE('div','mk-m'+(x.from===fbUser.uid?' me':''),x.text)}));box.scrollTop=box.scrollHeight},()=>mkSay('Messages indisponibles.'));
@@ -1428,7 +1438,7 @@ $('mkSend').onclick=async()=>{const t=$('mkTxt').value.trim();if(!t||!mkChatDoc|
 function mkBack(){if(mkChatUnsub){mkChatUnsub();mkChatUnsub=null}mkChatDoc=null;$('mkChat').hidden=true;$('mkFr').hidden=false;$('mkReq').hidden=false}
 function mkTab(t){
  if(t==='f'&&!fbUser){openAcc('Connecte-toi pour utiliser les amis.');return}
- if(t==='f')mkOfferPins();
+ if(t==='f'){mkBack();mkOfferPins()}
  $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f')mkFriends();
 }
 $('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
