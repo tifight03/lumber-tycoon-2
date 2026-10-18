@@ -253,6 +253,9 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .bk-txt{font-weight:700;font-size:14px;margin:8px 0 4px;line-height:1.4}
 #bkInfo{min-height:1.4em}
 
+.acc-in{display:block;width:100%;margin:8px 0;padding:11px 14px;border-radius:12px;border:3px solid var(--bark);background:#fff;color:#123127;font:700 16px var(--body)}
+.acc-in:focus-visible{outline:3px solid var(--gold)}
+.linkb{background:none;border:0;color:inherit;text-decoration:underline;font:inherit;cursor:pointer;padding:6px 0}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="light"] body{color:#123127;background:
  radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
@@ -312,7 +315,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <section class="dash">
   <div class="dash-top">
    <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
-   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="listBtn" class="dbtn" type="button" data-i18n="myList">📋 Ma liste</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">💾 Sauvegarde</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="listBtn" class="dbtn" type="button" data-i18n="myList">📋 Ma liste</button><button id="accBtn" class="dbtn" type="button"></button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">💾 Sauvegarde</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
   </div>
   <p class="tl-title" data-i18n="tlTitle"></p>
   <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
@@ -334,6 +337,22 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <h3 id="ctName"></h3><div><span class="yr" id="ctYear"></span></div>
  <div class="cgrid" id="ctGrid"></div>
  <div class="actions"><button class="btn alt" id="ctClose" type="button" data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<dialog id="acc"><div class="lb">
+ <h3 id="accTitle"></h3>
+ <p class="bk-txt" id="accText"></p>
+ <div id="accForm">
+  <input class="acc-in" id="accPseudo" type="text" maxlength="20" autocomplete="nickname" autocapitalize="none" hidden>
+  <input class="acc-in" id="accEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="none">
+  <input class="acc-in" id="accPass" type="password" autocomplete="current-password">
+  <div class="actions"><button class="btn" id="accGo" type="button"></button></div>
+  <p class="bk-txt"><button class="linkb" id="accForgot" type="button"></button></p>
+  <p class="bk-txt"><button class="linkb" id="accSwitch" type="button"></button></p>
+ </div>
+ <div class="actions" id="accOut" hidden><button class="btn alt" id="accLogout" type="button"></button></div>
+ <p class="bk-txt" id="accMsg" role="status"></p>
+ <div class="actions"><button class="btn alt" id="accClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
 
 <dialog id="bk"><div class="lb">
@@ -359,9 +378,10 @@ let sortMode='year',yearFilter='',viewMode='grid';
 const YC={2015:'#e5484d',2016:'#f97316',2017:'#f2b632',2018:'#84cc16',2019:'#22c55e',2020:'#14b8a6',2021:'#38bdf8',2022:'#6366f1',2023:'#a855f7',2024:'#ec4899',2025:'#fb7185'};
 const yc=y=>YC[y]||'#c0834a';
 let favs=new Set();try{favs=new Set(JSON.parse(localStorage.getItem('lt2favs')||'[]'))}catch(e){}
-const saveFavs=()=>{try{localStorage.setItem('lt2favs',JSON.stringify([...favs]))}catch(e){}};
+let cloudPush=()=>{};
+const saveFavs=()=>{try{localStorage.setItem('lt2favs',JSON.stringify([...favs]))}catch(e){}cloudPush()};
 let owned=new Set();try{owned=new Set(JSON.parse(localStorage.getItem('lt2owned')||'[]'))}catch(e){}
-const saveOwned=()=>{try{localStorage.setItem('lt2owned',JSON.stringify([...owned]))}catch(e){}};
+const saveOwned=()=>{try{localStorage.setItem('lt2owned',JSON.stringify([...owned]))}catch(e){}cloudPush()};
 let shownList=[],curG=null;
 let cState='idle',cDone=0;
 
@@ -872,6 +892,119 @@ function applyBk(replace){
  saveFavs();saveOwned();pendingBk=null;render();syncLb();bk.close();toastMsg(t('bkDone'));
 }
 $('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true);
+
+/* ---------- Comptes (Firebase) ---------- */
+/* Remplace les COLLE_ICI par la config de ton projet Firebase (voir les explications). */
+const FIREBASE_CONFIG={apiKey:'COLLE_ICI',authDomain:'COLLE_ICI',projectId:'COLLE_ICI',appId:'COLLE_ICI'};
+const cloudOn=()=>!/COLLE/.test(FIREBASE_CONFIG.apiKey+FIREBASE_CONFIG.projectId);
+const ACC_T={
+ fr:{btn:'👤 Compte',btnIn:p=>'👤 '+p,title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
+  forgot:'Mot de passe oublié ?',goSignup:'Pas de compte ? Crée-en un',goLogin:'Déjà un compte ? Connecte-toi',back:'← Retour à la connexion',sendReset:'Envoyer le mail de réinitialisation',
+  resetSent:'Mail envoyé ! Regarde ta boîte de réception (et tes spams).',logout:'Se déconnecter',
+  textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
+  textIn:p=>'Connecté : '+p+'. Tes favoris et tes gifts obtenus sont enregistrés automatiquement.',textReset:'Entre ton adresse mail : on t’envoie un lien pour choisir un nouveau mot de passe.',
+  off:'Les comptes ne sont pas encore activés sur ce site.',loading:'Connexion au service…',offline:'Impossible de joindre le service. Vérifie ta connexion internet.',
+  badPseudo:'Le pseudo doit faire entre 3 et 20 caractères.',needEmail:'Entre ton adresse mail.',needPass:'Entre ton mot de passe.',
+  created:'Compte créé !',logged:'Connecté !',loggedOut:'Déconnecté.',
+  e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
+   'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
+   'auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion internet.',def:'Une erreur est survenue. Réessaie.'}},
+ en:{btn:'👤 Account',btnIn:p=>'👤 '+p,title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
+  forgot:'Forgot password?',goSignup:'No account? Create one',goLogin:'Already have an account? Log in',back:'← Back to log in',sendReset:'Send the reset email',
+  resetSent:'Email sent! Check your inbox (and spam).',logout:'Log out',
+  textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
+  textIn:p=>'Logged in: '+p+'. Your favorites and owned gifts are saved automatically.',textReset:'Enter your email: we’ll send you a link to choose a new password.',
+  off:'Accounts are not enabled on this site yet.',loading:'Connecting to the service…',offline:'Can’t reach the service. Check your internet connection.',
+  badPseudo:'The username must be 3 to 20 characters long.',needEmail:'Enter your email address.',needPass:'Enter your password.',
+  created:'Account created!',logged:'Logged in!',loggedOut:'Logged out.',
+  e:{'auth/email-already-in-use':'This email already has an account.','auth/invalid-email':'Invalid email address.','auth/weak-password':'Password too short (6 characters minimum).',
+   'auth/invalid-credential':'Wrong email or password.','auth/wrong-password':'Wrong email or password.','auth/user-not-found':'Wrong email or password.',
+   'auth/too-many-requests':'Too many attempts. Try again in a few minutes.','auth/network-request-failed':'No internet connection.',def:'Something went wrong. Try again.'}}
+};
+const at=(k,...a)=>{const v=(ACC_T[lang]||ACC_T.fr)[k];return typeof v==='function'?v(...a):v};
+const accDlg=$('acc'),accMsg=m=>{$('accMsg').textContent=m||''};
+let fb=null,fbUser=null,accMode='login',pushT=0;
+const accName=u=>u?(u.displayName||(u.email||'').split('@')[0]):'';
+function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn')}
+function renderAcc(){
+ const m=fbUser?'in':accMode,on=cloudOn();
+ $('accTitle').textContent=at('title');
+ $('accText').textContent=!on?at('off'):m==='in'?at('textIn',accName(fbUser)):m==='reset'?at('textReset'):at('textOut');
+ $('accForm').hidden=!on||m==='in';$('accOut').hidden=m!=='in';
+ $('accPseudo').hidden=m!=='signup';$('accPass').hidden=m==='reset';
+ $('accPseudo').placeholder=at('pseudo');$('accEmail').placeholder=at('email');$('accPass').placeholder=at('pass');
+ $('accPass').autocomplete=m==='signup'?'new-password':'current-password';
+ $('accGo').textContent=m==='signup'?at('signup'):m==='reset'?at('sendReset'):at('login');
+ $('accForgot').hidden=m!=='login';$('accForgot').textContent=at('forgot');
+ $('accSwitch').textContent=m==='login'?at('goSignup'):m==='signup'?at('goLogin'):at('back');
+ $('accLogout').textContent=at('logout');
+}
+async function loadFb(){
+ if(fb)return true;if(!cloudOn())return false;
+ try{
+  const B='https://www.gstatic.com/firebasejs/10.12.2/';
+  const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+  const app=A.initializeApp(FIREBASE_CONFIG);
+  fb={auth:Au.getAuth(app),db:Fs.getFirestore(app),m:{...Au,...Fs}};
+  Au.onAuthStateChanged(fb.auth,onUser);
+  return true;
+ }catch(e){return false}
+}
+async function pushNow(){
+ if(!fbUser||!fb)return;
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',favs:[...favs],owned:[...owned],updated:Date.now()})}catch(e){}
+}
+async function onUser(u){
+ fbUser=u;updAccBtn();if(accDlg.open)renderAcc();
+ if(!u){cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
+ try{
+  const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
+  let last='';try{last=localStorage.getItem('lt2uid')||''}catch(e){}
+  if(snap.exists()){
+   const d=snap.data(),cf=cleanList(d.favs||[]),co=cleanList(d.owned||[]);
+   if(last===u.uid){favs=new Set(cf);owned=new Set(co)}
+   else{cf.forEach(x=>favs.add(x));co.forEach(x=>owned.add(x))}
+   saveFavs();saveOwned();render();syncLb();
+  }
+  try{localStorage.setItem('lt2uid',u.uid)}catch(e){}
+  cloudPush=()=>{clearTimeout(pushT);pushT=setTimeout(pushNow,800)};
+  if(!snap.exists()||last!==u.uid)pushNow();
+ }catch(e){}
+}
+$('accBtn').onclick=()=>{accMode='login';accMsg('');renderAcc();accDlg.showModal();if(cloudOn()&&!fb)loadFb()};
+$('accClose').onclick=()=>accDlg.close();
+accDlg.addEventListener('click',e=>{if(e.target===accDlg)accDlg.close()});
+$('accForgot').onclick=()=>{accMode='reset';accMsg('');renderAcc()};
+$('accSwitch').onclick=()=>{accMode=accMode==='login'?'signup':'login';accMsg('');renderAcc()};
+$('accLogout').onclick=async()=>{try{await fb.m.signOut(fb.auth);accMode='login';accMsg(at('loggedOut'));renderAcc()}catch(e){accMsg(at('e').def)}};
+['accEmail','accPass','accPseudo'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('accGo').click()}));
+$('accGo').onclick=async()=>{
+ if(!cloudOn())return;
+ const email=$('accEmail').value.trim(),pass=$('accPass').value,pseudo=$('accPseudo').value.trim();
+ accMsg('');
+ if(!email){accMsg(at('needEmail'));return}
+ if(accMode!=='reset'&&!pass){accMsg(at('needPass'));return}
+ if(accMode==='signup'&&(pseudo.length<3||pseudo.length>20)){accMsg(at('badPseudo'));return}
+ if(!fb){accMsg(at('loading'));if(!await loadFb()){accMsg(at('offline'));return}accMsg('')}
+ $('accGo').disabled=true;
+ try{
+  const M=fb.m;fb.auth.languageCode=lang==='en'?'en':'fr';
+  if(accMode==='signup'){
+   const c=await M.createUserWithEmailAndPassword(fb.auth,email,pass);
+   await M.updateProfile(c.user,{displayName:pseudo});
+   fbUser=c.user;updAccBtn();renderAcc();pushNow();toastMsg(at('created'));
+  }else if(accMode==='login'){
+   await M.signInWithEmailAndPassword(fb.auth,email,pass);
+   $('accPass').value='';accDlg.close();toastMsg(at('logged'));
+  }else{
+   await M.sendPasswordResetEmail(fb.auth,email);accMsg(at('resetSent'));
+  }
+ }catch(e){const E=at('e');accMsg(E[e&&e.code]||E.def)}
+ finally{$('accGo').disabled=false}
+};
+updAccBtn();setTimeout(updAccBtn,0);
+['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc()},0)));
+if(cloudOn())loadFb();
 
 function makeCard(g,q){
  const card=document.createElement('article');card.className='tag';card.style.setProperty('--yc',yc(g.year));card.dataset.g=g.name;
