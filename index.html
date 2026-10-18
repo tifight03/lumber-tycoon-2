@@ -340,6 +340,12 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 :root[data-theme="light"] .banner{background:#ffe6df;color:#7a1b10}
 :root[data-theme="light"] .banner code{background:#0001}
 :root[data-theme="light"] :focus-visible{outline-color:var(--ribbon)}
+.mk-card{border:3px solid var(--bark);border-radius:12px;padding:10px;margin:8px 0;background:#ffffff14}
+.mk-pin{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.mk-h{margin-bottom:4px}.mk-act,.mk-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.mk-row .acc-in{flex:1;min-width:0}.mk-r{margin:4px 0;font-size:14px}.mk-x{border:0;background:none;cursor:pointer;font-size:15px}
+.mk-msgs{max-height:40vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.mk-m{align-self:flex-start;background:#ffffff22;border-radius:12px;padding:6px 10px;max-width:80%;word-break:break-word}.mk-m.me{align-self:flex-end;background:var(--gold);color:var(--bark)}
 </style></head><body>
 
 <header class="hero"><button id="accBtn" class="acc-top" type="button"></button><button id="themeBtn" class="theme-btn" type="button"></button><div class="hero-in">
@@ -383,7 +389,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <section class="dash">
   <div class="dash-top">
    <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
-   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="sugBtn" class="dbtn" type="button"></button><button id="stBtn" class="dbtn" type="button"></button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="sugBtn" class="dbtn" type="button"></button><button id="mkBtn" class="dbtn" type="button">🔄 Échanges</button><button id="stBtn" class="dbtn" type="button"></button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
   </div>
   <p class="tl-title" data-i18n="tlTitle"></p>
   <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
@@ -467,6 +473,31 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <div class="actions"><button class="btn alt" id="stClose" type="button" autofocus data-i18n="close">Fermer</button></div>
 </div></dialog>
 
+<dialog id="mk"><div class="lb sugbox">
+ <h3>🔄 Place d’échange</h3>
+ <div class="mk-row"><button class="btn" id="mkTP" type="button">Annonces</button><button class="btn alt" id="mkTF" type="button">👥 Amis</button></div>
+ <div id="mkP">
+  <button class="btn" id="mkNewB" type="button">＋ Nouvelle annonce</button>
+  <div id="mkForm" hidden>
+   <select id="mkType" class="acc-in"><option value="swap">🔄 Échange</option><option value="buy">🛒 J’achète</option><option value="sell">💰 Je vends</option></select>
+   <input id="mkGive" class="acc-in" maxlength="80"><input id="mkWant" class="acc-in" maxlength="80">
+   <textarea id="mkNote" class="acc-in" rows="3" maxlength="300" placeholder="Détails (facultatif)"></textarea>
+   <div class="actions"><button class="btn" id="mkPub" type="button">Publier</button></div>
+  </div>
+  <h4 id="mkMineT" hidden>📌 Mes annonces (3 max)</h4><div id="mkMineBox"></div>
+  <h4>Annonces</h4>
+  <select id="mkFilter" class="acc-in"><option value="">Toutes</option><option value="swap">Échanges</option><option value="buy">J’achète</option><option value="sell">Je vends</option></select>
+  <div id="mkList"></div>
+ </div>
+ <div id="mkF" hidden>
+  <div class="mk-row"><input id="mkPs" class="acc-in" maxlength="20" placeholder="Pseudo de ton ami"><button class="btn" id="mkAdd" type="button">Ajouter</button></div>
+  <div id="mkReq"></div><div id="mkFr"></div>
+  <div id="mkChat" hidden><button class="btn alt" id="mkBack" type="button">← Amis</button><h4 id="mkChatT"></h4><div class="mk-msgs" id="mkMsgs"></div>
+   <div class="mk-row"><input id="mkTxt" class="acc-in" maxlength="500" placeholder="Message privé…"><button class="btn" id="mkSend" type="button">Envoyer</button></div></div>
+ </div>
+ <p class="bk-txt" id="mkMsg" role="status"></p>
+ <div class="actions"><button class="btn alt" id="mkClose" type="button">Fermer</button></div>
+</div></dialog>
 <dialog id="sug"><div class="lb sugbox">
  <h3 id="sugTitle"></h3>
  <p class="bk-txt" id="sugText"></p>
@@ -1292,6 +1323,103 @@ function openSug(){
  if(fbUser&&!isAdm)loadMine().then(markSeen);
 }
 $('sugBtn').onclick=openSug;
+/* ---------- Place d'échange ---------- */
+const mkD=$('mk'),mkSay=m=>{$('mkMsg').textContent=m||''},mkE=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const MK_T={swap:'🔄 Échange',buy:'🛒 J’achète',sell:'💰 Je vends'},MK_L={swap:['Je donne','Je veux en échange'],buy:['Je cherche','Mon offre'],sell:['Je vends','Prix']};
+let mkPosts=[],mkMine=[],mkChatUnsub=null,mkChatDoc=null;
+const mkNeed=()=>{if(!fbUser){openAcc('Connecte-toi pour utiliser la place d’échange.');return false}if(!fbUser.emailVerified){mkSay(at('needVerify'));return false}return true};
+async function mkLoad(){
+ if(!fb){mkSay('Connexion en cours, réessaie dans un instant.');return}
+ const M=fb.m,C=M.collection(fb.db,'posts');
+ try{
+  const s=await M.getDocs(M.query(C,M.orderBy('created','desc'),M.limit(60)));mkPosts=s.docs;
+  mkMine=fbUser?(await M.getDocs(M.query(C,M.where('uid','==',fbUser.uid)))).docs.sort((a,b)=>b.data().created-a.data().created):[];
+  mkRender();
+ }catch(e){mkSay('Impossible de charger les annonces.')}
+}
+function mkCard(d,mine){
+ const p=d.data(),c=mkE('div','mk-card'+(mine?' mk-pin':'')),h=mkE('div','mk-h'),L=MK_L[p.type]||MK_L.swap;
+ h.append(mkE('b',null,(mine?'📌 ':'')+(MK_T[p.type]||'')),mkE('span',null,' · '+p.pseudo));c.append(h,mkE('div',null,L[0]+' : '+p.give));
+ if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
+ if(p.note)c.append(mkE('div','bk-txt',p.note));
+ const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt','💬 Réponses');rp.hidden=true;
+ b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden)mkReplies(d,rp)};a.append(b1);
+ if(!mine&&fbUser&&p.uid!==fbUser.uid){const b2=mkE('button','btn alt','➕ Ami');b2.onclick=()=>mkSendReq(p.uid,p.pseudo);a.append(b2)}
+ if(mine||isAdm){const b3=mkE('button','btn alt','🗑️');b3.onclick=async()=>{if(!confirm('Supprimer cette annonce ?'))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay('Échec de la suppression.')}};a.append(b3)}
+ c.append(a,rp);return c;
+}
+function mkRender(){
+ const f=$('mkFilter').value,me=fbUser&&fbUser.uid,rest=mkPosts.filter(d=>d.data().uid!==me&&(!f||d.data().type===f));
+ $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)));$('mkMineT').hidden=!mkMine.length;
+ $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt','Aucune annonce pour le moment.')]));
+}
+async function mkReplies(d,box){
+ const M=fb.m;box.replaceChildren(mkE('p','bk-txt','…'));
+ try{
+  const s=await M.getDocs(M.query(M.collection(d.ref,'replies'),M.orderBy('created','asc'),M.limit(50)));box.replaceChildren();
+  s.docs.forEach(r=>{const x=r.data(),row=mkE('div','mk-r');row.append(mkE('b',null,x.pseudo+' : '),mkE('span',null,x.text));
+   if(fbUser&&(x.uid===fbUser.uid||d.data().uid===fbUser.uid||isAdm)){const del=mkE('button','mk-x','✕');del.onclick=async()=>{try{await M.deleteDoc(r.ref);mkReplies(d,box)}catch(e){mkSay('Échec.')}};row.append(del)}
+   box.append(row)});
+  if(!s.docs.length)box.append(mkE('p','bk-txt','Aucune réponse.'));
+  const inp=mkE('input','acc-in'),go=mkE('button','btn','Envoyer'),row=mkE('div','mk-row');inp.maxLength=300;inp.placeholder='Ta réponse…';
+  go.onclick=async()=>{if(!mkNeed())return;const t=inp.value.trim();if(!t)return;
+   try{await M.addDoc(M.collection(d.ref,'replies'),{uid:fbUser.uid,pseudo:accName(fbUser),text:t,created:Date.now()});mkReplies(d,box)}catch(e){mkSay('Envoi impossible.')}};
+  row.append(inp,go);box.append(row);
+ }catch(e){box.replaceChildren(mkE('p','bk-txt','Erreur de chargement.'))}
+}
+$('mkPub').onclick=async()=>{
+ if(!mkNeed())return;
+ const give=$('mkGive').value.trim(),want=$('mkWant').value.trim(),note=$('mkNote').value.trim(),type=$('mkType').value;
+ if(give.length<2){mkSay('Précise ce que tu donnes ou cherches.');return}
+ const used=new Set(mkMine.map(d=>d.id)),slot=[0,1,2].find(i=>!used.has(fbUser.uid+'_'+i));
+ if(slot==null){mkSay('Tu as déjà 3 annonces actives : supprime-en une.');return}
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'posts',fbUser.uid+'_'+slot),{uid:fbUser.uid,pseudo:accName(fbUser),type,give,want,note,created:Date.now()});
+  ['mkGive','mkWant','mkNote'].forEach(i=>$(i).value='');$('mkForm').hidden=true;mkSay('Annonce publiée !');mkLoad()}
+ catch(e){mkSay('Publication refusée (règles non à jour ou compte banni).')}
+};
+async function mkSendReq(uid,pseudo){
+ if(!mkNeed())return;const M=fb.m;
+ try{await M.setDoc(M.doc(fb.db,'friendReqs',fbUser.uid+'_'+uid),{from:fbUser.uid,to:uid,fromPseudo:accName(fbUser),created:Date.now()});mkSay('Demande envoyée à '+pseudo+'.')}
+ catch(e){mkSay('Demande impossible (déjà envoyée ?).')}
+}
+$('mkAdd').onclick=async()=>{
+ if(!mkNeed())return;const n=$('mkPs').value.trim().toLowerCase();if(n.length<3)return;
+ try{const s=await fb.m.getDoc(fb.m.doc(fb.db,'usernames',n));if(!s.exists()){mkSay('Pseudo introuvable.');return}
+  if(s.data().uid===fbUser.uid){mkSay('C’est toi !');return}
+  await mkSendReq(s.data().uid,n);$('mkPs').value=''}catch(e){mkSay('Erreur.')}
+};
+async function mkFriends(){
+ const M=fb.m,me=fbUser.uid;
+ try{
+  const [rq,fr]=await Promise.all([M.getDocs(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me))),M.getDocs(M.query(M.collection(fb.db,'friendships'),M.where('users','array-contains',me)))]);
+  $('mkReq').replaceChildren(...rq.docs.map(d=>{const x=d.data(),r=mkE('div','mk-row'),ok=mkE('button','btn','✔'),no=mkE('button','btn alt','✖');
+   r.append(mkE('span',null,'➕ '+x.fromPseudo),ok,no);
+   ok.onclick=async()=>{const u=[x.from,me],p=[x.fromPseudo,accName(fbUser)];if(u[0]>u[1]){u.reverse();p.reverse()}
+    try{await M.setDoc(M.doc(fb.db,'friendships',u[0]+'_'+u[1]),{users:u,p,created:Date.now()});await M.deleteDoc(d.ref);mkFriends()}catch(e){mkSay('Impossible d’accepter.')}};
+   no.onclick=async()=>{try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}};return r}));
+  $('mkFr').replaceChildren(...(fr.docs.length?fr.docs.map(d=>{const x=d.data(),o=x.users[0]===me?1:0,r=mkE('div','mk-row'),b=mkE('button','btn alt','💬 '+x.p[o]),rm=mkE('button','mk-x','✕');
+   b.onclick=()=>mkChat(d,x.p[o]);rm.onclick=async()=>{if(confirm('Retirer cet ami ?')){try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}}};r.append(b,rm);return r}):[mkE('p','bk-txt','Pas encore d’amis.')]));
+ }catch(e){mkSay('Chargement des amis impossible.')}
+}
+function mkChat(d,name){
+ const M=fb.m;if(mkChatUnsub)mkChatUnsub();mkChatDoc=d;
+ $('mkChat').hidden=false;$('mkFr').hidden=true;$('mkReq').hidden=true;$('mkChatT').textContent='💬 '+name;
+ mkChatUnsub=M.onSnapshot(M.query(M.collection(d.ref,'messages'),M.orderBy('created','asc'),M.limit(100)),s=>{
+  const box=$('mkMsgs');box.replaceChildren(...s.docs.map(m=>{const x=m.data();return mkE('div','mk-m'+(x.from===fbUser.uid?' me':''),x.text)}));box.scrollTop=box.scrollHeight},()=>mkSay('Messages indisponibles.'));
+}
+$('mkSend').onclick=async()=>{const t=$('mkTxt').value.trim();if(!t||!mkChatDoc||!mkNeed())return;
+ try{await fb.m.addDoc(fb.m.collection(mkChatDoc.ref,'messages'),{from:fbUser.uid,text:t,created:Date.now()});$('mkTxt').value=''}catch(e){mkSay('Envoi impossible.')}};
+function mkBack(){if(mkChatUnsub){mkChatUnsub();mkChatUnsub=null}mkChatDoc=null;$('mkChat').hidden=true;$('mkFr').hidden=false;$('mkReq').hidden=false}
+function mkTab(t){
+ if(t==='f'&&!fbUser){openAcc('Connecte-toi pour utiliser les amis.');return}
+ $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f')mkFriends();
+}
+$('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
+$('mkTP').onclick=()=>mkTab('p');$('mkTF').onclick=()=>mkTab('f');
+$('mkNewB').onclick=()=>{if(mkNeed())$('mkForm').hidden=!$('mkForm').hidden};
+$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkClose').onclick=()=>mkD.close();mkD.addEventListener('close',mkBack);
+$('mkType').onchange=()=>{const L=MK_L[$('mkType').value];$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};$('mkType').onchange();
+
 $('sugClose').onclick=()=>sugDlg.close();
 sugDlg.addEventListener('click',e=>{if(e.target===sugDlg)sugDlg.close()});
 sugDlg.addEventListener('close',()=>{freshIds=new Set()});
@@ -1558,7 +1686,7 @@ $('delGo').onclick=async()=>{
   const name=(u.displayName||'').toLowerCase(),b=M.writeBatch(db);
   const sq=await M.getDocs(M.query(M.collection(db,'suggestions'),M.where('uid','==',uid)));
   sq.docs.forEach(d=>b.delete(d.ref));
-  b.delete(M.doc(db,'users',uid));
+  b.delete(M.doc(db,'users',uid));for(let i=0;i<3;i++)b.delete(M.doc(db,'posts',uid+'_'+i));
   if(/^[a-z0-9_.-]{3,20}$/.test(name)){const un=await M.getDoc(M.doc(db,'usernames',name));if(un.exists()&&un.data().uid===uid)b.delete(M.doc(db,'usernames',name))}
   await b.commit();
   await M.deleteUser(u);
