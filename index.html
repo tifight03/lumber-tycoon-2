@@ -340,6 +340,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 :root[data-theme="light"] .banner{background:#ffe6df;color:#7a1b10}
 :root[data-theme="light"] .banner code{background:#0001}
 :root[data-theme="light"] :focus-visible{outline-color:var(--ribbon)}
+.mk-done{opacity:.65}.mk-done .mk-h b{text-decoration:line-through}.mk-tag{color:var(--gold);font-weight:800}
 .mk-card{border:3px solid var(--bark);border-radius:12px;padding:10px;margin:8px 0;background:#ffffff14}
 .mk-pin{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
 .mk-h{margin-bottom:4px}.mk-act,.mk-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
@@ -474,29 +475,32 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 </div></dialog>
 
 <dialog id="mk"><div class="lb sugbox">
- <h3>🔄 Place d’échange</h3>
- <div class="mk-row"><button class="btn" id="mkTP" type="button">Annonces</button><button class="btn alt" id="mkTF" type="button">👥 Amis</button></div>
+ <h3 data-k="title"></h3>
+ <div class="mk-row"><button class="btn" id="mkTP" type="button" data-k="tabP"></button><button class="btn alt" id="mkTF" type="button"></button></div>
  <div id="mkP">
-  <button class="btn" id="mkNewB" type="button">＋ Nouvelle annonce</button>
+  <div id="mkRepW" hidden><h4 data-k="reportsT"></h4><div id="mkRep"></div></div>
+  <button class="btn" id="mkNewB" type="button" data-k="newB"></button>
   <div id="mkForm" hidden>
-   <select id="mkType" class="acc-in"><option value="swap">🔄 Échange</option><option value="buy">🛒 J’achète</option><option value="sell">💰 Je vends</option></select>
+   <select id="mkType" class="acc-in"><option value="swap" data-k="T_swap"></option><option value="buy" data-k="T_buy"></option><option value="sell" data-k="T_sell"></option></select>
    <input id="mkGive" class="acc-in" maxlength="80"><input id="mkWant" class="acc-in" maxlength="80">
-   <textarea id="mkNote" class="acc-in" rows="3" maxlength="300" placeholder="Détails (facultatif)"></textarea>
-   <div class="actions"><button class="btn" id="mkPub" type="button">Publier</button></div>
+   <textarea id="mkNote" class="acc-in" rows="3" maxlength="300" data-kp="note"></textarea>
+   <div class="actions"><button class="btn" id="mkPub" type="button" data-k="pub"></button></div>
   </div>
-  <h4 id="mkMineT" hidden>📌 Mes annonces (3 max) et épingles</h4><div id="mkMineBox"></div>
-  <h4>Annonces</h4>
-  <select id="mkFilter" class="acc-in"><option value="">Toutes</option><option value="swap">Échanges</option><option value="buy">J’achète</option><option value="sell">Je vends</option></select>
+  <h4 id="mkMineT" data-k="mineT" hidden></h4><div id="mkMineBox"></div>
+  <h4 data-k="listT"></h4>
+  <div class="mk-row"><input id="mkQ" class="acc-in" maxlength="40" data-kp="search">
+  <select id="mkFilter" class="acc-in"><option value="" data-k="fAll"></option><option value="swap" data-k="fSwap"></option><option value="buy" data-k="fBuy"></option><option value="sell" data-k="fSell"></option></select></div>
   <div id="mkList"></div>
  </div>
  <div id="mkF" hidden>
-  <div class="mk-row"><input id="mkPs" class="acc-in" maxlength="20" placeholder="Pseudo de ton ami"><button class="btn" id="mkAdd" type="button">Ajouter</button></div>
+  <div class="mk-row"><input id="mkPs" class="acc-in" maxlength="20" data-kp="friendPh"><button class="btn" id="mkAdd" type="button" data-k="add"></button></div>
   <div id="mkReq"></div><div id="mkFr"></div>
-  <div id="mkChat" hidden><button class="btn alt" id="mkBack" type="button">← Amis</button><h4 id="mkChatT"></h4><div class="mk-msgs" id="mkMsgs"></div>
-   <div class="mk-row"><input id="mkTxt" class="acc-in" maxlength="500" placeholder="Message privé…"><button class="btn" id="mkSend" type="button">Envoyer</button></div></div>
+  <div id="mkBlW"><h4 id="mkBlT" data-k="blockedT" hidden></h4><div id="mkBl"></div></div>
+  <div id="mkChat" hidden><div class="mk-row"><button class="btn alt" id="mkBack" type="button" data-k="back"></button><button class="btn alt" id="mkBlockB" type="button">🚫</button></div><h4 id="mkChatT"></h4><div class="mk-msgs" id="mkMsgs"></div>
+   <div class="mk-row"><input id="mkTxt" class="acc-in" maxlength="500" data-kp="msgPh"><button class="btn" id="mkSend" type="button" data-k="send"></button></div></div>
  </div>
  <p class="bk-txt" id="mkMsg" role="status"></p>
- <div class="actions"><button class="btn alt" id="mkClose" type="button">Fermer</button></div>
+ <div class="actions"><button class="btn alt" id="mkClose" type="button" data-k="close"></button></div>
 </div></dialog>
 <dialog id="sug"><div class="lb sugbox">
  <h3 id="sugTitle"></h3>
@@ -1324,141 +1328,241 @@ function openSug(){
 }
 $('sugBtn').onclick=openSug;
 /* ---------- Place d'échange ---------- */
-const mkD=$('mk'),mkSay=m=>{$('mkMsg').textContent=m||''},mkE=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const MK_T={swap:'🔄 Échange',buy:'🛒 J’achète',sell:'💰 Je vends'},MK_L={swap:['Je donne','Je veux en échange'],buy:['Je cherche','Mon offre'],sell:['Je vends','Prix']};
-let mkPosts=[],mkMine=[],mkChatUnsub=null,mkChatDoc=null,mkPinIds=new Set(),mkPinned=[],mkAsk=new Map();
-const mkNeed=()=>{if(!fbUser){openAcc('Connecte-toi pour utiliser la place d’échange.');return false}if(!fbUser.emailVerified){mkSay(at('needVerify'));return false}return true};
+const MKT={
+fr:{btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
+ L_swap:['Je donne','Je veux en échange'],L_buy:['Je cherche','Mon offre'],L_sell:['Je vends','Prix'],note:'Détails (facultatif)',pub:'Publier',
+ mineT:'📌 Mes annonces (3 max) et épingles',listT:'Annonces',fAll:'Toutes',fSwap:'Échanges',fBuy:'J’achète',fSell:'Je vends',search:'Rechercher…',
+ friendPh:'Pseudo de ton ami',add:'Ajouter',back:'← Amis',msgPh:'Message privé…',send:'Envoyer',close:'Fermer',blockedT:'🚫 Bloqués',unblock:'Débloquer',reportsT:'🚩 Signalements',
+ none:'Aucune annonce pour le moment.',replies:'💬 Réponses',noReply:'Aucune réponse.',replyPh:'Ta réponse…',pin:'📌 Épingler',unpin:'📍 Retirer l’épingle',friend:'➕ Ami',
+ del:'🗑️ Supprimer',doneBtn:'✅ Terminée',doneTag:'✅ Terminée',delAsk:'Supprimer cette annonce ?',pinAsk:p=>'Épingler l’annonce de '+p+' pour la retrouver facilement ?',
+ rmFriend:'Retirer cet ami ?',blockAsk:p=>'Bloquer '+p+' ? Cette personne ne pourra plus t’écrire, te répondre ni t’ajouter en ami.',
+ login:'Connecte-toi pour utiliser la place d’échange.',loginF:'Connecte-toi pour utiliser les amis.',connecting:'Connexion en cours, réessaie dans un instant.',loadErr:'Impossible de charger les annonces.',
+ give2:'Précise ce que tu donnes ou cherches.',full3:'Tu as déjà 3 annonces actives : supprime-en une.',published:'Annonce publiée !',pubFail:'Publication refusée (règles non à jour ou compte banni).',
+ sent:p=>'Demande envoyée à '+p+'.',reqFail:'Demande impossible (déjà envoyée ?).',already:'Vous êtes déjà amis.',nowF:p=>'Vous êtes maintenant amis avec '+p+' 🎉',notFound:'Pseudo introuvable.',itsYou:'C’est toi !',
+ accFail:'Impossible d’accepter.',pinned:'Annonce épinglée 📌',pinFail:'Épinglage impossible.',fail:'Échec.',err:'Erreur.',sendFail:'Envoi impossible.',msgOff:'Messages indisponibles.',frErr:'Chargement des amis impossible.',
+ reported:'Signalement envoyé, merci.',blocked:p=>p+' est bloqué.',noF:'Pas encore d’amis.',reqToast:p=>'➕ '+p+' veut t’ajouter en ami',msgToast:p=>'💬 '+p+' t’a écrit',dismiss:'Ignorer',delPost:'Supprimer l’annonce',
+ loading:'Erreur de chargement.',report:'🚩 Signaler',block:'🚫 Bloquer'},
+en:{btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
+ L_swap:['I give','I want in return'],L_buy:['I’m looking for','My offer'],L_sell:['I’m selling','Price'],note:'Details (optional)',pub:'Publish',
+ mineT:'📌 My listings (3 max) and pins',listT:'Listings',fAll:'All',fSwap:'Swaps',fBuy:'Buying',fSell:'Selling',search:'Search…',
+ friendPh:'Your friend’s username',add:'Add',back:'← Friends',msgPh:'Private message…',send:'Send',close:'Close',blockedT:'🚫 Blocked',unblock:'Unblock',reportsT:'🚩 Reports',
+ none:'No listings yet.',replies:'💬 Replies',noReply:'No replies.',replyPh:'Your reply…',pin:'📌 Pin',unpin:'📍 Unpin',friend:'➕ Friend',
+ del:'🗑️ Delete',doneBtn:'✅ Mark as done',doneTag:'✅ Done',delAsk:'Delete this listing?',pinAsk:p=>'Pin '+p+'’s listing so you can find it easily?',
+ rmFriend:'Remove this friend?',blockAsk:p=>'Block '+p+'? They will no longer be able to message you, reply to you or send you friend requests.',
+ login:'Log in to use the trading post.',loginF:'Log in to use friends.',connecting:'Connecting, try again in a moment.',loadErr:'Could not load listings.',
+ give2:'Say what you give or are looking for.',full3:'You already have 3 active listings: delete one.',published:'Listing published!',pubFail:'Publishing refused (rules not updated or account banned).',
+ sent:p=>'Request sent to '+p+'.',reqFail:'Request failed (already sent?).',already:'You are already friends.',nowF:p=>'You are now friends with '+p+' 🎉',notFound:'Username not found.',itsYou:'That’s you!',
+ accFail:'Could not accept.',pinned:'Listing pinned 📌',pinFail:'Could not pin.',fail:'Failed.',err:'Error.',sendFail:'Could not send.',msgOff:'Messages unavailable.',frErr:'Could not load friends.',
+ reported:'Report sent, thank you.',blocked:p=>p+' is blocked.',noF:'No friends yet.',reqToast:p=>'➕ '+p+' wants to add you as a friend',msgToast:p=>'💬 '+p+' wrote to you',dismiss:'Dismiss',delPost:'Delete listing',
+ loading:'Loading error.',report:'🚩 Report',block:'🚫 Block'}};
+const mt=(k,...a)=>{const v=(MKT[lang]||MKT.fr)[k];return typeof v==='function'?v(...a):v};
+const mkD=$('mk'),mkSay=x=>{$('mkMsg').textContent=x||''},mkE=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const MK_DAY2=1728e5;
+let mkPosts=[],mkMine=[],mkPinned=[],mkPinIds=new Set(),mkBlocked=new Map(),mkAsk=new Map(),mkChatUnsub=null,mkChatDoc=null,mkChatPeer=null;
+let mkReqUnsub=null,mkFrUnsub=null,mkReqCnt=0,mkUnread=new Set(),mkSeen=false,mkReqSeen=-1;
+const mkNeed=()=>{if(!fbUser){openAcc(mt('login'));return false}if(!fbUser.emailVerified){mkSay(at('needVerify'));return false}return true};
+function mkApply(){
+ mkD.querySelectorAll('[data-k]').forEach(e=>e.textContent=mt(e.dataset.k));
+ mkD.querySelectorAll('[data-kp]').forEach(e=>e.placeholder=mt(e.dataset.kp));
+ $('mkType').onchange();mkBadge();if(mkD.open)mkRender();
+}
+function mkBadge(){const n=mkReqCnt+mkUnread.size,b=n?' 🔴 '+n:'';$('mkBtn').textContent=mt('btn')+b;$('mkTF').textContent=mt('tabF')+b}
+/* ---- lecture / non lus ---- */
+const mkGetR=fid=>{try{return +localStorage.getItem('lt2r_'+fbUser.uid+'_'+fid)||0}catch(e){return 0}};
+function mkSetR(fid){try{localStorage.setItem('lt2r_'+fbUser.uid+'_'+fid,String(Date.now()))}catch(e){}mkUnread.delete(fid);mkBadge()}
+function mkUnwatch(){
+ if(mkReqUnsub){mkReqUnsub();mkReqUnsub=null}if(mkFrUnsub){mkFrUnsub();mkFrUnsub=null}
+ mkReqCnt=0;mkReqSeen=-1;mkUnread=new Set();mkSeen=false;mkBadge();
+}
+function mkWatch(){
+ if(mkReqUnsub||!fb||!fbUser)return;const M=fb.m,me=fbUser.uid;
+ mkReqUnsub=M.onSnapshot(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me)),s=>{
+  mkReqCnt=s.size;mkBadge();
+  if(mkReqSeen>=0&&s.size>mkReqSeen){const c=s.docChanges().find(c=>c.type==='added');toastMsg(mt('reqToast',c?c.doc.data().fromPseudo:'?'))}
+  mkReqSeen=s.size;if(mkD.open&&!$('mkF').hidden&&!mkChatDoc)mkFriends();
+ },()=>{mkReqUnsub=null});
+ mkFrUnsub=M.onSnapshot(M.query(M.collection(fb.db,'friendships'),M.where('users','array-contains',me)),s=>{
+  const ids=new Set(s.docs.map(d=>d.id));mkUnread.forEach(i=>{if(!ids.has(i))mkUnread.delete(i)});
+  s.docs.forEach(d=>{const x=d.data(),open=mkD.open&&mkChatDoc&&mkChatDoc.id===d.id,un=x.last&&x.lastFrom&&x.lastFrom!==me&&x.last>mkGetR(d.id);
+   if(un&&open)mkSetR(d.id);
+   else if(un){if(!mkUnread.has(d.id)&&mkSeen)toastMsg(mt('msgToast',x.p[x.users[0]===me?1:0]));mkUnread.add(d.id)}
+   else mkUnread.delete(d.id)});
+  mkSeen=true;mkBadge();if(mkD.open&&!$('mkF').hidden&&!mkChatDoc)mkFriends();
+ },()=>{mkFrUnsub=null});
+}
+/* ---- annonces ---- */
 async function mkLoad(){
- if(!fb){mkSay('Connexion en cours, réessaie dans un instant.');return}
+ if(!fb){mkSay(mt('connecting'));return}
  const M=fb.m,C=M.collection(fb.db,'posts');
  try{
-  const s=await M.getDocs(M.query(C,M.orderBy('created','desc'),M.limit(60)));mkPosts=s.docs;
-  mkMine=fbUser?(await M.getDocs(M.query(C,M.where('uid','==',fbUser.uid)))).docs.sort((a,b)=>b.data().created-a.data().created):[];
-  mkPinned=[];mkPinIds=new Set();
+  mkPosts=(await M.getDocs(M.query(C,M.orderBy('created','desc'),M.limit(100)))).docs;
+  mkMine=[];mkPinned=[];mkPinIds=new Set();mkBlocked=new Map();
   if(fbUser){
-   const ps=await M.getDocs(M.collection(fb.db,'users',fbUser.uid,'pins'));
-   const ds=await Promise.all(ps.docs.map(async p=>{let d=mkPosts.find(x=>x.id===p.id);if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',p.id));d=g.exists()?g:null}if(!d)M.deleteDoc(p.ref).catch(()=>{});return d}));
-   mkPinned=ds.filter(d=>d&&d.data().uid!==fbUser.uid).sort((a,b)=>b.data().created-a.data().created);mkPinIds=new Set(mkPinned.map(d=>d.id));
+   const me=fbUser.uid,U=n=>M.collection(fb.db,'users',me,n);
+   mkMine=(await M.getDocs(M.query(C,M.where('uid','==',me)))).docs.sort((a,b)=>b.data().created-a.data().created);
+   const old=mkMine.filter(d=>d.data().done&&Date.now()-d.data().doneAt>MK_DAY2);
+   old.forEach(d=>M.deleteDoc(d.ref).catch(()=>{}));mkMine=mkMine.filter(d=>!old.includes(d));
+   const [pins,bl]=await Promise.all([M.getDocs(U('pins')),M.getDocs(U('blocks'))]);
+   bl.docs.forEach(b=>mkBlocked.set(b.id,b.data().pseudo||''));
+   const ds=await Promise.all(pins.docs.map(async p=>{let d=mkPosts.find(x=>x.id===p.id);if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',p.id));d=g.exists()?g:null}if(!d)M.deleteDoc(p.ref).catch(()=>{});return d}));
+   mkPinned=ds.filter(d=>d&&d.data().uid!==me&&!mkBlocked.has(d.data().uid)).sort((a,b)=>b.data().created-a.data().created);mkPinIds=new Set(mkPinned.map(d=>d.id));
   }
-  mkRender();
- }catch(e){mkSay('Impossible de charger les annonces.')}
+  mkRender();if(isAdm)mkLoadReports();
+ }catch(e){mkSay(mt('loadErr'))}
 }
 function mkCard(d,mine,pin){
- const p=d.data(),c=mkE('div','mk-card'+(mine||pin?' mk-pin':'')),h=mkE('div','mk-h'),L=MK_L[p.type]||MK_L.swap;
- h.append(mkE('b',null,(mine||pin?'📌 ':'')+(MK_T[p.type]||'')),mkE('span',null,' · '+p.pseudo));c.append(h,mkE('div',null,L[0]+' : '+p.give));
+ const p=d.data(),c=mkE('div','mk-card'+(mine||pin?' mk-pin':'')+(p.done?' mk-done':'')),h=mkE('div','mk-h'),L=mt('L_'+p.type)||mt('L_swap');
+ h.append(mkE('b',null,(mine||pin?'📌 ':'')+(mt('T_'+p.type)||'')),mkE('span',null,' · '+p.pseudo));if(p.done)h.append(mkE('span','mk-tag',' '+mt('doneTag')));
+ c.append(h,mkE('div',null,L[0]+' : '+p.give));
  if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
  if(p.note)c.append(mkE('div','bk-txt',p.note));
- const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt','💬 Réponses');rp.hidden=true;
+ const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt',mt('replies'));rp.hidden=true;
  b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden)mkReplies(d,rp);else mkOfferPins()};a.append(b1);
- if(!mine&&fbUser&&p.uid!==fbUser.uid){const b2=mkE('button','btn alt','➕ Ami');b2.onclick=()=>mkSendReq(p.uid,p.pseudo);const b4=mkE('button','btn alt',pin?'📍 Retirer l’épingle':'📌 Épingler');b4.onclick=()=>pin?mkUnpin(d):mkPin(d);a.append(b2,b4)}
- if(mine||isAdm){const b3=mkE('button','btn alt','🗑️ Supprimer');b3.onclick=async()=>{if(!confirm('Supprimer cette annonce ?'))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay('Échec de la suppression.')}};a.append(b3)}
+ if(!mine&&fbUser&&p.uid!==fbUser.uid){
+  const bf=mkE('button','btn alt',mt('friend')),bp=mkE('button','btn alt',pin?mt('unpin'):mt('pin')),br=mkE('button','btn alt','🚩'),bb=mkE('button','btn alt','🚫');
+  br.title=mt('report');bb.title=mt('block');
+  bf.onclick=()=>mkSendReq(p.uid,p.pseudo);bp.onclick=()=>pin?mkUnpin(d):mkPin(d);
+  br.onclick=()=>mkReport('post',d.id,p.uid,p.pseudo,p.give+' / '+p.want+' / '+p.note);bb.onclick=()=>mkBlock(p.uid,p.pseudo);
+  a.append(bf,bp,br,bb);
+ }
+ if(mine&&!p.done){const bd=mkE('button','btn alt',mt('doneBtn'));bd.onclick=()=>mkDone(d);a.append(bd)}
+ if(mine||isAdm){const b3=mkE('button','btn alt',mt('del'));b3.onclick=async()=>{if(!confirm(mt('delAsk')))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(b3)}
  c.append(a,rp);return c;
 }
 function mkRender(){
- const f=$('mkFilter').value,me=fbUser&&fbUser.uid,rest=mkPosts.filter(d=>d.data().uid!==me&&!mkPinIds.has(d.id)&&(!f||d.data().type===f));
+ const f=$('mkFilter').value,q=$('mkQ').value.trim().toLowerCase(),me=fbUser&&fbUser.uid,now=Date.now();
+ const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo).toLowerCase().includes(q))});
  $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...mkPinned.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+mkPinned.length);
- $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt','Aucune annonce pour le moment.')]));
+ $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt',mt('none'))]));
 }
 async function mkReplies(d,box){
- const M=fb.m;box.replaceChildren(mkE('p','bk-txt','…'));
+ const M=fb.m,post=d.data();box.replaceChildren(mkE('p','bk-txt','…'));
  try{
-  const s=await M.getDocs(M.query(M.collection(d.ref,'replies'),M.orderBy('created','asc'),M.limit(50)));box.replaceChildren();
-  s.docs.forEach(r=>{const x=r.data(),row=mkE('div','mk-r');row.append(mkE('b',null,x.pseudo+' : '),mkE('span',null,x.text));
-   if(fbUser&&(x.uid===fbUser.uid||d.data().uid===fbUser.uid||isAdm)){const del=mkE('button','mk-x','✕');del.onclick=async()=>{try{await M.deleteDoc(r.ref);mkReplies(d,box)}catch(e){mkSay('Échec.')}};row.append(del)}
+  const s=await M.getDocs(M.query(M.collection(d.ref,'replies'),M.orderBy('created','asc'),M.limit(50)));box.replaceChildren();let n=0;
+  s.docs.forEach(r=>{const x=r.data();if(mkBlocked.has(x.uid))return;n++;const row=mkE('div','mk-r');row.append(mkE('b',null,x.pseudo+' : '),mkE('span',null,x.text));
+   const mineR=fbUser&&x.uid===fbUser.uid;
+   if(fbUser&&!mineR){const rb=mkE('button','mk-x','🚩'),bb=mkE('button','mk-x','🚫');rb.title=mt('report');bb.title=mt('block');
+    rb.onclick=()=>mkReport('reply',d.id,x.uid,x.pseudo,x.text);bb.onclick=()=>mkBlock(x.uid,x.pseudo);row.append(rb,bb)}
+   if(fbUser&&(mineR||post.uid===fbUser.uid||isAdm)){const del=mkE('button','mk-x','✕');del.onclick=async()=>{try{await M.deleteDoc(r.ref);mkReplies(d,box)}catch(e){mkSay(mt('fail'))}};row.append(del)}
    box.append(row)});
-  if(!s.docs.length)box.append(mkE('p','bk-txt','Aucune réponse.'));
-  const inp=mkE('input','acc-in'),go=mkE('button','btn','Envoyer'),row=mkE('div','mk-row');inp.maxLength=300;inp.placeholder='Ta réponse…';
+  if(!n)box.append(mkE('p','bk-txt',mt('noReply')));
+  if(post.done)return;
+  const inp=mkE('input','acc-in'),go=mkE('button','btn',mt('send')),row=mkE('div','mk-row');inp.maxLength=300;inp.placeholder=mt('replyPh');
   go.onclick=async()=>{if(!mkNeed())return;const t=inp.value.trim();if(!t)return;
-   try{await M.addDoc(M.collection(d.ref,'replies'),{uid:fbUser.uid,pseudo:accName(fbUser),text:t,created:Date.now()});if(d.data().uid!==fbUser.uid&&!mkPinIds.has(d.id))mkAsk.set(d.id,d);mkReplies(d,box)}catch(e){mkSay('Envoi impossible.')}};
+   try{await M.addDoc(M.collection(d.ref,'replies'),{uid:fbUser.uid,pseudo:accName(fbUser),text:t,created:Date.now()});if(post.uid!==fbUser.uid&&!mkPinIds.has(d.id))mkAsk.set(d.id,d);mkReplies(d,box)}catch(e){mkSay(mt('sendFail'))}};
   row.append(inp,go);box.append(row);
- }catch(e){box.replaceChildren(mkE('p','bk-txt','Erreur de chargement.'))}
+ }catch(e){box.replaceChildren(mkE('p','bk-txt',mt('loading')))}
 }
 $('mkPub').onclick=async()=>{
  if(!mkNeed())return;
  const give=$('mkGive').value.trim(),want=$('mkWant').value.trim(),note=$('mkNote').value.trim(),type=$('mkType').value;
- if(give.length<2){mkSay('Précise ce que tu donnes ou cherches.');return}
+ if(give.length<2){mkSay(mt('give2'));return}
  const used=new Set(mkMine.map(d=>d.id)),slot=[0,1,2].find(i=>!used.has(fbUser.uid+'_'+i));
- if(slot==null){mkSay('Tu as déjà 3 annonces actives : supprime-en une.');return}
+ if(slot==null){mkSay(mt('full3'));return}
  try{await fb.m.setDoc(fb.m.doc(fb.db,'posts',fbUser.uid+'_'+slot),{uid:fbUser.uid,pseudo:accName(fbUser),type,give,want,note,created:Date.now()});
-  ['mkGive','mkWant','mkNote'].forEach(i=>$(i).value='');$('mkForm').hidden=true;mkSay('Annonce publiée !');mkLoad()}
- catch(e){mkSay('Publication refusée (règles non à jour ou compte banni).')}
+  ['mkGive','mkWant','mkNote'].forEach(i=>$(i).value='');$('mkForm').hidden=true;mkSay(mt('published'));mkLoad()}
+ catch(e){mkSay(mt('pubFail'))}
 };
+async function mkDone(d){try{await fb.m.updateDoc(d.ref,{done:true,doneAt:Date.now()});mkLoad()}catch(e){mkSay(mt('fail'))}}
+/* ---- épingles ---- */
 async function mkPin(d){
  if(!mkNeed())return;
- try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id),{postId:d.id,created:Date.now()});mkAsk.delete(d.id);mkSay('Annonce épinglée 📌');await mkLoad()}
- catch(e){mkSay('Épinglage impossible.')}
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id),{postId:d.id,created:Date.now()});mkAsk.delete(d.id);mkSay(mt('pinned'));await mkLoad()}
+ catch(e){mkSay(mt('pinFail'))}
 }
-async function mkUnpin(d){try{await fb.m.deleteDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id));await mkLoad()}catch(e){mkSay('Échec.')}}
+async function mkUnpin(d){try{await fb.m.deleteDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id));await mkLoad()}catch(e){mkSay(mt('fail'))}}
 async function mkOfferPins(){
  const l=[...mkAsk.values()];mkAsk.clear();
- for(const d of l){if(mkPinIds.has(d.id))continue;if(confirm('Épingler l’annonce de '+d.data().pseudo+' pour la retrouver facilement ?'))await mkPin(d)}
+ for(const d of l){if(mkPinIds.has(d.id))continue;if(confirm(mt('pinAsk',d.data().pseudo)))await mkPin(d)}
 }
+/* ---- signaler / bloquer ---- */
+async function mkReport(kind,pid,uid,pseudo,text){
+ if(!mkNeed())return;
+ try{await fb.m.addDoc(fb.m.collection(fb.db,'reports'),{by:fbUser.uid,byPseudo:accName(fbUser),kind,postId:pid,uid,pseudo,text:String(text||'').slice(0,200),created:Date.now()});mkSay(mt('reported'))}
+ catch(e){mkSay(mt('fail'))}
+}
+async function mkLoadReports(){
+ const M=fb.m;
+ try{
+  const s=await M.getDocs(M.query(M.collection(fb.db,'reports'),M.orderBy('created','desc'),M.limit(50)));$('mkRepW').hidden=!s.docs.length;
+  $('mkRep').replaceChildren(...s.docs.map(r=>{const x=r.data(),c=mkE('div','mk-card'),a=mkE('div','mk-act'),ig=mkE('button','btn alt',mt('dismiss'));
+   c.append(mkE('div',null,'🚩 '+x.byPseudo+' → '+x.pseudo+' ('+x.kind+')'),mkE('div','bk-txt',x.text));
+   ig.onclick=async()=>{try{await M.deleteDoc(r.ref);mkLoadReports()}catch(e){}};a.append(ig);
+   if(x.kind==='post'){const dp=mkE('button','btn alt',mt('delPost'));dp.onclick=async()=>{try{await M.deleteDoc(M.doc(fb.db,'posts',x.postId));await M.deleteDoc(r.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(dp)}
+   c.append(a);return c}));
+ }catch(e){}
+}
+async function mkBlock(uid,pseudo){
+ if(!mkNeed()||!confirm(mt('blockAsk',pseudo)))return;
+ const M=fb.m,me=fbUser.uid;
+ try{await M.setDoc(M.doc(fb.db,'users',me,'blocks',uid),{uid,pseudo,created:Date.now()})}catch(e){mkSay(mt('fail'));return}
+ for(const r of [['friendships',[uid,me].sort().join('_')],['friendReqs',uid+'_'+me],['friendReqs',me+'_'+uid]])try{await M.deleteDoc(M.doc(fb.db,r[0],r[1]))}catch(e){}
+ mkSay(mt('blocked',pseudo));mkBack();await mkLoad();if(!$('mkF').hidden)mkFriends();
+}
+async function mkUnblock(uid){try{await fb.m.deleteDoc(fb.m.doc(fb.db,'users',fbUser.uid,'blocks',uid));await mkLoad();mkFriends()}catch(e){mkSay(mt('fail'))}}
+/* ---- amis ---- */
 async function mkAccept(from,fromPseudo){
  const M=fb.m,me=fbUser.uid,u=[from,me],p=[fromPseudo,accName(fbUser)];if(u[0]>u[1]){u.reverse();p.reverse()}
  const ref=M.doc(fb.db,'friendships',u[0]+'_'+u[1]);let ok=true;
  try{await M.setDoc(ref,{users:u,p,created:Date.now()})}catch(e){try{ok=(await M.getDoc(ref)).exists()}catch(_){ok=false}}
- if(!ok){mkSay('Impossible d’accepter.');return false}
+ if(!ok){mkSay(mt('accFail'));return false}
  for(const id of [from+'_'+me,me+'_'+from])try{await M.deleteDoc(M.doc(fb.db,'friendReqs',id))}catch(e){}
  return true;
 }
 async function mkSendReq(uid,pseudo){
  if(!mkNeed())return;const M=fb.m,me=fbUser.uid,fid=[uid,me].sort().join('_');
- try{if((await M.getDoc(M.doc(fb.db,'friendships',fid))).exists()){mkSay('Vous êtes déjà amis.');return}}catch(e){}
+ try{if((await M.getDoc(M.doc(fb.db,'friendships',fid))).exists()){mkSay(mt('already'));return}}catch(e){}
  try{const rv=await M.getDoc(M.doc(fb.db,'friendReqs',uid+'_'+me));
-  if(rv.exists()){if(await mkAccept(uid,rv.data().fromPseudo||pseudo)){mkSay('Vous êtes maintenant amis avec '+pseudo+' 🎉');if(!$('mkF').hidden)mkFriends()}return}}catch(e){}
- try{await M.setDoc(M.doc(fb.db,'friendReqs',fbUser.uid+'_'+uid),{from:fbUser.uid,to:uid,fromPseudo:accName(fbUser),created:Date.now()});mkSay('Demande envoyée à '+pseudo+'.')}
- catch(e){mkSay('Demande impossible (déjà envoyée ?).')}
+  if(rv.exists()){if(await mkAccept(uid,rv.data().fromPseudo||pseudo)){mkSay(mt('nowF',pseudo));if(!$('mkF').hidden)mkFriends()}return}}catch(e){}
+ try{await M.setDoc(M.doc(fb.db,'friendReqs',me+'_'+uid),{from:me,to:uid,fromPseudo:accName(fbUser),created:Date.now()});mkSay(mt('sent',pseudo))}
+ catch(e){mkSay(mt('reqFail'))}
 }
 $('mkAdd').onclick=async()=>{
  if(!mkNeed())return;const n=$('mkPs').value.trim().toLowerCase();if(n.length<3)return;
- try{const s=await fb.m.getDoc(fb.m.doc(fb.db,'usernames',n));if(!s.exists()){mkSay('Pseudo introuvable.');return}
-  if(s.data().uid===fbUser.uid){mkSay('C’est toi !');return}
-  await mkSendReq(s.data().uid,n);$('mkPs').value=''}catch(e){mkSay('Erreur.')}
+ try{const s=await fb.m.getDoc(fb.m.doc(fb.db,'usernames',n));if(!s.exists()){mkSay(mt('notFound'));return}
+  if(s.data().uid===fbUser.uid){mkSay(mt('itsYou'));return}
+  await mkSendReq(s.data().uid,n);$('mkPs').value=''}catch(e){mkSay(mt('err'))}
 };
 async function mkFriends(){
  const M=fb.m,me=fbUser.uid;
  try{
-  const [rq,fr]=await Promise.all([M.getDocs(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me))),M.getDocs(M.query(M.collection(fb.db,'friendships'),M.where('users','array-contains',me)))]);
+  const [rq,fr,bl]=await Promise.all([M.getDocs(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me))),M.getDocs(M.query(M.collection(fb.db,'friendships'),M.where('users','array-contains',me))),M.getDocs(M.collection(fb.db,'users',me,'blocks'))]);
+  mkBlocked=new Map(bl.docs.map(b=>[b.id,b.data().pseudo||'']));
   $('mkReq').replaceChildren(...rq.docs.map(d=>{const x=d.data(),r=mkE('div','mk-row'),ok=mkE('button','btn','✔'),no=mkE('button','btn alt','✖');
    r.append(mkE('span',null,'➕ '+x.fromPseudo),ok,no);
    ok.onclick=async()=>{if(await mkAccept(x.from,x.fromPseudo))mkFriends()};
    no.onclick=async()=>{try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}};return r}));
-  $('mkFr').replaceChildren(...(fr.docs.length?fr.docs.map(d=>{const x=d.data(),o=x.users[0]===me?1:0,r=mkE('div','mk-row'),b=mkE('button','btn alt','💬 '+x.p[o]),rm=mkE('button','mk-x','✕');
-   b.onclick=()=>mkChat(d,x.p[o]);rm.onclick=async()=>{if(confirm('Retirer cet ami ?')){try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}}};r.append(b,rm);return r}):[mkE('p','bk-txt','Pas encore d’amis.')]));
- }catch(e){mkSay('Chargement des amis impossible.')}
+  $('mkFr').replaceChildren(...(fr.docs.length?fr.docs.map(d=>{const x=d.data(),o=x.users[0]===me?1:0,r=mkE('div','mk-row'),b=mkE('button','btn alt','💬 '+x.p[o]+(mkUnread.has(d.id)?' 🔴':'')),rm=mkE('button','mk-x','✕');
+   b.onclick=()=>mkChat(d,x.p[o]);rm.onclick=async()=>{if(confirm(mt('rmFriend'))){try{await M.deleteDoc(d.ref);mkFriends()}catch(e){}}};r.append(b,rm);return r}):[mkE('p','bk-txt',mt('noF'))]));
+  $('mkBlT').hidden=!bl.docs.length;
+  $('mkBl').replaceChildren(...bl.docs.map(b=>{const r=mkE('div','mk-row'),u=mkE('button','btn alt',mt('unblock'));r.append(mkE('span',null,'🚫 '+(b.data().pseudo||'?')),u);u.onclick=()=>mkUnblock(b.id);return r}));
+ }catch(e){mkSay(mt('frErr'))}
 }
 function mkChat(d,name){
- const M=fb.m;if(mkChatUnsub)mkChatUnsub();mkChatDoc=d;$('mkMsgs').replaceChildren();
- $('mkChat').hidden=false;$('mkFr').hidden=true;$('mkReq').hidden=true;$('mkChatT').textContent='💬 '+name;
+ const M=fb.m,me=fbUser.uid;if(mkChatUnsub)mkChatUnsub();mkChatDoc=d;mkChatPeer={uid:d.data().users.find(u=>u!==me),name};mkSetR(d.id);
+ $('mkMsgs').replaceChildren();$('mkChat').hidden=false;$('mkFr').hidden=true;$('mkReq').hidden=true;$('mkBlW').hidden=true;$('mkChatT').textContent='💬 '+name;
  mkChatUnsub=M.onSnapshot(M.query(M.collection(d.ref,'messages'),M.orderBy('created','asc'),M.limit(100)),s=>{
-  const box=$('mkMsgs');box.replaceChildren(...s.docs.map(m=>{const x=m.data();return mkE('div','mk-m'+(x.from===fbUser.uid?' me':''),x.text)}));box.scrollTop=box.scrollHeight},()=>mkSay('Messages indisponibles.'));
+  const box=$('mkMsgs');box.replaceChildren(...s.docs.map(m=>{const x=m.data();return mkE('div','mk-m'+(x.from===me?' me':''),x.text)}));box.scrollTop=box.scrollHeight;if(mkD.open)mkSetR(d.id)},()=>mkSay(mt('msgOff')));
 }
-$('mkSend').onclick=async()=>{const t=$('mkTxt').value.trim();if(!t||!mkChatDoc||!mkNeed())return;
- try{await fb.m.addDoc(fb.m.collection(mkChatDoc.ref,'messages'),{from:fbUser.uid,text:t,created:Date.now()});$('mkTxt').value=''}catch(e){mkSay('Envoi impossible.')}};
-function mkBack(){if(mkChatUnsub){mkChatUnsub();mkChatUnsub=null}mkChatDoc=null;$('mkChat').hidden=true;$('mkFr').hidden=false;$('mkReq').hidden=false}
+$('mkSend').onclick=async()=>{
+ const t=$('mkTxt').value.trim();if(!t||!mkChatDoc||!mkNeed())return;const M=fb.m;
+ try{await M.addDoc(M.collection(mkChatDoc.ref,'messages'),{from:fbUser.uid,text:t,created:Date.now()});$('mkTxt').value='';
+  M.updateDoc(mkChatDoc.ref,{last:Date.now(),lastFrom:fbUser.uid}).catch(()=>{})}catch(e){mkSay(mt('sendFail'))}
+};
+$('mkBlockB').onclick=()=>{if(mkChatPeer)mkBlock(mkChatPeer.uid,mkChatPeer.name)};
+function mkBack(){if(mkChatUnsub){mkChatUnsub();mkChatUnsub=null}mkChatDoc=null;mkChatPeer=null;$('mkChat').hidden=true;$('mkFr').hidden=false;$('mkReq').hidden=false;$('mkBlW').hidden=false}
 function mkTab(t){
- if(t==='f'&&!fbUser){openAcc('Connecte-toi pour utiliser les amis.');return}
- if(t==='f'){mkBack();mkOfferPins()}
- $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f')mkFriends();
+ if(t==='f'&&!fbUser){openAcc(mt('loginF'));return}
+ $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f'){mkBack();mkOfferPins();mkFriends()}
 }
 $('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
 $('mkTP').onclick=()=>mkTab('p');$('mkTF').onclick=()=>mkTab('f');
 $('mkNewB').onclick=()=>{if(mkNeed())$('mkForm').hidden=!$('mkForm').hidden};
-$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkClose').onclick=()=>mkD.close();mkD.addEventListener('close',()=>{mkBack();mkOfferPins()});
-$('mkType').onchange=()=>{const L=MK_L[$('mkType').value];$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};$('mkType').onchange();
-/* notifications : demandes d'ami */
-let mkReqUnsub=null,mkReqN=-1;
-function mkBadge(n){$('mkBtn').textContent='🔄 Échanges'+(n?' 🔴 '+n:'');$('mkTF').textContent='👥 Amis'+(n?' 🔴 '+n:'')}
-function mkUnwatch(){if(mkReqUnsub){mkReqUnsub();mkReqUnsub=null}mkReqN=-1;mkBadge(0)}
-function mkWatch(){
- if(mkReqUnsub||!fb||!fbUser)return;const M=fb.m;
- mkReqUnsub=M.onSnapshot(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',fbUser.uid)),s=>{
-  const n=s.size;mkBadge(n);
-  if(mkReqN>=0&&n>mkReqN){const d=s.docChanges().find(c=>c.type==='added');toastMsg('➕ '+(d?d.doc.data().fromPseudo:'Quelqu’un')+' veut t’ajouter en ami')}
-  mkReqN=n;if(!$('mkF').hidden&&mkD.open&&!mkChatDoc)mkFriends();
- },()=>{mkReqUnsub=null});
-}
-if(fb&&fbUser)mkWatch();
+$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkQ').oninput=mkRender;$('mkClose').onclick=()=>mkD.close();
+mkD.addEventListener('close',()=>{mkBack();mkOfferPins()});
+$('mkType').onchange=()=>{const L=mt('L_'+$('mkType').value);$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};
+{const _al=applyLang;applyLang=function(){_al();mkApply()}}
+mkApply();if(fb&&fbUser)mkWatch();
 
 $('sugClose').onclick=()=>sugDlg.close();
 sugDlg.addEventListener('click',e=>{if(e.target===sugDlg)sugDlg.close()});
@@ -1727,6 +1831,7 @@ $('delGo').onclick=async()=>{
   const sq=await M.getDocs(M.query(M.collection(db,'suggestions'),M.where('uid','==',uid)));
   sq.docs.forEach(d=>b.delete(d.ref));
   (await M.getDocs(M.collection(db,'users',uid,'pins'))).docs.forEach(d=>b.delete(d.ref));
+  (await M.getDocs(M.collection(db,'users',uid,'blocks'))).docs.forEach(d=>b.delete(d.ref));
   b.delete(M.doc(db,'users',uid));for(let i=0;i<3;i++)b.delete(M.doc(db,'posts',uid+'_'+i));
   if(/^[a-z0-9_.-]{3,20}$/.test(name)){const un=await M.getDoc(M.doc(db,'usernames',name));if(un.exists()&&un.data().uid===uid)b.delete(M.doc(db,'usernames',name))}
   await b.commit();
