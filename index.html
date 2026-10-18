@@ -314,6 +314,15 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .st-ban{background:#b91d31;color:#fff}
 .warn-h{color:#b91d31;text-align:center}
 .warn-item{background:#ffe6df;border:2px solid var(--ribbon);border-radius:14px;padding:10px 12px;margin:10px 0}
+.announce{display:flex;align-items:flex-start;gap:10px;margin:16px 0;padding:12px 14px;border-radius:14px;background:var(--gold);color:var(--bark);border:3px solid var(--bark);box-shadow:0 4px 0 var(--bark);font-weight:800}
+.ann-t{flex:1;white-space:pre-wrap;word-break:break-word}
+.ann-x{flex:none;border:0;background:#0002;color:inherit;width:28px;height:28px;border-radius:50%;font:800 14px var(--body);cursor:pointer}
+.rules-link{text-align:center;padding:0 16px 30px;font-size:14px}
+.rule-item{margin:8px 0;padding:9px 12px;background:#ffffffaa;border:2px solid var(--bark);border-radius:12px;font-weight:700;line-height:1.4}
+.adm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.adm-stat{background:#ffffffaa;border:2px solid var(--bark);border-radius:12px;padding:8px 4px;text-align:center}
+.adm-sv{font:400 26px/1 var(--display)}
+.adm-sl{font-size:11px;font-weight:800;margin-top:3px}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="light"] body{color:#123127;background:
  radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
@@ -369,6 +378,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 </div></div>
 
 <main>
+ <div class="announce" id="announce" hidden><span class="ann-ic">📣</span><span class="ann-t" id="annText"></span><button class="ann-x" id="annX" type="button" aria-label="Fermer">✕</button></div>
  <div class="banner" id="banner"></div>
  <section class="dash">
   <div class="dash-top">
@@ -382,6 +392,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 </main>
 <button id="top" type="button" data-i18n-aria="top" aria-label="Retour en haut">🎁</button>
 <footer data-i18n="footer">Images © Lumber Tycoon 2 Wiki (Fandom).</footer>
+<div class="rules-link"><button id="rulesBtn" class="linkb" type="button"></button></div>
 
 <div id="toast" popover="manual" role="status" aria-live="polite"></div>
 
@@ -397,8 +408,25 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <div class="actions"><button class="btn alt" id="ctClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
 
+<dialog id="del"><div class="lb">
+ <h3 class="warn-h" id="delTitle"></h3>
+ <p class="bk-txt" id="delText"></p>
+ <input class="acc-in" id="delPass" type="password" autocomplete="current-password">
+ <p class="bk-txt" id="delMsg" role="status"></p>
+ <div class="actions"><button class="btn" id="delGo" type="button"></button><button class="btn alt" id="delCancel" type="button"></button></div>
+</div></dialog>
+
+<dialog id="rules"><div class="lb sugbox">
+ <h3 id="rulesTitle"></h3>
+ <p class="bk-txt" id="rulesIntro"></p>
+ <div id="rulesList"></div>
+ <div class="actions"><button class="btn alt" id="rulesClose" type="button" autofocus data-i18n="close">Fermer</button></div>
+</div></dialog>
+
 <dialog id="adm"><div class="lb sugbox">
  <h3 id="admTitle"></h3>
+ <h4 id="admStatsT"></h4><div class="adm-stats" id="admStats"></div>
+ <div class="actions"><button class="btn alt" id="admStatsRef" type="button"></button></div>
  <input class="acc-in" id="admName" type="text" maxlength="20" autocomplete="off" autocapitalize="none">
  <div class="actions"><button class="btn" id="admFind" type="button"></button></div>
  <div id="admRes" hidden>
@@ -407,9 +435,13 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
    <div class="adm-line" id="admMail"></div>
    <div class="adm-line" id="admWarn"></div>
   </div>
+  <p class="bk-txt" id="admProt" hidden></p>
   <textarea class="acc-in" id="admMsg" rows="3" maxlength="500"></textarea>
   <div class="actions"><button class="btn alt" id="admWarnBtn" type="button"></button><button class="btn" id="admBanBtn" type="button"></button></div>
  </div>
+ <h4 id="admAnnT"></h4>
+ <textarea class="acc-in" id="admAnn" rows="3" maxlength="300"></textarea>
+ <div class="actions"><button class="btn" id="admAnnPub" type="button"></button><button class="btn alt" id="admAnnDel" type="button"></button></div>
  <h4 id="admBansT"></h4><div id="admBans"></div>
  <p class="bk-txt" id="admStatus" role="status"></p>
  <div class="actions"><button class="btn alt" id="admClose" type="button" autofocus data-i18n="close">Fermer</button></div>
@@ -419,6 +451,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <h3 class="warn-h" id="warnTitle"></h3>
  <div id="warnList"></div>
  <p class="bk-txt" id="warnNote"></p>
+ <p class="bk-txt"><button class="linkb" id="warnRules" type="button"></button></p>
  <div class="actions"><button class="btn" id="warnOk" type="button" autofocus></button></div>
 </div></dialog>
 
@@ -460,7 +493,9 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
   <p class="bk-txt"><button class="linkb" id="accForgot" type="button"></button></p>
   <p class="bk-txt"><button class="linkb" id="accSwitch" type="button"></button></p>
  </div>
- <div class="actions" id="accOut" hidden><button class="btn alt" id="accAdm" type="button" hidden></button><button class="btn alt" id="accImp" type="button"></button><button class="btn alt" id="accLogout" type="button"></button></div>
+ <div class="actions" id="accOut" hidden><button class="btn alt" id="accAdm" type="button" hidden></button><button class="btn alt" id="accImp" type="button"></button><button class="btn alt" id="accLogout" type="button"></button><button class="btn alt" id="accDel" type="button" hidden></button></div>
+ <div class="adm-card" id="accVerify" hidden><p class="bk-txt" id="accVerifyT"></p><div class="actions"><button class="btn" id="accResend" type="button"></button><button class="btn alt" id="accRefresh" type="button"></button></div></div>
+ <p class="bk-txt"><button class="linkb" id="accRules" type="button"></button></p>
  <p class="bk-txt" id="accMsg" role="status"></p>
  <div class="actions"><button class="btn alt" id="accClose" type="button" data-i18n="close">Fermer</button></div>
 </div></dialog>
@@ -1016,7 +1051,7 @@ $('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true)
 const FIREBASE_CONFIG={apiKey:'AIzaSyBR66ZKwTASN-BpnV4EKbTysuwIoLqw9R8',authDomain:'lt2-gift.firebaseapp.com',projectId:'lt2-gift',appId:'1:9437134338:web:eab0b48f7179cf643a311b'};
 const cloudOn=()=>!/COLLE/.test(FIREBASE_CONFIG.apiKey+FIREBASE_CONFIG.projectId);
 const ACC_T={
- fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',admBtn:'🛡️ Outils admin',admTitle:'🛡️ Outils admin',admName:'Nom d’utilisateur',admFind:'Rechercher',admNotFound:'Utilisateur introuvable.',admActive:'Actif',admBannedS:'Banni',admWarnsN:(n,o)=>'⚠️ Avertissements : '+n+(o?' ('+o+' pas encore lu'+(o>1?'s':'')+')':''),admNoEmail:'Adresse mail inconnue : il doit se reconnecter une fois. Le bannissement agit quand même sur son compte.',admWarnPh:'Message d’avertissement…',admWarnBtn:'⚠️ Avertir',admBanBtn:'🚫 Bannir',admUnbanBtn:'✅ Débannir',admBanAsk:p=>'Bannir '+p+' ? Il ne pourra plus utiliser le site avec ce compte ni se réinscrire avec cette adresse mail.',admBanned:'Compte banni.',admUnbanned:'Compte débanni.',admWarned:'Avertissement envoyé.',admSelf:'Tu ne peux pas te bannir toi-même.',admBansT:n=>'Comptes bannis ('+n+')',admNone:'Aucun compte banni.',warnDefault:'Ton comportement ne respecte pas les règles du site. Si cela continue, ton compte risque d’être banni.',warnTitle:'⚠️ Avertissement',warnNote:'Un nouvel écart peut entraîner le bannissement de ton compte.',warnOk:'J’ai compris',banned:'Ce compte a été banni : tu ne peux plus l’utiliser.',emailBanned:'Cette adresse mail est bannie.',st_new:'Reçue',st_progress:'En cours',st_done:'Faite',mineT:'Mes suggestions',mineEmpty:'Tu n’as pas encore envoyé de suggestion.',replyFrom:'Réponse du créateur :',newTag:'NOUVEAU',unreadN:n=>n+(n>1?' non lus':' non lu'),replyPh:'Écrire une réponse…',replyBtn:'Répondre',stLbl:'Statut :',stBtn:'📊 Statistiques',stTitle:'Mes statistiques',stOwnedN:(n,t,f)=>n+' / '+t+' gifts obtenus · '+f+(f>1?' favoris':' favori'),stGoalL:'🎯 Mon objectif (nombre de gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progression par année',stBadgesT:'🏅 Badges',celAll:'👑 Collection complète ! Bravo !',celYear:y=>'🎉 Année '+y+' complète !',celBadge:n=>'🏅 Nouveau badge : '+n,promptSug:'Connecte-toi ou crée un compte pour envoyer une suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Suggestions reçues',sugTitle:'Suggestions & remarques',sugTitleAdmin:'Suggestions reçues',sugText:'Une idée pour améliorer le site, un bug, une remarque ? Écris-la ici, elle sera envoyée au créateur du site.',sugPh:'Écris ta suggestion ou ta remarque ici…',sugSend:'Envoyer',sugSent:'Merci ! Ta suggestion a bien été envoyée.',sugShort:'Écris au moins quelques mots.',sugFail:'Impossible pour le moment. Vérifie ta connexion et réessaie.',sugWait:'Attends quelques secondes avant d’envoyer un autre message.',inboxEmpty:'Aucune suggestion pour le moment.',inboxRefresh:'↻ Actualiser',inboxN:n=>n+(n>1?' messages':' message'),del:'Supprimer',delAsk:'Supprimer ce message ?',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
+ fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',delBtn:'🗑️ Supprimer mon compte',delTitle:'Supprimer mon compte',delText:'Action définitive : ton compte, ton pseudo, tes favoris, tes gifts obtenus et tes suggestions seront supprimés (seuls d’éventuels avertissements ou bannissements sont conservés). Entre ton mot de passe pour confirmer.',passOnly:'Mot de passe',delGo:'Supprimer définitivement',delCancel:'Annuler',delDone:'Compte supprimé.',delAdmin:'Le compte admin ne peut pas être supprimé.',verifyT:'Ton adresse mail n’est pas encore vérifiée. Clique sur le lien du mail reçu (regarde aussi les spams). Il faut une adresse vérifiée pour envoyer des suggestions.',resend:'Renvoyer le mail',iVerified:'J’ai vérifié',verifySent:'Mail de vérification envoyé ! Regarde ta boîte de réception (et tes spams).',verifiedOk:'Adresse vérifiée, merci !',notYet:'Pas encore vérifiée : clique d’abord sur le lien du mail.',needVerify:'Vérifie ton adresse mail (lien reçu par mail) pour envoyer une suggestion.',rulesLink:'📜 Règles du site',annT:'📣 Annonce pour tout le monde',annPh:'Écris une annonce (nouveauté, maintenance…)',annPub:'Publier',annDel:'Retirer',annPubOk:'Annonce publiée.',annDelOk:'Annonce retirée.',statsT:'📈 Chiffres du site',statsRef:'↻ Actualiser',sAcc:'Comptes',sNewAcc:'Nouveaux (7 j)',sSug:'Suggestions',sUnread:'Non lues',sNew:'Reçues',sProg:'En cours',sDone:'Faites',sWeek:'Cette semaine',sBans:'Bannis',sWarns:'Avertissements',admBtn:'🛡️ Outils admin',admTitle:'🛡️ Outils admin',admName:'Nom d’utilisateur',admFind:'Rechercher',admNotFound:'Utilisateur introuvable.',admActive:'Actif',admBannedS:'Banni',admWarnsN:(n,o)=>'⚠️ Avertissements : '+n+(o?' ('+o+' pas encore lu'+(o>1?'s':'')+')':''),admNoEmail:'Adresse mail inconnue : il doit se reconnecter une fois. Le bannissement agit quand même sur son compte.',admWarnPh:'Message d’avertissement…',admWarnBtn:'⚠️ Avertir',admBanBtn:'🚫 Bannir',admUnbanBtn:'✅ Débannir',admBanAsk:p=>'Bannir '+p+' ? Il ne pourra plus utiliser le site avec ce compte ni se réinscrire avec cette adresse mail.',admBanned:'Compte banni.',admUnbanned:'Compte débanni.',admWarned:'Avertissement envoyé.',admSelf:'Tu ne peux pas te bannir toi-même.',admProtected:'🛡️ Compte protégé : il ne peut être ni banni ni averti.',admBansT:n=>'Comptes bannis ('+n+')',admNone:'Aucun compte banni.',warnDefault:'Ton comportement ne respecte pas les règles du site. Si cela continue, ton compte risque d’être banni.',warnTitle:'⚠️ Avertissement',warnNote:'Un nouvel écart peut entraîner le bannissement de ton compte.',warnOk:'J’ai compris',banned:'Ce compte a été banni : tu ne peux plus l’utiliser.',emailBanned:'Cette adresse mail est bannie.',st_new:'Reçue',st_progress:'En cours',st_done:'Faite',mineT:'Mes suggestions',mineEmpty:'Tu n’as pas encore envoyé de suggestion.',replyFrom:'Réponse du créateur :',newTag:'NOUVEAU',unreadN:n=>n+(n>1?' non lus':' non lu'),replyPh:'Écrire une réponse…',replyBtn:'Répondre',stLbl:'Statut :',stBtn:'📊 Statistiques',stTitle:'Mes statistiques',stOwnedN:(n,t,f)=>n+' / '+t+' gifts obtenus · '+f+(f>1?' favoris':' favori'),stGoalL:'🎯 Mon objectif (nombre de gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progression par année',stBadgesT:'🏅 Badges',celAll:'👑 Collection complète ! Bravo !',celYear:y=>'🎉 Année '+y+' complète !',celBadge:n=>'🏅 Nouveau badge : '+n,promptSug:'Connecte-toi ou crée un compte pour envoyer une suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Suggestions reçues',sugTitle:'Suggestions & remarques',sugTitleAdmin:'Suggestions reçues',sugText:'Une idée pour améliorer le site, un bug, une remarque ? Écris-la ici, elle sera envoyée au créateur du site.',sugPh:'Écris ta suggestion ou ta remarque ici…',sugSend:'Envoyer',sugSent:'Merci ! Ta suggestion a bien été envoyée.',sugShort:'Écris au moins quelques mots.',sugFail:'Impossible pour le moment. Vérifie ta connexion et réessaie.',sugWait:'Attends quelques secondes avant d’envoyer un autre message.',inboxEmpty:'Aucune suggestion pour le moment.',inboxRefresh:'↻ Actualiser',inboxN:n=>n+(n>1?' messages':' message'),del:'Supprimer',delAsk:'Supprimer ce message ?',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
   forgot:'Mot de passe oublié ?',goSignup:'Pas de compte ? Crée-en un',goLogin:'Déjà un compte ? Connecte-toi',back:'← Retour à la connexion',sendReset:'Envoyer le mail de réinitialisation',
   resetSent:'Mail envoyé ! Regarde ta boîte de réception (et tes spams).',logout:'Se déconnecter',
   textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
@@ -1027,7 +1062,7 @@ const ACC_T={
   e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
    'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
    'auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion internet.',def:'Une erreur est survenue. Réessaie.'}},
- en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',admBtn:'🛡️ Admin tools',admTitle:'🛡️ Admin tools',admName:'Username',admFind:'Search',admNotFound:'User not found.',admActive:'Active',admBannedS:'Banned',admWarnsN:(n,o)=>'⚠️ Warnings: '+n+(o?' ('+o+' not read yet)':''),admNoEmail:'Email unknown: they must log in once. The ban still applies to their account.',admWarnPh:'Warning message…',admWarnBtn:'⚠️ Warn',admBanBtn:'🚫 Ban',admUnbanBtn:'✅ Unban',admBanAsk:p=>'Ban '+p+'? They will no longer be able to use the site with this account or sign up again with this email.',admBanned:'Account banned.',admUnbanned:'Account unbanned.',admWarned:'Warning sent.',admSelf:'You can’t ban yourself.',admBansT:n=>'Banned accounts ('+n+')',admNone:'No banned accounts.',warnDefault:'Your behavior doesn’t follow the site rules. If this continues, your account may be banned.',warnTitle:'⚠️ Warning',warnNote:'Another offense may lead to your account being banned.',warnOk:'I understand',banned:'This account has been banned: you can no longer use it.',emailBanned:'This email address is banned.',st_new:'Received',st_progress:'In progress',st_done:'Done',mineT:'My suggestions',mineEmpty:'You haven’t sent any suggestion yet.',replyFrom:'Reply from the creator:',newTag:'NEW',unreadN:n=>n+' unread',replyPh:'Write a reply…',replyBtn:'Reply',stLbl:'Status:',stBtn:'📊 Statistics',stTitle:'My statistics',stOwnedN:(n,t,f)=>n+' / '+t+' gifts owned · '+f+(f>1?' favorites':' favorite'),stGoalL:'🎯 My goal (number of gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progress by year',stBadgesT:'🏅 Badges',celAll:'👑 Complete collection! Well done!',celYear:y=>'🎉 Year '+y+' complete!',celBadge:n=>'🏅 New badge: '+n,promptSug:'Log in or create an account to send a suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Received suggestions',sugTitle:'Suggestions & feedback',sugTitleAdmin:'Received suggestions',sugText:'An idea to improve the site, a bug, a remark? Write it here, it will be sent to the site’s creator.',sugPh:'Write your suggestion or remark here…',sugSend:'Send',sugSent:'Thanks! Your suggestion has been sent.',sugShort:'Write at least a few words.',sugFail:'Not possible right now. Check your connection and try again.',sugWait:'Wait a few seconds before sending another message.',inboxEmpty:'No suggestions yet.',inboxRefresh:'↻ Refresh',inboxN:n=>n+(n>1?' messages':' message'),del:'Delete',delAsk:'Delete this message?',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
+ en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',delBtn:'🗑️ Delete my account',delTitle:'Delete my account',delText:'This is final: your account, username, favorites, owned gifts and suggestions will be deleted (only warnings or bans, if any, are kept). Enter your password to confirm.',passOnly:'Password',delGo:'Delete permanently',delCancel:'Cancel',delDone:'Account deleted.',delAdmin:'The admin account can’t be deleted.',verifyT:'Your email address isn’t verified yet. Click the link in the email you received (check spam too). A verified address is required to send suggestions.',resend:'Resend the email',iVerified:'I verified it',verifySent:'Verification email sent! Check your inbox (and spam).',verifiedOk:'Email verified, thanks!',notYet:'Not verified yet: click the link in the email first.',needVerify:'Verify your email address (link sent by email) to send a suggestion.',rulesLink:'📜 Site rules',annT:'📣 Announcement for everyone',annPh:'Write an announcement (news, maintenance…)',annPub:'Publish',annDel:'Remove',annPubOk:'Announcement published.',annDelOk:'Announcement removed.',statsT:'📈 Site numbers',statsRef:'↻ Refresh',sAcc:'Accounts',sNewAcc:'New (7 d)',sSug:'Suggestions',sUnread:'Unread',sNew:'Received',sProg:'In progress',sDone:'Done',sWeek:'This week',sBans:'Banned',sWarns:'Warnings',admBtn:'🛡️ Admin tools',admTitle:'🛡️ Admin tools',admName:'Username',admFind:'Search',admNotFound:'User not found.',admActive:'Active',admBannedS:'Banned',admWarnsN:(n,o)=>'⚠️ Warnings: '+n+(o?' ('+o+' not read yet)':''),admNoEmail:'Email unknown: they must log in once. The ban still applies to their account.',admWarnPh:'Warning message…',admWarnBtn:'⚠️ Warn',admBanBtn:'🚫 Ban',admUnbanBtn:'✅ Unban',admBanAsk:p=>'Ban '+p+'? They will no longer be able to use the site with this account or sign up again with this email.',admBanned:'Account banned.',admUnbanned:'Account unbanned.',admWarned:'Warning sent.',admSelf:'You can’t ban yourself.',admProtected:'🛡️ Protected account: it can’t be banned or warned.',admBansT:n=>'Banned accounts ('+n+')',admNone:'No banned accounts.',warnDefault:'Your behavior doesn’t follow the site rules. If this continues, your account may be banned.',warnTitle:'⚠️ Warning',warnNote:'Another offense may lead to your account being banned.',warnOk:'I understand',banned:'This account has been banned: you can no longer use it.',emailBanned:'This email address is banned.',st_new:'Received',st_progress:'In progress',st_done:'Done',mineT:'My suggestions',mineEmpty:'You haven’t sent any suggestion yet.',replyFrom:'Reply from the creator:',newTag:'NEW',unreadN:n=>n+' unread',replyPh:'Write a reply…',replyBtn:'Reply',stLbl:'Status:',stBtn:'📊 Statistics',stTitle:'My statistics',stOwnedN:(n,t,f)=>n+' / '+t+' gifts owned · '+f+(f>1?' favorites':' favorite'),stGoalL:'🎯 My goal (number of gifts)',stGoalTxt:(n,g,p)=>n+' / '+g+' · '+p+' %',stYearsT:'Progress by year',stBadgesT:'🏅 Badges',celAll:'👑 Complete collection! Well done!',celYear:y=>'🎉 Year '+y+' complete!',celBadge:n=>'🏅 New badge: '+n,promptSug:'Log in or create an account to send a suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Received suggestions',sugTitle:'Suggestions & feedback',sugTitleAdmin:'Received suggestions',sugText:'An idea to improve the site, a bug, a remark? Write it here, it will be sent to the site’s creator.',sugPh:'Write your suggestion or remark here…',sugSend:'Send',sugSent:'Thanks! Your suggestion has been sent.',sugShort:'Write at least a few words.',sugFail:'Not possible right now. Check your connection and try again.',sugWait:'Wait a few seconds before sending another message.',inboxEmpty:'No suggestions yet.',inboxRefresh:'↻ Refresh',inboxN:n=>n+(n>1?' messages':' message'),del:'Delete',delAsk:'Delete this message?',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
   forgot:'Forgot password?',goSignup:'No account? Create one',goLogin:'Already have an account? Log in',back:'← Back to log in',sendReset:'Send the reset email',
   resetSent:'Email sent! Check your inbox (and spam).',logout:'Log out',
   textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
@@ -1049,7 +1084,7 @@ function updAccBtn(){
  const sb=$('sugBtn');sb.textContent=isAdm?at('sugBtnAdmin'):at('sugBtn');
  const c=isAdm?unread:myNew;
  if(c>0){const k=document.createElement('span');k.className='cnt-badge';k.textContent=c>99?'99+':String(c);sb.append(k)}
- $('stBtn').textContent=at('stBtn');
+ $('stBtn').textContent=at('stBtn');$('rulesBtn').textContent=at('rulesLink');
 }
 function renderAcc(){
  const m=fbUser?'in':accMode,on=cloudOn();
@@ -1062,7 +1097,9 @@ function renderAcc(){
  $('accGo').textContent=m==='signup'?at('signup'):m==='reset'?at('sendReset'):at('login');
  $('accForgot').hidden=m!=='login';$('accForgot').textContent=at('forgot');
  $('accSwitch').textContent=m==='login'?at('goSignup'):m==='signup'?at('goLogin'):at('back');
- $('accLogout').textContent=at('logout');$('accAdm').hidden=!isAdm;$('accAdm').textContent=at('admBtn');$('accImp').textContent=at('imp');
+ $('accLogout').textContent=at('logout');$('accAdm').hidden=!isAdm;$('accAdm').textContent=at('admBtn');
+ $('accVerify').hidden=!(m==='in'&&fbUser&&!fbUser.emailVerified);$('accVerifyT').textContent=at('verifyT');$('accResend').textContent=at('resend');$('accRefresh').textContent=at('iVerified');
+ $('accDel').hidden=!(m==='in'&&!isAdm);$('accDel').textContent=at('delBtn');$('accRules').textContent=at('rulesLink');$('accImp').textContent=at('imp');
  $('accStayT').textContent=at('stay');$('accStayL').hidden=m!=='login'&&m!=='signup';
 }
 async function loadFb(){
@@ -1072,13 +1109,13 @@ async function loadFb(){
   const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
   const app=A.initializeApp(FIREBASE_CONFIG);
   fb={auth:Au.getAuth(app),db:Fs.getFirestore(app),m:{...Au,...Fs}};
-  Au.onAuthStateChanged(fb.auth,onUser);
+  Au.onAuthStateChanged(fb.auth,onUser);loadAnnounce();
   return true;
  }catch(e){return false}
 }
 async function pushNow(){
  if(!fbUser||!fb)return;
- try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',email:fbUser.email||'',favs:[...favs],owned:[...owned],goal:goal||0,updated:Date.now()})}catch(e){}
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',email:fbUser.email||'',created:Date.parse(fbUser.metadata&&fbUser.metadata.creationTime)||Date.now(),favs:[...favs],owned:[...owned],goal:goal||0,updated:Date.now()})}catch(e){}
 }
 async function ensureUsername(u){
  const n=u&&u.displayName;if(!n||!fb||!/^[A-Za-z0-9_.-]{3,20}$/.test(n))return;
@@ -1102,7 +1139,7 @@ async function onUser(u){
   }
   try{localStorage.setItem('lt2uid',u.uid)}catch(e){}
   cloudPush=()=>{clearTimeout(pushT);pushT=setTimeout(pushNow,800)};
-  if(!snap.exists()||last!==u.uid||!snap.data().email)pushNow();
+  if(!snap.exists()||last!==u.uid||!snap.data().email||!snap.data().created)pushNow();
  }catch(e){}
 }
 function openAcc(reason){accReason=reason||'';accMode='login';accMsg('');renderAcc();if(!accDlg.open)accDlg.showModal();if(cloudOn()&&!fb)loadFb()}
@@ -1142,6 +1179,7 @@ $('accGo').onclick=async()=>{
    catch(err){try{await c.user.delete()}catch(_){}accMsg(err&&err.code==='permission-denied'?at('pseudoTaken'):at('e').def);return}
    await M.updateProfile(c.user,{displayName:pseudo});
    fbUser=c.user;updAccBtn();renderAcc();pushNow();toastMsg(at('created'));
+   try{fb.auth.languageCode=lang==='en'?'en':'fr';await M.sendEmailVerification(c.user);accMsg(at('verifySent'))}catch(err){}
   }else if(accMode==='login'){
    if(await isEmailBanned(email)){accMsg(at('emailBanned'));return}
    await M.signInWithEmailAndPassword(fb.auth,email,pass);
@@ -1264,6 +1302,7 @@ $('sugSend').onclick=async()=>{
  if(!fbUser){openAcc(at('promptSug'));return}
  const text=$('sugTa').value.trim();
  if(text.length<3){sugMsg(at('sugShort'));return}
+ if(!fbUser.emailVerified){try{const u=fb.auth.currentUser;await fb.m.reload(u);await u.getIdToken(true)}catch(e){}if(!fbUser.emailVerified){sugMsg(at('needVerify'));return}}
  if(Date.now()-lastSug<15000){sugMsg(at('sugWait'));return}
  $('sugSend').disabled=true;
  try{
@@ -1364,7 +1403,7 @@ async function checkWarnings(u){
  }catch(e){}
 }
 function showWarn(){
- $('warnTitle').textContent=at('warnTitle');$('warnNote').textContent=at('warnNote');$('warnOk').textContent=at('warnOk');
+ $('warnTitle').textContent=at('warnTitle');$('warnNote').textContent=at('warnNote');$('warnOk').textContent=at('warnOk');$('warnRules').textContent=at('rulesLink');
  const L=$('warnList');L.textContent='';
  warnDocs.forEach(d=>{const x=d.data(),it=mk('div','warn-item');it.append(mk('div','sug-date',fmtDate(x.created)),mk('div','sug-body',x.message||''));L.append(it)});
  if(!warnDlg.open)warnDlg.showModal();
@@ -1373,6 +1412,7 @@ $('warnOk').onclick=async()=>{
  try{const b=fb.m.writeBatch(fb.db);warnDocs.forEach(d=>b.update(d.ref,{ack:true,ackAt:Date.now()}));await b.commit()}catch(e){}
  warnDocs=[];warnDlg.close();
 };
+const isProtectedUser=u=>!!u&&((fbUser&&u.uid===fbUser.uid)||String(u.pseudo||'').toLowerCase()==='tifight03');
 function renderAdmUser(){
  const u=admUser;if(!u)return;
  $('admRes').hidden=false;$('admPseudo').textContent='👤 '+u.pseudo;
@@ -1380,6 +1420,9 @@ function renderAdmUser(){
  $('admMail').textContent=u.email?'✉ '+u.email:at('admNoEmail');
  $('admWarn').textContent=at('admWarnsN',u.warns,u.warnsOpen);
  $('admWarnBtn').textContent=at('admWarnBtn');$('admBanBtn').textContent=u.banned?at('admUnbanBtn'):at('admBanBtn');
+ const prot=isProtectedUser(u);
+ $('admWarnBtn').hidden=prot;$('admBanBtn').hidden=prot;$('admMsg').hidden=prot;
+ $('admProt').hidden=!prot;$('admProt').textContent=at('admProtected');
 }
 async function admFind(){
  admSay('');$('admRes').hidden=true;admUser=null;
@@ -1398,6 +1441,7 @@ async function admFind(){
 }
 async function admWarn(){
  if(!admUser)return;
+ if(isProtectedUser(admUser)){admSay(at('admProtected'));return}
  const msg=$('admMsg').value.trim();
  if(msg.length<3){admSay(at('sugShort'));return}
  try{
@@ -1414,7 +1458,7 @@ async function unban(uid,email){
 }
 async function admBan(){
  if(!admUser)return;
- if(admUser.uid===fbUser.uid){admSay(at('admSelf'));return}
+ if(isProtectedUser(admUser)){admSay(admUser.uid===fbUser.uid?at('admSelf'):at('admProtected'));return}
  if(admUser.banned){
   if(await unban(admUser.uid,admUser.email)){admUser.banned=false;renderAdmUser();loadBans()}
   return;
@@ -1444,7 +1488,7 @@ async function loadBans(){
 }
 function openAdm(){
  if(!isAdm||!fb)return;
- $('admTitle').textContent=at('admTitle');$('admName').placeholder=at('admName');$('admFind').textContent=at('admFind');$('admMsg').placeholder=at('admWarnPh');
+ $('admTitle').textContent=at('admTitle');$('admName').placeholder=at('admName');$('admFind').textContent=at('admFind');$('admMsg').placeholder=at('admWarnPh');admLabels();
  admSay('');$('admRes').hidden=true;admUser=null;
  if(!admDlg.open)admDlg.showModal();
  loadBans();
@@ -1456,6 +1500,117 @@ $('admBanBtn').onclick=admBan;
 $('admClose').onclick=()=>admDlg.close();
 admDlg.addEventListener('click',e=>{if(e.target===admDlg)admDlg.close()});
 $('accAdm').onclick=()=>{accDlg.close();openAdm()};
+/* ---------- Suppression de compte, vérification mail, règles, annonces, chiffres ---------- */
+const delDlg=$('del'),rulesDlg=$('rules');
+const delSay=m=>{$('delMsg').textContent=m||''};
+let annCur=null;
+const RULES_T={
+ fr:{title:'📜 Règles du site',intro:'Pour que le site reste agréable pour tout le monde :',
+  items:['🤝 Respecte les autres : pas d’insultes, de harcèlement ni de discrimination.','🚫 Pas de spam : une suggestion claire suffit, inutile de répéter le même message.','🎭 Pas de faux compte ni d’usurpation : ton pseudo et ton adresse mail doivent être les tiens.','📧 Utilise une vraie adresse mail, vérifiée : un seul compte par personne.','🔞 Pas de contenu illégal, choquant ou publicitaire dans tes messages.',
+   '⚖️ Sanctions : un avertissement d’abord, puis le bannissement du compte et de l’adresse mail si cela continue. En cas de problème grave, le bannissement peut être immédiat.',
+   '🔒 Tes données : le site garde ton pseudo, ton adresse mail, tes favoris, tes gifts obtenus et tes suggestions. Tu peux supprimer ton compte et tes données à tout moment depuis « Mon compte ». Seuls les éventuels avertissements et bannissements sont conservés pour protéger le site.',
+   '💬 Une question ou un désaccord ? Écris-nous dans « Suggestions ».']},
+ en:{title:'📜 Site rules',intro:'To keep the site pleasant for everyone:',
+  items:['🤝 Respect others: no insults, harassment or discrimination.','🚫 No spam: one clear suggestion is enough, no need to repeat the same message.','🎭 No fake accounts or impersonation: your username and email must be yours.','📧 Use a real, verified email address: one account per person.','🔞 No illegal, shocking or advertising content in your messages.',
+   '⚖️ Penalties: a warning first, then a ban of the account and email address if it continues. For serious problems, a ban can be immediate.',
+   '🔒 Your data: the site keeps your username, email, favorites, owned gifts and suggestions. You can delete your account and data at any time from “My account”. Only warnings and bans, if any, are kept to protect the site.',
+   '💬 A question or disagreement? Write to us in “Suggestions”.']}
+};
+function openRules(){
+ const R=RULES_T[lang]||RULES_T.fr;
+ $('rulesTitle').textContent=R.title;$('rulesIntro').textContent=R.intro;
+ const L=$('rulesList');L.textContent='';R.items.forEach(x=>L.append(mk('div','rule-item',x)));
+ if(!rulesDlg.open)rulesDlg.showModal();
+}
+$('rulesBtn').onclick=openRules;$('accRules').onclick=openRules;$('warnRules').onclick=openRules;
+$('rulesClose').onclick=()=>rulesDlg.close();
+rulesDlg.addEventListener('click',e=>{if(e.target===rulesDlg)rulesDlg.close()});
+
+/* vérification de l'adresse mail */
+$('accResend').onclick=async()=>{
+ try{fb.auth.languageCode=lang==='en'?'en':'fr';await fb.m.sendEmailVerification(fb.auth.currentUser);accMsg(at('verifySent'))}
+ catch(e){const E=at('e');accMsg(E[e&&e.code]||E.def)}
+};
+$('accRefresh').onclick=async()=>{
+ try{
+  const u=fb.auth.currentUser;await fb.m.reload(u);await u.getIdToken(true);
+  fbUser=u;updAccBtn();renderAcc();accMsg(u.emailVerified?at('verifiedOk'):at('notYet'));
+ }catch(e){accMsg(at('e').def)}
+};
+
+/* suppression du compte */
+$('accDel').onclick=()=>{
+ if(!fbUser||isAdm)return;
+ $('delTitle').textContent=at('delTitle');$('delText').textContent=at('delText');$('delPass').placeholder=at('passOnly');
+ $('delGo').textContent=at('delGo');$('delCancel').textContent=at('delCancel');
+ delSay('');$('delPass').value='';accDlg.close();delDlg.showModal();
+};
+$('delCancel').onclick=()=>delDlg.close();
+$('delGo').onclick=async()=>{
+ if(!fbUser)return;
+ if(isAdm){delSay(at('delAdmin'));return}
+ const pass=$('delPass').value;if(!pass){delSay(at('needPass'));return}
+ $('delGo').disabled=true;delSay('');
+ try{
+  const M=fb.m,db=fb.db,u=fb.auth.currentUser,uid=u.uid;
+  await M.reauthenticateWithCredential(u,M.EmailAuthProvider.credential(u.email,pass));
+  clearTimeout(pushT);cloudPush=()=>{};
+  const name=(u.displayName||'').toLowerCase(),b=M.writeBatch(db);
+  const sq=await M.getDocs(M.query(M.collection(db,'suggestions'),M.where('uid','==',uid)));
+  sq.docs.forEach(d=>b.delete(d.ref));
+  b.delete(M.doc(db,'users',uid));
+  if(/^[a-z0-9_.-]{3,20}$/.test(name)){const un=await M.getDoc(M.doc(db,'usernames',name));if(un.exists()&&un.data().uid===uid)b.delete(M.doc(db,'usernames',name))}
+  await b.commit();
+  await M.deleteUser(u);
+  try{localStorage.removeItem('lt2uid')}catch(e){}
+  delDlg.close();toastMsg(at('delDone'));
+ }catch(e){const E=at('e');delSay(e&&(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')?E['auth/invalid-credential']:(E[e&&e.code]||E.def))}
+ finally{$('delGo').disabled=false}
+};
+
+/* annonces du créateur */
+async function loadAnnounce(){
+ try{const sn=await fb.m.getDoc(fb.m.doc(fb.db,'config','announcement'));showAnnounce(sn.exists()?sn.data():null)}catch(e){}
+}
+function showAnnounce(d){
+ annCur=d;const box=$('announce');
+ if(!d||!d.text||d.active===false){box.hidden=true;return}
+ let seen='';try{seen=localStorage.getItem('lt2ann')||''}catch(e){}
+ if(seen===String(d.updated)){box.hidden=true;return}
+ $('annText').textContent=d.text;box.hidden=false;
+}
+$('annX').onclick=()=>{try{localStorage.setItem('lt2ann',String(annCur&&annCur.updated))}catch(e){}$('announce').hidden=true};
+$('admAnnPub').onclick=async()=>{
+ const text=$('admAnn').value.trim();
+ if(text.length<3){admSay(at('sugShort'));return}
+ try{const d={text:text.slice(0,300),updated:Date.now(),active:true};await fb.m.setDoc(fb.m.doc(fb.db,'config','announcement'),d);showAnnounce(d);admSay(at('annPubOk'))}
+ catch(e){admSay(at('sugFail'))}
+};
+$('admAnnDel').onclick=async()=>{
+ try{await fb.m.deleteDoc(fb.m.doc(fb.db,'config','announcement'));showAnnounce(null);$('admAnn').value='';admSay(at('annDelOk'))}
+ catch(e){admSay(at('sugFail'))}
+};
+
+/* chiffres du site (admin) */
+async function loadAdmStats(){
+ const box=$('admStats');box.textContent='…';
+ const M=fb.m,db=fb.db,C=n=>M.collection(db,n),S=C('suggestions'),wk=Date.now()-7*864e5;
+ const cnt=async q=>{try{return (await M.getCountFromServer(q)).data().count}catch(e){return null}};
+ const [acc,newAcc,sug,sNew,sProg,sDone,sWeek,bans,warns]=await Promise.all([
+  cnt(C('users')),cnt(M.query(C('users'),M.where('created','>',wk))),
+  cnt(S),cnt(M.query(S,M.where('status','==','new'))),cnt(M.query(S,M.where('status','==','progress'))),cnt(M.query(S,M.where('status','==','done'))),
+  cnt(M.query(S,M.where('created','>',wk))),cnt(C('bans')),cnt(C('warnings'))]);
+ const items=[['👥',at('sAcc'),acc],['🆕',at('sNewAcc'),newAcc],['💬',at('sSug'),sug],['📥',at('sUnread'),unread],['🔴',at('sNew'),sNew],['🟡',at('sProg'),sProg],['🟢',at('sDone'),sDone],['📅',at('sWeek'),sWeek],['🚫',at('sBans'),bans],['⚠️',at('sWarns'),warns]];
+ box.textContent='';
+ items.forEach(([ic,l,v])=>{const c=mk('div','adm-stat');c.append(mk('div','adm-sv',v==null?'—':String(v)),mk('div','adm-sl',ic+' '+l));box.append(c)});
+}
+function admLabels(){
+ $('admStatsT').textContent=at('statsT');$('admStatsRef').textContent=at('statsRef');
+ $('admAnnT').textContent=at('annT');$('admAnn').placeholder=at('annPh');$('admAnnPub').textContent=at('annPub');$('admAnnDel').textContent=at('annDel');
+ $('admAnn').value=annCur&&annCur.text&&annCur.active!==false?annCur.text:'';
+ loadAdmStats();
+}
+$('admStatsRef').onclick=loadAdmStats;
 updAccBtn();setTimeout(updAccBtn,0);
 ['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();if($('stats').open)renderStats()},0)));
 if(cloudOn())loadFb();
