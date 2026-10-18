@@ -344,7 +344,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .mk-card{border:3px solid var(--bark);border-radius:12px;padding:10px;margin:8px 0;background:#ffffff14}
 .mk-pin{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
 .mk-h{margin-bottom:4px}.mk-act,.mk-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
-.mk-row .acc-in{flex:1;min-width:0}.mk-r{margin:4px 0;font-size:14px}.mk-gift{display:flex;gap:10px;align-items:center;margin:6px 0}.mk-gimg{width:64px;height:64px;flex:none;display:flex;align-items:center;justify-content:center;font-size:28px;border-radius:10px;border:3px solid var(--bark);background:#ffffff22;overflow:hidden}.mk-gimg img{width:100%;height:100%;object-fit:contain}.mk-pick{margin:8px 0}.mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;max-height:34vh;overflow-y:auto;margin:6px 0}.mk-gb{border:3px solid var(--bark);border-radius:10px;background:var(--snow);color:var(--bark);padding:4px;cursor:pointer;font:700 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;word-break:break-word}.mk-gb .mk-gimg{width:56px;height:56px;border-width:2px}.mk-x{border:0;background:none;cursor:pointer;font-size:15px}
+.mk-row .acc-in{flex:1;min-width:0}.mk-r{margin:4px 0;font-size:14px}.mk-gc{display:inline-flex;margin:8px 0 0 8px;border:2px solid var(--bark);background:#ffe9a8;color:var(--bark);border-radius:999px;padding:3px 10px;font-weight:700;font-size:12px;font-family:inherit;cursor:pointer}.mk-gfchip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}.mk-gift{display:flex;gap:10px;align-items:center;margin:6px 0}.mk-gimg{width:64px;height:64px;flex:none;display:flex;align-items:center;justify-content:center;font-size:28px;border-radius:10px;border:3px solid var(--bark);background:#ffffff22;overflow:hidden}.mk-gimg img{width:100%;height:100%;object-fit:contain}.mk-pick{margin:8px 0}.mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;max-height:34vh;overflow-y:auto;margin:6px 0}.mk-gb{border:3px solid var(--bark);border-radius:10px;background:var(--snow);color:var(--bark);padding:4px;cursor:pointer;font:700 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;word-break:break-word}.mk-gb .mk-gimg{width:56px;height:56px;border-width:2px}.mk-x{border:0;background:none;cursor:pointer;font-size:15px}
 .mk-msgs{max-height:40vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin:8px 0}
 .mk-m{align-self:flex-start;background:#ffffff22;border-radius:12px;padding:6px 10px;max-width:80%;word-break:break-word}.mk-m.me{align-self:flex-end;background:var(--gold);color:var(--bark)}
 </style></head><body>
@@ -488,10 +488,13 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
    <div id="mkGiftBox" hidden><input id="mkGiftQ" class="acc-in" maxlength="40" data-kp="giftSearch"><div class="mk-grid" id="mkGiftGrid"></div></div>
    <div class="actions"><button class="btn" id="mkPub" type="button" data-k="pub"></button><button class="btn alt" id="mkCancel" type="button" data-k="cancel" hidden></button></div>
   </div>
+  <div id="mkShared" hidden></div>
   <h4 id="mkMineT" data-k="mineT" hidden></h4><div id="mkMineBox"></div>
   <h4 data-k="listT"></h4>
   <div class="mk-row"><input id="mkQ" class="acc-in" maxlength="40" data-kp="search">
   <select id="mkFilter" class="acc-in"><option value="" data-k="fAll"></option><option value="swap" data-k="fSwap"></option><option value="buy" data-k="fBuy"></option><option value="sell" data-k="fSell"></option></select></div>
+  <div class="mk-row"><select id="mkSort" class="acc-in"><option value="new" data-k="sNew"></option><option value="old" data-k="sOld"></option></select><select id="mkWith" class="acc-in"><option value="" data-k="wAll"></option><option value="gift" data-k="wGift"></option></select></div>
+  <div id="mkGF" class="mk-gfchip" hidden></div>
   <div id="mkList"></div>
  </div>
  <div id="mkF" hidden>
@@ -1146,7 +1149,7 @@ async function loadFb(){
   const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
   const app=A.initializeApp(FIREBASE_CONFIG);
   fb={auth:Au.getAuth(app),db:Fs.getFirestore(app),m:{...Au,...Fs}};
-  Au.onAuthStateChanged(fb.auth,onUser);loadAnnounce();
+  Au.onAuthStateChanged(fb.auth,onUser);loadAnnounce();mkBoot();
   return true;
  }catch(e){return false}
 }
@@ -1331,7 +1334,7 @@ function openSug(){
 $('sugBtn').onclick=openSug;
 /* ---------- Place d'échange ---------- */
 const MKT={
-fr:{renew:'🔁 Renouveler',renewed:'Annonce renouvelée : elle remonte en tête.',renewFail:'Renouvellement impossible.',expTag:'⏳ Expirée',expIn:n=>'⏳ expire dans '+n+(n>1?' jours':' jour'),repToast:p=>'💬 '+p+' a répondu à ton annonce',giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'Aucun gift ne correspond.',giftRemove:'Retirer le gift',edit:'✏️ Modifier',save:'Enregistrer',cancel:'Annuler',saved:'Annonce modifiée !',saveFail:'Modification refusée (règles non à jour ou compte banni).',editedTag:'(modifiée)',btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
+fr:{sNew:'Plus récentes',sOld:'Plus anciennes',wAll:'Avec ou sans gift',wGift:'Avec image de gift',onlyGift:'Annonces pour :',share:'🔗 Partager',linkCopied:'Lien copié !',gcOne:n=>'🔄 '+n+' annonce',gcMany:n=>'🔄 '+n+' annonces',sharedT:'Annonce partagée',sharedGone:'Cette annonce n’existe plus ou a expiré.',renew:'🔁 Renouveler',renewed:'Annonce renouvelée : elle remonte en tête.',renewFail:'Renouvellement impossible.',expTag:'⏳ Expirée',expIn:n=>'⏳ expire dans '+n+(n>1?' jours':' jour'),repToast:p=>'💬 '+p+' a répondu à ton annonce',giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'Aucun gift ne correspond.',giftRemove:'Retirer le gift',edit:'✏️ Modifier',save:'Enregistrer',cancel:'Annuler',saved:'Annonce modifiée !',saveFail:'Modification refusée (règles non à jour ou compte banni).',editedTag:'(modifiée)',btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
  L_swap:['Je donne','Je veux en échange'],L_buy:['Je cherche','Mon offre'],L_sell:['Je vends','Prix'],note:'Détails (facultatif)',pub:'Publier',
  mineT:'📌 Mes annonces (3 max) et épingles',listT:'Annonces',fAll:'Toutes',fSwap:'Échanges',fBuy:'J’achète',fSell:'Je vends',search:'Rechercher…',
  friendPh:'Pseudo de ton ami',add:'Ajouter',back:'← Amis',msgPh:'Message privé…',send:'Envoyer',close:'Fermer',blockedT:'🚫 Bloqués',unblock:'Débloquer',reportsT:'🚩 Signalements',
@@ -1344,7 +1347,7 @@ fr:{renew:'🔁 Renouveler',renewed:'Annonce renouvelée : elle remonte en tête
  accFail:'Impossible d’accepter.',pinned:'Annonce épinglée 📌',pinFail:'Épinglage impossible.',fail:'Échec.',err:'Erreur.',sendFail:'Envoi impossible.',msgOff:'Messages indisponibles.',frErr:'Chargement des amis impossible.',
  reported:'Signalement envoyé, merci.',blocked:p=>p+' est bloqué.',noF:'Pas encore d’amis.',reqToast:p=>'➕ '+p+' veut t’ajouter en ami',msgToast:p=>'💬 '+p+' t’a écrit',dismiss:'Ignorer',delPost:'Supprimer l’annonce',
  loading:'Erreur de chargement.',report:'🚩 Signaler',block:'🚫 Bloquer'},
-en:{renew:'🔁 Renew',renewed:'Listing renewed: it’s back on top.',renewFail:'Could not renew.',expTag:'⏳ Expired',expIn:n=>'⏳ expires in '+n+(n>1?' days':' day'),repToast:p=>'💬 '+p+' replied to your listing',giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gift matches.',giftRemove:'Remove the gift',edit:'✏️ Edit',save:'Save',cancel:'Cancel',saved:'Listing updated!',saveFail:'Edit refused (rules not updated or account banned).',editedTag:'(edited)',btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
+en:{sNew:'Newest first',sOld:'Oldest first',wAll:'With or without gift',wGift:'With gift image',onlyGift:'Listings for:',share:'🔗 Share',linkCopied:'Link copied!',gcOne:n=>'🔄 '+n+' listing',gcMany:n=>'🔄 '+n+' listings',sharedT:'Shared listing',sharedGone:'This listing no longer exists or has expired.',renew:'🔁 Renew',renewed:'Listing renewed: it’s back on top.',renewFail:'Could not renew.',expTag:'⏳ Expired',expIn:n=>'⏳ expires in '+n+(n>1?' days':' day'),repToast:p=>'💬 '+p+' replied to your listing',giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gift matches.',giftRemove:'Remove the gift',edit:'✏️ Edit',save:'Save',cancel:'Cancel',saved:'Listing updated!',saveFail:'Edit refused (rules not updated or account banned).',editedTag:'(edited)',btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
  L_swap:['I give','I want in return'],L_buy:['I’m looking for','My offer'],L_sell:['I’m selling','Price'],note:'Details (optional)',pub:'Publish',
  mineT:'📌 My listings (3 max) and pins',listT:'Listings',fAll:'All',fSwap:'Swaps',fBuy:'Buying',fSell:'Selling',search:'Search…',
  friendPh:'Your friend’s username',add:'Add',back:'← Friends',msgPh:'Private message…',send:'Send',close:'Close',blockedT:'🚫 Blocked',unblock:'Unblock',reportsT:'🚩 Reports',
@@ -1394,11 +1397,11 @@ function mkWatch(){
  },()=>{mkFrUnsub=null});
 }
 /* ---- annonces ---- */
-async function mkLoad(){
+async function mkLoad(useCache){
  if(!fb){mkSay(mt('connecting'));return}
  const M=fb.m,C=M.collection(fb.db,'posts');
  try{
-  mkPosts=(await M.getDocs(M.query(C,M.orderBy('created','desc'),M.limit(100)))).docs;
+  if(!(useCache&&mkPosts.length&&Date.now()-mkPostsAt<6e4)&&!await mkFetchPosts(true))throw new Error('posts');
   mkMine=[];mkPinned=[];mkPinIds=new Set();mkBlocked=new Map();
   if(fbUser){
    const me=fbUser.uid,U=n=>M.collection(fb.db,'users',me,n);
@@ -1410,7 +1413,7 @@ async function mkLoad(){
    const ds=await Promise.all(pins.docs.map(async p=>{let d=mkPosts.find(x=>x.id===p.id);if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',p.id));d=g.exists()?g:null}if(!d)M.deleteDoc(p.ref).catch(()=>{});return d}));
    mkPinned=ds.filter(d=>d&&d.data().uid!==me&&!mkBlocked.has(d.data().uid)).sort((a,b)=>b.data().created-a.data().created);mkPinIds=new Set(mkPinned.map(d=>d.id));
   }
-  mkRender();if(isAdm)mkLoadReports();
+  mkCountGifts();mkGalleryBadges();mkRender();if(isAdm)mkLoadReports();
  }catch(e){mkSay(mt('loadErr'))}
 }
 function mkCard(d,mine,pin){
@@ -1422,7 +1425,7 @@ function mkCard(d,mine,pin){
  if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
  if(p.note)c.append(mkE('div','bk-txt',p.note));
  const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt',mt('replies')+(mine&&mkRepNew.get(d.id)?' 🔴 '+mkRepNew.get(d.id):''));rp.hidden=true;if(mine)b1.dataset.pid=d.id;
- b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden){mkReplies(d,rp);if(mine){mkRepMark(d.id);b1.textContent=mt('replies')}}else mkOfferPins()};a.append(b1);
+ b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden){mkReplies(d,rp);if(mine){mkRepMark(d.id);b1.textContent=mt('replies')}}else mkOfferPins()};a.append(b1);if(!p.done){const bs=mkE('button','btn alt',mt('share'));bs.onclick=()=>mkShare(d);a.append(bs)}
  if(!mine&&fbUser&&p.uid!==fbUser.uid){
   const bf=mkE('button','btn alt',mt('friend')),bp=mkE('button','btn alt',pin?mt('unpin'):mt('pin')),br=mkE('button','btn alt','🚩'),bb=mkE('button','btn alt','🚫');
   br.title=mt('report');bb.title=mt('block');
@@ -1435,11 +1438,11 @@ function mkCard(d,mine,pin){
  c.append(a,rp);return c;
 }
 function mkRender(){
- const f=$('mkFilter').value,q=$('mkQ').value.trim().toLowerCase(),me=fbUser&&fbUser.uid,now=Date.now();
- const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&now-p.created<=MK_EXP&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo+' '+(p.gift||'')).toLowerCase().includes(q))});
+ const f=$('mkFilter').value,w=$('mkWith').value,so=$('mkSort').value,q=$('mkQ').value.trim().toLowerCase(),me=fbUser&&fbUser.uid,now=Date.now();
+ const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&now-p.created<=MK_EXP&&(!f||p.type===f)&&(!mkGiftF||norm(p.gift||'')===norm(mkGiftF))&&(w!=='gift'||(p.gift&&mkGiftMap.has(norm(p.gift))))&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo+' '+(p.gift||'')).toLowerCase().includes(q))});
  const pn=mkPinned.filter(d=>now-d.data().created<=MK_EXP);
  $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...pn.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+pn.length);
- $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt',mt('none'))]));
+ $('mkList').replaceChildren(...(rest.length?(so==='old'?[...rest].reverse():rest).map(d=>mkCard(d,false)):[mkE('p','bk-txt',mt('none'))]));
 }
 async function mkReplies(d,box){
  const M=fb.m,post=d.data();box.replaceChildren(mkE('p','bk-txt','…'));
@@ -1560,6 +1563,70 @@ function mkRepWatch(){
   mkRepUnsub.push(un);
  });
 }
+/* ---- partage, filtres, compteur d'annonces par gift ---- */
+var mkPostsAt=0,mkGc=new Map(),mkGiftF='';
+const MK_PRELOAD=true; /* false = ne pas précharger les annonces au démarrage (économise des lectures Firestore) */
+async function mkFetchPosts(force){
+ if(!fb)return false;
+ if(!force&&mkPosts.length&&Date.now()-mkPostsAt<6e4)return true;
+ try{const M=fb.m;mkPosts=(await M.getDocs(M.query(M.collection(fb.db,'posts'),M.orderBy('created','desc'),M.limit(100)))).docs;mkPostsAt=Date.now();mkCountGifts();return true}
+ catch(e){return false}
+}
+function mkCountGifts(){
+ const now=Date.now();mkGc=new Map();
+ mkPosts.forEach(d=>{const p=d.data();if(!p.gift||p.done||now-p.created>MK_EXP||mkBlocked.has(p.uid))return;
+  const k=norm(p.gift);if(mkGiftMap.has(k))mkGc.set(k,(mkGc.get(k)||0)+1)});
+}
+function mkGcFor(card){
+ const old=card.querySelector('.mk-gc');if(old)old.remove();
+ const n=mkGc&&mkGc.get(norm(card.dataset.g)),own=card.querySelector('.own');
+ if(!n||!own)return;
+ const b=document.createElement('button');b.type='button';b.className='mk-gc';b.textContent=mt(n>1?'gcMany':'gcOne',n);
+ b.onclick=e=>{e.stopPropagation();mkOpenForGift(card.dataset.g)};own.parentNode.append(b);
+}
+function mkGalleryBadges(){document.querySelectorAll('.tag[data-g]').forEach(mkGcFor)}
+function mkSetGiftF(n){
+ mkGiftF=n||'';const c=$('mkGF');c.replaceChildren();c.hidden=!mkGiftF;if(!mkGiftF)return;
+ const x=mkE('button','mk-x','✕');x.type='button';x.title=mt('giftRemove');x.setAttribute('aria-label',mt('giftRemove'));
+ x.onclick=()=>{mkSetGiftF('');mkRender()};
+ c.append(mkE('span','bk-txt',mt('onlyGift')),mkGiftView(mkGiftF),x);
+}
+function mkOpenForGift(name){
+ mkSetGiftF(mkGiftMap.get(norm(name))||'');
+ if(!mkD.open)mkD.showModal();
+ mkTab('p');mkLoad(true);
+}
+function mkInitFilters(){
+ const ids=['mkFilter','mkSort','mkWith'];
+ try{const o=JSON.parse(localStorage.getItem('lt2mkf')||'{}');ids.forEach(i=>{if(typeof o[i]==='string'&&[...$(i).options].some(x=>x.value===o[i]))$(i).value=o[i]})}catch(e){}
+ ids.forEach(i=>{$(i).onchange=()=>{try{localStorage.setItem('lt2mkf',JSON.stringify(Object.fromEntries(ids.map(k=>[k,$(k).value]))))}catch(e){}mkRender()}});
+}
+async function mkShare(d){
+ const p=d.data(),url=location.origin+location.pathname+'?annonce='+encodeURIComponent(d.id);
+ if(navigator.share){
+  try{await navigator.share({title:'Lumber Tycoon 2 — '+(mt('T_'+p.type)||''),text:p.give,url});return}
+  catch(e){if(e&&e.name==='AbortError')return}
+ }
+ copyOrAsk(url,mt('linkCopied'));
+}
+async function mkOpenShared(id){
+ try{history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
+ mkSetGiftF('');mkD.showModal();mkTab('p');
+ await mkLoad(true);
+ const box=$('mkShared');box.replaceChildren();box.hidden=true;
+ try{
+  const M=fb.m;let d=mkPosts.find(x=>x.id===id);
+  if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',id));d=g.exists()?g:null}
+  const now=Date.now(),p=d&&d.data();
+  if(!p||now-p.created>MK_EXP||(p.done&&now-p.doneAt>MK_DAY2)){mkSay(mt('sharedGone'));return}
+  box.append(mkE('h4',null,mt('sharedT')),mkCard(d,!!(fbUser&&p.uid===fbUser.uid)));box.hidden=false;
+ }catch(e){mkSay(mt('loadErr'))}
+}
+function mkBoot(){
+ const id=new URLSearchParams(location.search).get('annonce');
+ if(id&&/^[A-Za-z0-9_-]{6,60}_[0-2]$/.test(id)){mkOpenShared(id);return}
+ if(MK_PRELOAD)setTimeout(()=>{if(document.visibilityState==='visible')mkFetchPosts(false).then(ok=>{if(ok)mkGalleryBadges()})},2500);
+}
 async function mkDone(d){try{await fb.m.updateDoc(d.ref,{done:true,doneAt:Date.now()});mkLoad()}catch(e){mkSay(mt('fail'))}}
 /* ---- épingles ---- */
 async function mkPin(d){
@@ -1652,11 +1719,11 @@ function mkTab(t){
  if(t==='f'&&!fbUser){openAcc(mt('loginF'));return}
  $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f'){mkBack();mkOfferPins();mkFriends()}
 }
-$('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
+$('mkBtn').onclick=()=>{mkSetGiftF('');mkD.showModal();mkTab('p');mkLoad(true)};
 $('mkTP').onclick=()=>mkTab('p');$('mkTF').onclick=()=>mkTab('f');
 $('mkNewB').onclick=()=>{if(!mkNeed())return;if(mkEditId){mkFormReset();$('mkForm').hidden=false;return}$('mkForm').hidden=!$('mkForm').hidden};
-$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkQ').oninput=mkRender;$('mkClose').onclick=()=>mkD.close();
-mkD.addEventListener('close',()=>{mkBack();mkOfferPins()});
+$('mkBack').onclick=mkBack;mkInitFilters();$('mkQ').oninput=mkRender;$('mkClose').onclick=()=>mkD.close();
+mkD.addEventListener('close',()=>{mkBack();mkOfferPins();mkSetGiftF('');$('mkShared').replaceChildren();$('mkShared').hidden=true});
 $('mkType').onchange=()=>{const L=mt('L_'+$('mkType').value);$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};
 {const _al=applyLang;applyLang=function(){_al();mkApply()}}
 mkApply();if(fb&&fbUser)mkWatch();
@@ -2011,7 +2078,7 @@ function makeCard(g,q){
  const own=document.createElement('button');own.type='button';own.className='own';own.innerHTML='<span class="box" aria-hidden="true"></span><span class="lab"></span>';
  renderOwnBtn(own,g.name);own.onclick=e=>{e.stopPropagation();toggleOwned(g.name)};info.append(own);
  card.classList.toggle('owned',owned.has(g.name));
- card.append(pic,info);return card;
+ card.append(pic,info);mkGcFor(card);return card;
 }
 function render(){
  const q=search.value.trim().toLowerCase();
