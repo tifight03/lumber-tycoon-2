@@ -940,7 +940,7 @@ const ACC_T={
   textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
   textIn:p=>'Connecté : '+p+'. Tes favoris et tes gifts obtenus sont enregistrés automatiquement.',textReset:'Entre ton adresse mail : on t’envoie un lien pour choisir un nouveau mot de passe.',
   off:'Les comptes ne sont pas encore activés sur ce site.',loading:'Connexion au service…',offline:'Impossible de joindre le service. Vérifie ta connexion internet.',
-  badPseudo:'Le pseudo doit faire entre 3 et 20 caractères.',needEmail:'Entre ton adresse mail.',needPass:'Entre ton mot de passe.',
+  badPseudo:'Pseudo : 3 à 20 caractères, avec seulement des lettres, des chiffres, _ . ou -',pseudoTaken:'Ce pseudo est déjà pris, choisis-en un autre.',needEmail:'Entre ton adresse mail.',needPass:'Entre ton mot de passe.',
   created:'Compte créé !',logged:'Connecté !',loggedOut:'Déconnecté.',
   e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
    'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
@@ -951,7 +951,7 @@ const ACC_T={
   textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
   textIn:p=>'Logged in: '+p+'. Your favorites and owned gifts are saved automatically.',textReset:'Enter your email: we’ll send you a link to choose a new password.',
   off:'Accounts are not enabled on this site yet.',loading:'Connecting to the service…',offline:'Can’t reach the service. Check your internet connection.',
-  badPseudo:'The username must be 3 to 20 characters long.',needEmail:'Enter your email address.',needPass:'Enter your password.',
+  badPseudo:'Username: 3 to 20 characters, only letters, digits, _ . or -',pseudoTaken:'This username is already taken, choose another one.',needEmail:'Enter your email address.',needPass:'Enter your password.',
   created:'Account created!',logged:'Logged in!',loggedOut:'Logged out.',
   e:{'auth/email-already-in-use':'This email already has an account.','auth/invalid-email':'Invalid email address.','auth/weak-password':'Password too short (6 characters minimum).',
    'auth/invalid-credential':'Wrong email or password.','auth/wrong-password':'Wrong email or password.','auth/user-not-found':'Wrong email or password.',
@@ -991,9 +991,14 @@ async function pushNow(){
  if(!fbUser||!fb)return;
  try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',favs:[...favs],owned:[...owned],updated:Date.now()})}catch(e){}
 }
+async function ensureUsername(u){
+ const n=u&&u.displayName;if(!n||!fb||!/^[A-Za-z0-9_.-]{3,20}$/.test(n))return;
+ const r=fb.m.doc(fb.db,'usernames',n.toLowerCase());
+ try{const sn=await fb.m.getDoc(r);if(!sn.exists())await fb.m.setDoc(r,{uid:u.uid})}catch(e){}
+}
 async function onUser(u){
  fbUser=u;authKnown=true;if(!u)isAdm=false;updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();
- if(u)checkAdmin();
+ if(u){checkAdmin();ensureUsername(u)}
  if(!u){cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
  try{
   const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
@@ -1030,14 +1035,19 @@ $('accGo').onclick=async()=>{
  accMsg('');
  if(!email){accMsg(at('needEmail'));return}
  if(accMode!=='reset'&&!pass){accMsg(at('needPass'));return}
- if(accMode==='signup'&&(pseudo.length<3||pseudo.length>20)){accMsg(at('badPseudo'));return}
+ if(accMode==='signup'&&!/^[A-Za-z0-9_.-]{3,20}$/.test(pseudo)){accMsg(at('badPseudo'));return}
  if(!fb){accMsg(at('loading'));if(!await loadFb()){accMsg(at('offline'));return}accMsg('')}
  $('accGo').disabled=true;
  try{
   const M=fb.m;fb.auth.languageCode=lang==='en'?'en':'fr';
   if(accMode!=='reset')await M.setPersistence(fb.auth,$('accStay').checked?M.browserLocalPersistence:M.browserSessionPersistence);
   if(accMode==='signup'){
+   const key=pseudo.toLowerCase();
+   const ex=await M.getDoc(M.doc(fb.db,'usernames',key));
+   if(ex.exists()){accMsg(at('pseudoTaken'));return}
    const c=await M.createUserWithEmailAndPassword(fb.auth,email,pass);
+   try{await M.setDoc(M.doc(fb.db,'usernames',key),{uid:c.user.uid})}
+   catch(err){try{await c.user.delete()}catch(_){}accMsg(err&&err.code==='permission-denied'?at('pseudoTaken'):at('e').def);return}
    await M.updateProfile(c.user,{displayName:pseudo});
    fbUser=c.user;updAccBtn();renderAcc();pushNow();toastMsg(at('created'));
   }else if(accMode==='login'){
@@ -1100,6 +1110,7 @@ $('sugSend').onclick=async()=>{
  if(Date.now()-lastSug<15000){sugMsg(at('sugWait'));return}
  $('sugSend').disabled=true;
  try{
+  await ensureUsername(fbUser);
   await fb.m.addDoc(fb.m.collection(fb.db,'suggestions'),{uid:fbUser.uid,pseudo:accName(fbUser),email:fbUser.email||'',text:text.slice(0,1000),created:Date.now()});
   lastSug=Date.now();$('sugTa').value='';$('sugCount').textContent='0 / 1000';sugMsg(at('sugSent'));
  }catch(e){sugMsg(at('sugFail'))}
