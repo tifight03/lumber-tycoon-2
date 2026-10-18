@@ -1,0 +1,1006 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0f2a22"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LT2 Gifts">
+<script>try{var th=localStorage.getItem('lt2theme');if(th!=='light'&&th!=='dark')th=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=th}catch(e){document.documentElement.dataset.theme='dark'}</script><title data-i18n="title">Lumber Tycoon 2 — Galerie des gifts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --forest:#0f2a22;--forest2:#163a2f;--pine:#1f4d3c;--kraft:#ecdcc0;--kraft2:#dcc59d;--bark:#3b2a1a;--ribbon:#d7263d;--gold:#f2b632;--snow:#f6f8f3;
+ --display:'Lilita One','Arial Rounded MT Bold','Trebuchet MS',system-ui,sans-serif;--body:'Nunito',system-ui,-apple-system,sans-serif;
+ color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:500 16px/1.5 var(--body);color:var(--snow);min-height:100vh;
+ background:
+  radial-gradient(1200px 500px at 85% -10%,#24614b55,transparent 70%),
+  repeating-linear-gradient(90deg,#0000 0 118px,#ffffff06 118px 120px),
+  linear-gradient(180deg,var(--forest),#0a1e18)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+/* En-tête : une planche de bois avec un ruban en croix */
+.hero{position:relative;overflow:hidden;padding:44px 20px 34px;border-bottom:6px solid var(--bark);
+ background:
+  repeating-linear-gradient(0deg,#0000 0 46px,#0003 46px 48px),
+  linear-gradient(180deg,#b97d43,#9c6532)}
+.hero::before,.hero::after{content:"";position:absolute;background:var(--ribbon);box-shadow:inset 0 0 0 3px #0000001f}
+.hero::before{left:0;right:0;top:50%;height:30px;transform:translateY(-50%) rotate(-3deg);opacity:.9}
+.hero::after{display:none}
+.hero-in{position:relative;max-width:1180px;margin:auto}
+.tagline{display:inline-block;background:var(--bark);color:var(--kraft);padding:5px 14px;border-radius:999px;font-weight:800;font-size:14px}
+h1{font:400 clamp(2.4rem,9vw,5rem)/.95 var(--display);margin:14px 0 10px;color:var(--snow);text-shadow:0 4px 0 var(--bark),0 8px 0 #0003;letter-spacing:.5px;max-width:14ch}
+.hero p{margin:0;max-width:52ch;color:#fff;font-weight:700;text-shadow:0 2px 0 #0006;background:#3b2a1acc;display:inline-block;padding:8px 14px;border-radius:12px}
+
+/* Barre d'outils collante */
+.bar{position:sticky;top:0;z-index:20;background:#0a1e18ee;backdrop-filter:blur(8px);border-bottom:2px solid #ffffff14}
+.bar-in{max-width:1180px;margin:auto;padding:12px 20px;display:grid;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 220px;display:flex;align-items:center;gap:8px;background:var(--snow);color:var(--bark);border-radius:14px;padding:0 14px;border:3px solid var(--bark)}
+.search input{flex:1;border:0;background:none;font:700 16px var(--body);color:var(--bark);padding:11px 0;min-width:0;outline:0}
+.search:focus-within{border-color:var(--gold)}
+.seg{display:flex;border:3px solid var(--bark);border-radius:14px;overflow:hidden;background:var(--bark)}
+.seg button{border:0;background:#0000;color:var(--kraft);font:800 14px var(--body);padding:10px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--bark)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.chip{flex:none;border:2px solid #ffffff30;background:#ffffff0d;color:var(--snow);font:800 14px var(--body);padding:7px 14px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ribbon);border-color:var(--ribbon)}
+.lang button{min-width:44px}
+.meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;color:#bcd2c7;font-size:14px;font-weight:700}
+.meta button{border:2px solid #ffffff30;background:none;color:var(--snow);border-radius:10px;padding:5px 10px;font:800 13px var(--body);cursor:pointer}
+
+main{max-width:1180px;margin:auto;padding:8px 20px 60px}
+.banner{display:none;margin:16px 0;padding:14px 16px;border-radius:14px;background:#5a2118;border:2px solid var(--ribbon);color:#ffd9d2;font-weight:700}
+.banner code{background:#0004;padding:1px 6px;border-radius:6px}
+
+/* Titres d'année : un ruban */
+.year-head{display:flex;align-items:center;gap:14px;margin:34px 0 14px}
+.year-head h2{margin:0;font:400 2rem/1 var(--display);background:var(--ribbon);color:var(--snow);padding:8px 22px 8px 18px;clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%);text-shadow:0 2px 0 #0004}
+.year-head span{color:#bcd2c7;font-weight:800;font-size:14px;white-space:nowrap}
+.year-head::after{content:"";flex:1;height:4px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--kraft2) 0 10px,#0000 10px 18px);opacity:.35;order:3}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+
+/* Cartes : des étiquettes cadeau en papier kraft */
+.tag{position:relative;display:grid;grid-template-columns:116px 1fr;gap:14px;align-items:center;padding:18px 16px 16px 16px;color:var(--bark);min-height:148px;
+ background:linear-gradient(160deg,var(--kraft),var(--kraft2));
+ clip-path:polygon(26px 0,100% 0,100% 100%,0 100%,0 26px);filter:none}
+.tag::before{content:"";position:absolute;left:5px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 3px #fff8;z-index:2}
+.pic{all:unset;box-sizing:border-box;cursor:zoom-in;width:116px;height:116px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;
+ background:radial-gradient(circle at 50% 40%,#fff,#f1e6d0 70%);border:3px solid var(--bark)}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.pic.empty{opacity:.5;filter:grayscale(.4)}
+.desc{margin:0;font-weight:700;font-size:15px;line-height:1.4}
+.desc.none{opacity:.6;font-weight:600}
+.pic:focus-visible{outline:3px solid var(--ribbon);outline-offset:2px}
+.name{font:400 1.2rem/1.1 var(--display);margin:0 0 6px;overflow-wrap:anywhere}
+.yr{display:inline-block;background:var(--bark);color:var(--kraft);font-weight:800;font-size:12px;padding:2px 10px;border-radius:999px}
+.links{margin-top:8px}
+.wiki{font-weight:800;font-size:13px;color:#8a1426;text-decoration:underline;text-underline-offset:3px}
+.status{font-size:12px;color:#6b5638;margin-top:4px;font-weight:700}
+.empty-msg{text-align:center;padding:60px 10px;color:#bcd2c7;font-weight:700}
+
+/* Visionneuse */
+dialog{border:0;padding:0;background:none;max-width:min(92vw,520px);width:100%;color:var(--bark)}
+dialog::backdrop{background:#04120ecc;backdrop-filter:blur(4px)}
+.lb{background:linear-gradient(160deg,var(--kraft),var(--kraft2));border-radius:22px;padding:18px;border:4px solid var(--bark);text-align:center}
+.lb .big{background:radial-gradient(circle at 50% 40%,#fff,#f1e6d0 70%);border-radius:16px;border:3px solid var(--bark);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lb img{width:100%;height:100%;object-fit:contain}
+.lb h3{font:400 1.6rem/1.1 var(--display);margin:14px 0 6px}
+.lb .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.btn{border:3px solid var(--bark);background:var(--gold);color:var(--bark);font:800 15px var(--body);padding:9px 16px;border-radius:12px;cursor:pointer;text-decoration:none}
+.btn.alt{background:var(--snow)}
+
+.contents{font-size:13px;font-weight:700;margin-top:6px;line-height:1.35}
+.contents b{font-weight:800}
+.badge{display:inline-block;font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;margin-left:6px;vertical-align:1px}
+.badge.sure{background:#1f6b3a;color:#fff}.badge.maybe{background:#8a6a1a;color:#fff}
+.items{all:unset;box-sizing:border-box;display:block;margin-top:8px;cursor:pointer;width:100%}
+.items:focus-visible{outline:3px solid var(--ribbon);outline-offset:3px;border-radius:6px}
+.chipw{display:flex;flex-wrap:wrap;gap:6px}
+.ichip{background:var(--bark);color:var(--kraft);font-weight:800;font-size:13px;padding:3px 10px;border-radius:999px;line-height:1.3}
+.tap{font-size:12px;font-weight:800;color:#8a1426;margin-top:5px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin-top:14px;max-height:58vh;overflow:auto;padding:2px}
+.cell{text-align:center}
+.cpic{aspect-ratio:1;border-radius:14px;border:3px solid var(--bark);background:radial-gradient(circle at 50% 40%,#fff,#f1e6d0 70%);display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden}
+.cpic img{width:100%;height:100%;object-fit:contain;display:block}
+.cpic.empty{opacity:.5}
+.cname{font-weight:800;font-size:13px;margin-top:5px;line-height:1.2;overflow-wrap:anywhere}
+.cname a{color:var(--bark);text-underline-offset:3px}
+.it{border-left:4px solid var(--ribbon);padding-left:9px}
+.where{font-size:12px;font-weight:700;color:#6b5638;line-height:1.25}
+.iname{font-weight:800;font-size:15px;line-height:1.2}
+.more{font-size:12px;font-weight:700;color:#6b5638}
+.origin{font-size:12px;font-weight:700;margin-top:4px;color:#6b5638}
+.origin a{color:#8a1426;font-weight:800;text-underline-offset:3px}
+footer{max-width:1180px;margin:auto;padding:0 20px 40px;color:#8fb1a1;font-size:13px;font-weight:600}
+
+@media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.tag{grid-template-columns:104px 1fr}.pic{width:104px;height:104px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* Une seule animation : l'apparition de l'image qui vient de charger */
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.pic img{animation:pop .35s ease-out}
+@media(prefers-reduced-motion:reduce){.pic img{animation:none}}
+
+/* ===== Finitions ===== */
+body{background:
+ radial-gradient(circle,#ffffff18 1.2px,#0000 1.8px) 0 0/54px 54px,
+ radial-gradient(circle,#ffffff10 1px,#0000 1.6px) 27px 27px/54px 54px,
+ radial-gradient(1200px 500px at 85% -10%,#24614b66,#0000 70%),
+ linear-gradient(180deg,var(--forest),#08180f)}
+.hero{border-bottom:0;padding:48px 20px 70px;background:
+ repeating-linear-gradient(0deg,#0000 0 46px,#0002 46px 48px),
+ repeating-linear-gradient(90deg,#0000 0 160px,#0000001a 160px 162px),
+ linear-gradient(180deg,#c48a4e,#9c6532)}
+.hero::before{height:34px;opacity:1;background:repeating-linear-gradient(90deg,var(--ribbon) 0 70px,#e8374d 70px 140px)}
+.hero::after{content:"";display:block;position:absolute;inset:0;pointer-events:none;
+ background:radial-gradient(circle,#fff 1.6px,#0000 2.2px) 0 0/70px 70px,radial-gradient(circle,#fffc 1.2px,#0000 1.8px) 35px 35px/70px 70px;opacity:.55;animation:snow 14s linear infinite}
+@keyframes snow{to{background-position:-20px 70px,15px 105px}}
+.hero-in{z-index:1;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.stack{flex:none;width:clamp(112px,27vw,250px);height:auto;filter:drop-shadow(0 8px 0 #0004);transform:rotate(4deg)}
+h1{font-size:clamp(2.3rem,8.5vw,4.8rem)}
+.pines{height:42px;margin-top:-41px;position:relative;z-index:2;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='42' viewBox='0 0 44 42'><polygon points='0,42 22,2 44,42' fill='%230f2a22'/><polygon points='9,42 22,14 35,42' fill='%23163a2f'/></svg>") repeat-x bottom/44px 42px}
+.bar{border-bottom:0;box-shadow:0 8px 18px #0006}
+.bar::after{content:"";display:block;height:7px;background:repeating-linear-gradient(135deg,var(--ribbon) 0 12px,var(--snow) 12px 24px)}
+.chip{transition:background .15s,transform .15s}
+.chip[aria-pressed="true"]{background:var(--ribbon);border-color:#ff8a98;box-shadow:0 3px 0 #7a1020}
+.seg button[aria-pressed="true"]{box-shadow:inset 0 -3px 0 #b8861b}
+.year-head h2{font-size:2.3rem;padding:10px 28px 10px 20px;box-shadow:0 4px 0 #7a1020}
+.grid{filter:drop-shadow(0 6px 0 #0000004d)}
+.tag{background:
+ repeating-linear-gradient(0deg,#0000 0 3px,#8a5a2a0d 3px 4px),
+ linear-gradient(160deg,#f3e6cb,#dcc59d);
+ transition:transform .18s ease}
+.tag:hover{transform:translateY(-4px) rotate(-.6deg)}
+.pic{box-shadow:inset 0 3px 8px #3b2a1a33,0 3px 0 #3b2a1a;transition:transform .18s}
+.pic:hover{transform:scale(1.04) rotate(2deg)}
+.name{font-size:1.3rem;color:#2c1d0e}
+.desc{color:#4b3a26;font-weight:700}
+.pic.empty:hover{transform:none}
+dialog .lb{box-shadow:0 12px 0 #0005,0 0 0 6px #d7263d}
+@media(prefers-reduced-motion:reduce){.hero::after{animation:none}.tag,.pic{transition:none}.tag:hover,.pic:hover{transform:none}}
+@media(max-width:520px){.hero{padding:34px 16px 64px}.stack{width:104px}}
+
+/* ===== Encore plus beau ===== */
+.tag{--yc:#c0834a}
+.tag::after{content:"";position:absolute;left:26px;right:0;top:0;height:7px;background:var(--yc);box-shadow:inset 0 -2px 0 #0003}
+.pic{background:radial-gradient(circle at 50% 38%,#fff 0,color-mix(in srgb,var(--yc) 24%,#f6ecd8) 78%)}
+.name{text-wrap:balance}.desc{text-wrap:pretty}
+.year-head h2{border-left:14px solid var(--yc,#fff);padding-left:14px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:0;box-shadow:0 0 0 2px #0006}
+.chips{-webkit-mask-image:linear-gradient(90deg,#000 90%,#0000);mask-image:linear-gradient(90deg,#000 90%,#0000);padding-right:24px}
+.search{box-shadow:0 4px 0 #0005;transition:box-shadow .15s}
+.search:focus-within{box-shadow:0 4px 0 #0005,0 0 0 5px #f2b63255}
+.hero h1{background:linear-gradient(180deg,#fff 40%,#ffe7b0);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0;filter:drop-shadow(0 4px 0 var(--bark)) drop-shadow(0 8px 0 #0003);text-shadow:none}
+.tagline{box-shadow:0 3px 0 #0005;border:2px solid #f2b63266}
+.hero p{border:2px solid #f2b63244}
+dialog[open] .lb{animation:pop .25s ease-out}
+dialog[open]::backdrop{animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+#top{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:52px;height:52px;border-radius:50%;border:3px solid var(--bark);background:var(--gold);font-size:24px;cursor:pointer;box-shadow:0 5px 0 var(--bark);opacity:0;transform:translateY(20px) scale(.8);pointer-events:none;transition:opacity .2s,transform .2s}
+#top.show{opacity:1;transform:none;pointer-events:auto}
+#top:active{transform:translateY(3px);box-shadow:0 2px 0 var(--bark)}
+footer{margin-top:10px;padding-top:26px;text-align:center;border-top:4px dashed #ecdcc033;font-weight:700}
+footer::before{content:"🎄 🎁 🎄";display:block;font-size:22px;margin-bottom:6px;letter-spacing:6px}
+@media(prefers-reduced-motion:reduce){dialog[open] .lb,dialog[open]::backdrop{animation:none}#top{transition:none}}
+
+/* ===== Favoris, navigation, chargement ===== */
+.fav{position:absolute;right:10px;top:16px;z-index:3;width:36px;height:36px;border-radius:50%;border:2px solid var(--bark);background:#fff9;color:var(--bark);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 2px;transition:transform .15s}
+.fav:active{transform:scale(.88)}
+.fav.on{background:var(--ribbon);color:#fff;border-color:#7a1020}
+.tag .name{padding-right:36px}
+.mbtn{display:flex;gap:8px;flex-wrap:wrap}
+.big{position:relative}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:3px solid var(--bark);background:#f2b632ee;font:800 28px/1 var(--body);color:var(--bark);cursor:pointer;display:grid;place-items:center;padding:0 0 4px}
+.nav.prev{left:8px}.nav.next{right:8px}
+@keyframes shim{to{background-position:-200% 0}}
+body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff 50%,#f1e6d0 70%) 0 0/200% 100%;animation:shim 1.3s linear infinite}
+@media(prefers-reduced-motion:reduce){body:not(.imgdone) .pic.empty{animation:none}.fav{transition:none}}
+
+/* ===== Collection, liste, frise, partage ===== */
+.own,.ownb{font:800 13px var(--body);cursor:pointer}
+.own{display:inline-flex;align-items:center;gap:7px;margin-top:8px;border:2px solid var(--bark);background:#fff9;color:var(--bark);border-radius:999px;padding:3px 12px 3px 4px}
+.own .box,.ownb .box{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--bark);display:grid;place-items:center;font-size:13px;line-height:1;background:#fff;color:#1f6b3a}
+.own[aria-pressed="true"]{background:#1f6b3a;color:#fff;border-color:#0f3a1f}
+.own[aria-pressed="true"] .box{border-color:#fff}
+.ownb{display:inline-flex;align-items:center;gap:8px}
+.ownb[aria-pressed="true"]{background:#1f6b3a;color:#fff}
+.ownb[aria-pressed="true"] .box{border-color:#fff}
+.tag.owned{background:
+ repeating-linear-gradient(0deg,#0000 0 3px,#2a6a3a14 3px 4px),
+ linear-gradient(160deg,#e9f0d2,#bfd39c)}
+.hit{margin:6px 0 0;font-size:12px;font-weight:800;color:#8a1426;line-height:1.3}
+
+.dash{margin:18px 0 6px;padding:14px 16px 12px;color:var(--bark);border:3px solid var(--bark);border-radius:16px;box-shadow:0 5px 0 #0005;
+ background:repeating-linear-gradient(0deg,#0000 0 3px,#8a5a2a0d 3px 4px),linear-gradient(160deg,#f3e6cb,#dcc59d)}
+.dash-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.prog{flex:1 1 240px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px}
+.prog span{white-space:nowrap}
+.progbar{flex:1;min-width:80px;height:14px;border-radius:999px;border:3px solid var(--bark);background:#fff8;overflow:hidden}
+.progbar i{display:block;height:100%;width:0;background:#1f6b3a;transition:width .3s}
+.dbtn{border:2px solid var(--bark);background:var(--snow);color:var(--bark);border-radius:10px;padding:6px 11px;font:800 13px var(--body);cursor:pointer}
+.tl-title{margin:12px 0 0;font-size:13px;font-weight:800;color:#6b5638}
+.tl{display:flex;align-items:flex-end;gap:2px;margin-top:6px;padding-bottom:2px}
+.tlc{flex:1 1 0;min-width:0;border:0;background:none;color:var(--bark);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font:800 12px var(--body);padding:5px 2px 4px;border-radius:10px}
+.tlc[aria-pressed="true"]{background:#3b2a1a1f;box-shadow:inset 0 0 0 2px var(--bark)}
+.tlbar{display:block;width:100%;max-width:36px;border:2px solid var(--bark);border-radius:6px 6px 0 0;background:var(--yc);position:relative;overflow:hidden}
+.tlown{position:absolute;left:0;right:0;bottom:0;background:#1f6b3a}
+.tly{font-size:11px}.tly b{font-weight:800}.tly .y2{display:none}
+
+#toast{display:none;position:fixed;inset:auto auto calc(24px + env(safe-area-inset-bottom,0px)) 50%;transform:translateX(-50%);margin:0;border:2px solid #f2b63266;
+ background:var(--bark);color:var(--kraft);padding:10px 16px;border-radius:999px;font:800 14px var(--body);z-index:60}
+#toast.show{display:block}
+#toast:popover-open{display:block}
+
+/* Vue liste compacte */
+.view-list .grid{grid-template-columns:1fr;gap:8px}
+.view-list .tag{grid-template-columns:52px 1fr;gap:12px;min-height:0;padding:14px 104px 10px 12px}
+.view-list .pic{width:52px;height:52px;font-size:24px;border-width:2px;border-radius:10px;box-shadow:none}
+.view-list .desc{display:none}
+.view-list .name,.view-list .tag .name{font-size:1.1rem;margin:0;padding-right:0}
+.view-list .fav{top:calc(50% - 14px);right:10px}
+.view-list .own{position:absolute;right:54px;top:calc(50% - 14px);margin:0;padding:0;width:36px;height:36px;justify-content:center;border-radius:50%}
+.view-list .own .lab{display:none}
+.view-list .own .box{width:22px;height:22px}
+.view-list .hit{margin:2px 0 0}
+@media(max-width:520px){.bar-in{padding:10px 12px}.seg button{padding:9px 9px}.lang button{min-width:0}.dash{padding:12px}.tlc{font-size:11px}.tlbar{max-width:30px}.tly .y4{display:none}.tly .y2{display:inline}}
+
+/* ===== Thème clair, Noël, sauvegarde ===== */
+[hidden]{display:none!important}
+.theme-btn{position:absolute;top:12px;right:12px;z-index:3;width:42px;height:42px;border-radius:50%;border:3px solid var(--bark);background:var(--gold);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 0 var(--bark);display:grid;place-items:center;padding:0}
+.theme-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--bark)}
+.xmas{display:inline-block;margin-top:10px;background:var(--ribbon);color:#fff;font-weight:800;font-size:14px;padding:5px 14px;border-radius:999px;border:2px solid #ffffff55;box-shadow:0 3px 0 #0005}
+.bk-txt{font-weight:700;font-size:14px;margin:8px 0 4px;line-height:1.4}
+#bkInfo{min-height:1.4em}
+
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="light"] body{color:#123127;background:
+ radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
+ radial-gradient(circle,#0f2a220d 1px,#0000 1.6px) 27px 27px/54px 54px,
+ radial-gradient(1200px 500px at 85% -10%,#ffffffaa,#0000 70%),
+ linear-gradient(180deg,#eaf3ec,#c6dac9)}
+:root[data-theme="light"] .pines{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='42' viewBox='0 0 44 42'><polygon points='0,42 22,2 44,42' fill='%23eaf3ec'/><polygon points='9,42 22,14 35,42' fill='%23d9e8dd'/></svg>") repeat-x bottom/44px 42px}
+:root[data-theme="light"] .bar{background:#eaf3eeee;box-shadow:0 8px 18px #0f2a2233}
+:root[data-theme="light"] .chip{border-color:#0f2a2244;background:#0f2a2210;color:var(--forest)}
+:root[data-theme="light"] .chip[aria-pressed="true"]{background:var(--ribbon);border-color:#ff8a98;color:#fff}
+:root[data-theme="light"] .meta,:root[data-theme="light"] .empty-msg,:root[data-theme="light"] .year-head span{color:#33574a}
+:root[data-theme="light"] .meta button{border-color:#0f2a2244;color:var(--forest)}
+:root[data-theme="light"] .year-head::after{background:repeating-linear-gradient(90deg,var(--bark) 0 10px,#0000 10px 18px)}
+:root[data-theme="light"] footer{color:#46685a;border-top-color:#0f2a2233}
+:root[data-theme="light"] .banner{background:#ffe6df;color:#7a1b10}
+:root[data-theme="light"] .banner code{background:#0001}
+:root[data-theme="light"] :focus-visible{outline-color:var(--ribbon)}
+</style></head><body>
+
+<header class="hero"><button id="themeBtn" class="theme-btn" type="button"></button><div class="hero-in">
+ <div class="hero-text">
+  <span class="tagline">Roblox · Lumber Tycoon 2</span>
+  <h1 data-i18n="h1">Tous les gifts de Lumberland</h1>
+  <p data-i18n="sub">Les cadeaux de 2015 à 2025, avec leur image du wiki.</p>
+  <div><span class="xmas" id="xmas"></span></div>
+ </div>
+ <svg class="stack" viewBox="0 0 240 240" role="img" data-i18n-aria="stack" aria-label="Pile de cadeaux">
+  <g stroke="#3b2a1a" stroke-width="4" stroke-linejoin="round">
+   <rect x="10" y="140" width="140" height="90" rx="4" fill="#d7263d"/><rect x="69" y="140" width="22" height="90" fill="#f2b632"/>
+   <rect x="4" y="122" width="152" height="24" rx="4" fill="#b91d31"/><rect x="69" y="122" width="22" height="24" fill="#f2b632"/>
+   <rect x="150" y="170" width="84" height="60" rx="4" fill="#1f8f5a"/><rect x="181" y="170" width="22" height="60" fill="#f6f8f3"/>
+   <rect x="146" y="156" width="92" height="20" rx="4" fill="#176b43"/><rect x="181" y="156" width="22" height="20" fill="#f6f8f3"/>
+   <rect x="36" y="88" width="88" height="34" rx="4" fill="#f2b632"/><rect x="70" y="88" width="20" height="34" fill="#d7263d"/>
+   <rect x="32" y="72" width="96" height="18" rx="4" fill="#d89a14"/><rect x="70" y="72" width="20" height="18" fill="#d7263d"/>
+   <path d="M80 70C52 40 38 70 80 70C122 70 108 40 80 70Z" fill="#d7263d"/>
+   <path d="M80 120C52 92 38 122 80 120C122 122 108 92 80 120Z" fill="#f2b632"/>
+   <path d="M192 154C170 130 160 156 192 154C224 156 214 130 192 154Z" fill="#f6f8f3"/>
+  </g>
+ </svg>
+</div></header>
+<div class="pines" aria-hidden="true"></div>
+
+<div class="bar"><div class="bar-in">
+ <div class="row">
+  <label class="search"><span aria-hidden="true">🔍</span><input id="search" type="search" data-i18n-ph="search" data-i18n-aria="search" placeholder="Chercher un gift" aria-label="Chercher un gift" autocomplete="off"></label>
+  <div class="seg" id="sortSeg" role="group" data-i18n-aria="sort" aria-label="Tri"><button id="byYear" type="button" aria-pressed="true" data-i18n="byYear">Par année</button><button id="byName" type="button" aria-pressed="false">A → Z</button></div>
+  <div class="seg" id="viewSeg" role="group" data-i18n-aria="view" aria-label="Affichage"><button id="vGrid" type="button" aria-pressed="true" data-i18n-aria="vGrid" data-i18n-title="vGrid" aria-label="Grille" title="Grille">▦</button><button id="vList" type="button" aria-pressed="false" data-i18n-aria="vList" data-i18n-title="vList" aria-label="Liste" title="Liste">☰</button></div>
+  <div class="seg lang" id="langSeg" role="group" aria-label="Langue / Language"><button id="langFr" type="button" lang="fr" aria-pressed="true" title="Français">FR</button><button id="langEn" type="button" lang="en" aria-pressed="false" title="English">EN</button></div>
+
+ </div>
+ <div class="chips" id="chips" role="group" data-i18n-aria="filter" aria-label="Filtrer par année"></div>
+ <div class="meta"><span><span id="count" data-i18n="loading">Chargement…</span> <span id="cstat"></span></span><span class="mbtn"><button id="rand" type="button" data-i18n="rand">🎲 Surprise</button> <button id="retry" type="button" data-i18n="retry">Recharger les images</button></span></div>
+</div></div>
+
+<main>
+ <div class="banner" id="banner"></div>
+ <section class="dash">
+  <div class="dash-top">
+   <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="listBtn" class="dbtn" type="button" data-i18n="myList">📋 Ma liste</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">💾 Sauvegarde</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+  </div>
+  <p class="tl-title" data-i18n="tlTitle"></p>
+  <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
+ </section>
+ <div id="out"></div>
+</main>
+<button id="top" type="button" data-i18n-aria="top" aria-label="Retour en haut">🎁</button>
+<footer data-i18n="footer">Images © Lumber Tycoon 2 Wiki (Fandom). Pour voir les images, ouvre ce fichier dans un navigateur avec Internet.</footer>
+
+<div id="toast" popover="manual" role="status" aria-live="polite"></div>
+
+<dialog id="lb"><div class="lb">
+ <div class="big"><img id="lbImg" alt=""><span id="lbEmpty" style="font-size:80px;display:none">🎁</span><button class="nav prev" id="lbPrev" type="button" data-i18n-aria="prev" aria-label="Gift précédent">‹</button><button class="nav next" id="lbNext" type="button" data-i18n-aria="next" aria-label="Gift suivant">›</button></div>
+ <h3 id="lbName"></h3><div><span class="yr" id="lbYear"></span></div>
+ <div class="actions"><button class="btn" id="lbContents" type="button" style="display:none" data-i18n="viewContents">Voir le contenu</button><a class="btn" id="lbWiki" target="_blank" rel="noopener" data-i18n="wikiPage">Fiche du wiki</a><button class="btn alt ownb" id="lbOwn" type="button" aria-pressed="false"><span class="box" aria-hidden="true"></span><span class="lab"></span></button><button class="btn alt" id="lbLink" type="button" data-i18n-aria="lbLink" data-i18n-title="lbLink" aria-label="Copier le lien" title="Copier le lien">🔗</button><button class="btn alt" id="lbClose" type="button" data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<dialog id="ct"><div class="lb">
+ <h3 id="ctName"></h3><div><span class="yr" id="ctYear"></span></div>
+ <div class="cgrid" id="ctGrid"></div>
+ <div class="actions"><button class="btn alt" id="ctClose" type="button" data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<dialog id="bk"><div class="lb">
+ <h3 data-i18n="bkTitle">Sauvegarde</h3>
+ <p class="bk-txt" data-i18n="bkText"></p>
+ <div class="actions"><button class="btn" id="bkExport" type="button" data-i18n="bkExport"></button><button class="btn alt" id="bkImport" type="button" data-i18n="bkImport"></button><input type="file" id="bkFile" accept=".pdf,application/pdf,.txt,.json,text/plain,application/json" hidden></div>
+ <p class="bk-txt" id="bkInfo" role="status"></p>
+ <div class="actions" id="bkChoice" hidden><button class="btn" id="bkMerge" type="button" data-i18n="bkMerge"></button><button class="btn alt" id="bkReplace" type="button" data-i18n="bkReplace"></button></div>
+ <div class="actions"><button class="btn alt" id="bkClose" type="button" data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<script>
+const gifts=[{"name": "Acceptable Gift from Bob", "year": 2016}, {"name": "Antithetical Gift of Opposites", "year": 2025}, {"name": "BIG GIFT", "year": 2016}, {"name": "Bright Gift", "year": 2025}, {"name": "Burnt Gift", "year": 2019}, {"name": "Checkered Gift of Mates", "year": 2024}, {"name": "Chilly Gift of Deep Cold", "year": 2022}, {"name": "Cold and Wet and Lumpy Gift from Bob", "year": 2018}, {"name": "Daisy Gift", "year": 2019}, {"name": "Dark Gift", "year": 2021}, {"name": "Delicious Pink Present of Bubbly Fun", "year": 2024}, {"name": "Delightful Lime Present of Excellent Endearance", "year": 2023}, {"name": "Duck Shaped Gift", "year": 2018}, {"name": "Fabulous Gift", "year": 2020}, {"name": "Fiery Gift of Lumber", "year": 2015}, {"name": "Gift of Adventure", "year": 2018}, {"name": "Gift of Citrus Tart", "year": 2022}, {"name": "Gift of Comfort", "year": 2025}, {"name": "Gift of Critically Acclaimed Knowledge", "year": 2021}, {"name": "Gift of Enchanted Tales", "year": 2022}, {"name": "Gift of Forbidden Knowledge", "year": 2025}, {"name": "Gift of Good Health", "year": 2019}, {"name": "Gift of Good Preparedness", "year": 2020}, {"name": "Gift of Important Game Knowledge", "year": 2023}, {"name": "Gift of Individualism", "year": 2024}, {"name": "Gift of Pixelation", "year": 2023}, {"name": "Gift of Plump Appetites", "year": 2021}, {"name": "Gift of Snow", "year": 2022}, {"name": "Gift of Spooky Knowledge", "year": 2024}, {"name": "Gift of Tremendously Important Knowledge", "year": 2020}, {"name": "Gift of Unhealthy Diets", "year": 2019}, {"name": "Gift with Candy Cane Stripes", "year": 2018}, {"name": "Gift with Green Candy Cane Stripes", "year": 2020}, {"name": "Gift with Yellow Candy Cane Stripes", "year": 2021}, {"name": "Gingerbread Gift", "year": 2018}, {"name": "Grand Gift of Twenty Facets", "year": 2025}, {"name": "Green Gift of Good Golly Goodness", "year": 2023}, {"name": "Happy Blue Gift of Fun", "year": 2016}, {"name": "Happy Red Gift of Fun", "year": 2015}, {"name": "Hasty Gift of Refined Refinement", "year": 2024}, {"name": "Jingly Gift of Jingles", "year": 2016}, {"name": "Joyful Green Gift of High Quality Charm", "year": 2017}, {"name": "Modern Gift", "year": 2017}, {"name": "Murky Gift of Goo", "year": 2021}, {"name": "Old Gift of Oxidation", "year": 2019}, {"name": "Orange Gift of Traffic Control and Corporate Power", "year": 2018}, {"name": "Poorly Wrapped Gift from Bob", "year": 2015}, {"name": "Prismatic Present of Whimsy and Wonder", "year": 2025}, {"name": "Round and Flat Gift", "year": 2018}, {"name": "Rugged Gift", "year": 2024}, {"name": "Shiny Gift of Sweet Sounds", "year": 2025}, {"name": "Silly Gift of Six Sides", "year": 2023}, {"name": "Spooky Deep Earth Gift", "year": 2020}, {"name": "Sweet Gift", "year": 2016}, {"name": "Tall Gift of Stone", "year": 2022}, {"name": "Tall Gift of Stripes", "year": 2021}, {"name": "Teal Gift", "year": 2020}, {"name": "The Gift of Great Times", "year": 2017}, {"name": "The Golden Gift of Golden Times", "year": 2017}, {"name": "Trivial Gift of Ten Tangents", "year": 2024}, {"name": "Twinkly Gift", "year": 2024}, {"name": "Very Cold Gift", "year": 2021}, {"name": "Very Plum Gift", "year": 2018}, {"name": "Warm Gift of Love and Safety", "year": 2018}, {"name": "Weighted Gift of Immense Friendship", "year": 2022}, {"name": "Weighted Gift of Weight", "year": 2021}, {"name": "Wide Gift of Stone", "year": 2022}, {"name": "Wobbler Gift of Uncertainty", "year": 2015}, {"name": "Wobblier Gift of Less Certainty", "year": 2016}, {"name": "Wobbly Gift of Doom and Despair", "year": 2024}, {"name": "Wobbly Gift of High Confidence", "year": 2017}, {"name": "Wobbly Gift of Low Confidence", "year": 2018}, {"name": "Wobbly Gift Of Lowest Confidence", "year": 2021}, {"name": "Wobbly Gift of Most Confusion", "year": 2022}, {"name": "Wobbly Gift of Mostly Teal", "year": 2019}, {"name": "Wobbly Gift of Shock and Awe", "year": 2023}, {"name": "Wobbly Gift of Snow and Ice", "year": 2025}, {"name": "Wobbly Gift of Uncertainty", "year": 2015}];
+const WIKI='https://lumber-tycoon-2.fandom.com';
+const API=WIKI+'/api.php?action=query&format=json&origin=*&redirects=1';
+const base=WIKI+'/wiki/';
+const $=id=>document.getElementById(id);
+const out=$('out'),search=$('search'),count=$('count'),banner=$('banner'),chips=$('chips');
+const slug=s=>s.replace(/ /g,'_');
+const imgFor=g=>fixedImages[g.name]||thumbs.get(norm(g.name))||'';
+const norm=s=>s.toLowerCase().replace(/_/g,' ').trim();
+let sortMode='year',yearFilter='',viewMode='grid';
+const YC={2015:'#e5484d',2016:'#f97316',2017:'#f2b632',2018:'#84cc16',2019:'#22c55e',2020:'#14b8a6',2021:'#38bdf8',2022:'#6366f1',2023:'#a855f7',2024:'#ec4899',2025:'#fb7185'};
+const yc=y=>YC[y]||'#c0834a';
+let favs=new Set();try{favs=new Set(JSON.parse(localStorage.getItem('lt2favs')||'[]'))}catch(e){}
+const saveFavs=()=>{try{localStorage.setItem('lt2favs',JSON.stringify([...favs]))}catch(e){}};
+let owned=new Set();try{owned=new Set(JSON.parse(localStorage.getItem('lt2owned')||'[]'))}catch(e){}
+const saveOwned=()=>{try{localStorage.setItem('lt2owned',JSON.stringify([...owned]))}catch(e){}};
+let shownList=[],curG=null;
+let cState='idle',cDone=0;
+
+/* ---------- Langue (FR / EN) ---------- */
+const T={
+ fr:{
+  toLight:'Passer en mode clair',toDark:'Passer en mode sombre',
+  xmasDays:n=>'🎄 Noël dans '+n+' jours',xmasTomorrow:'🎄 Noël, c’est demain !',xmasToday:'🎄 Joyeux Noël !',
+  install:'📲 Installer',bkBtn:'💾 Sauvegarde',bkTitle:'Sauvegarde de ta collection',
+  bkText:'Exporte tes favoris et tes gifts obtenus dans un joli PDF, puis réimporte ce même PDF sur un autre appareil ou après avoir vidé le navigateur.',
+  bkExport:'⬇ Exporter',bkImport:'⬆ Importer',bkMerge:'Fusionner',bkReplace:'Remplacer',
+  bkFound:(o,f)=>'Fichier lu : '+o+(o>1?' obtenus':' obtenu')+', '+f+(f>1?' favoris':' favori')+'. Fusionner garde aussi ce que tu as déjà ; Remplacer efface ta collection actuelle.',
+  bkBad:'Fichier non reconnu. Choisis un PDF exporté depuis ce site.',bkExported:'PDF exporté !',bkDone:'Collection mise à jour !',
+  own:'Je l’ai',ownedChip:'✓ Obtenus',missingChip:'À trouver',prog:(n,t)=>'Collection : '+n+'/'+t,contains:'Contient',
+  share:'🔗 Partager',myList:'📋 Ma liste',copied:'Lien copié !',listCopied:'Liste copiée !',copyManual:'Copie ce texte :',
+  view:'Affichage',vGrid:'Grille',vList:'Liste',tlTitle:'Gifts par année (en vert : ceux que tu as)',tlGroup:'Gifts par année',
+  tlAria:(y,n,o)=>y+' : '+n+(n>1?' gifts':' gift')+', '+o+(o>1?' obtenus':' obtenu'),lbLink:'Copier le lien',
+  noOwned:'Rien de coché pour l’instant. Appuie sur « Je l’ai » sur une carte.',allDone:'Tu as tout trouvé, bravo !',
+  listTitle:'Lumber Tycoon 2 — mes gifts',listFavs:'♥ Favoris',listOwned:'✓ Obtenus',none:'(aucun)',
+  title:'Lumber Tycoon 2 — Galerie des gifts',h1:'Tous les gifts de Lumberland',sub:'Les cadeaux de 2015 à 2025, avec leur image du wiki.',
+  stack:'Pile de cadeaux',search:'Chercher un gift ou un objet',sort:'Tri',byYear:'Par année',filter:'Filtrer par année',
+  loading:'Chargement…',rand:'🎲 Surprise',retry:'Recharger les images',top:'Retour en haut',
+  footer:'Images © Lumber Tycoon 2 Wiki (Fandom). Pour voir les images, ouvre ce fichier dans un navigateur avec Internet.',
+  prev:'Gift précédent',next:'Gift suivant',viewContents:'Voir le contenu',wikiPage:'Fiche du wiki',close:'Fermer',
+  all:'Toutes',favs:'♥ Favoris',
+  zoom:n=>'Agrandir l’image de '+n,imgOf:n=>'Image de '+n,
+  imgSearch:'Recherche de l’image…',imgFail:'Image du wiki non chargée.',imgWiki:'Image du wiki',imgNone:'Pas d’image sur le wiki',
+  descNone:'Pas de description sur le wiki.',descLoad:'Chargement de la description…',
+  favRemove:n=>'Retirer des favoris : '+n,favAdd:n=>'Ajouter aux favoris : '+n,
+  countOf:(n,t)=>n+(n>1?' gifts':' gift')+' sur '+t,gifts:n=>n+(n>1?' gifts':' gift'),
+  noFav:'Aucun favori pour l’instant. Appuie sur le ♥ d’une carte pour l’ajouter.',noMatch:'Aucun gift ne correspond. Essaie un autre mot ou choisis « Toutes ».',
+  cstat:(d,t)=>'· contenus : '+d+'/'+t,
+  bannerImg:e=>'Le wiki est injoignable (<code>'+e+'</code>). Vérifie ta connexion et ouvre ce fichier directement dans ton navigateur, puis appuie sur « Recharger les images ».',
+  bannerCt:e=>'Impossible de lire le contenu des gifts sur le wiki (<code>'+e+'</code>). Ouvre ce fichier dans ton navigateur avec Internet, puis appuie sur « Recharger les images ».'
+ },
+ en:{
+  toLight:'Switch to light mode',toDark:'Switch to dark mode',
+  xmasDays:n=>'🎄 Christmas in '+n+' days',xmasTomorrow:'🎄 Christmas is tomorrow!',xmasToday:'🎄 Merry Christmas!',
+  install:'📲 Install',bkBtn:'💾 Backup',bkTitle:'Back up your collection',
+  bkText:'Export your favorites and owned gifts as a nicely styled PDF, then import that same PDF on another device or after clearing your browser.',
+  bkExport:'⬇ Export',bkImport:'⬆ Import',bkMerge:'Merge',bkReplace:'Replace',
+  bkFound:(o,f)=>'File read: '+o+' owned, '+f+(f===1?' favorite':' favorites')+'. Merge keeps what you already have too; Replace erases your current collection.',
+  bkBad:'File not recognized. Pick a PDF exported from this site.',bkExported:'PDF exported!',bkDone:'Collection updated!',
+  own:'Got it',ownedChip:'✓ Owned',missingChip:'Still missing',prog:(n,t)=>'Collection: '+n+'/'+t,contains:'Contains',
+  share:'🔗 Share',myList:'📋 My list',copied:'Link copied!',listCopied:'List copied!',copyManual:'Copy this text:',
+  view:'View',vGrid:'Grid',vList:'List',tlTitle:'Gifts per year (green = the ones you have)',tlGroup:'Gifts per year',
+  tlAria:(y,n,o)=>y+': '+n+(n===1?' gift':' gifts')+', '+o+' owned',lbLink:'Copy link',
+  noOwned:'Nothing checked yet. Tap “Got it” on a card.',allDone:'You found them all, nice!',
+  listTitle:'Lumber Tycoon 2 — my gifts',listFavs:'♥ Favorites',listOwned:'✓ Owned',none:'(none)',
+  title:'Lumber Tycoon 2 — Gift gallery',h1:'Every gift in Lumberland',sub:'Gifts from 2015 to 2025, with their wiki image.',
+  stack:'Pile of gifts',search:'Search for a gift or an item',sort:'Sort',byYear:'By year',filter:'Filter by year',
+  loading:'Loading…',rand:'🎲 Surprise me',retry:'Reload images',top:'Back to top',
+  footer:'Images © Lumber Tycoon 2 Wiki (Fandom). To see the images, open this file in a browser with an Internet connection.',
+  prev:'Previous gift',next:'Next gift',viewContents:'View contents',wikiPage:'Wiki page',close:'Close',
+  all:'All',favs:'♥ Favorites',
+  zoom:n=>'Enlarge image of '+n,imgOf:n=>'Image of '+n,
+  imgSearch:'Looking for the image…',imgFail:'Wiki image failed to load.',imgWiki:'Wiki image',imgNone:'No image on the wiki',
+  descNone:'No description on the wiki.',descLoad:'Loading description…',
+  favRemove:n=>'Remove from favorites: '+n,favAdd:n=>'Add to favorites: '+n,
+  countOf:(n,t)=>n+(n===1?' gift':' gifts')+' of '+t,gifts:n=>n+(n===1?' gift':' gifts'),
+  noFav:'No favorites yet. Tap the ♥ on a card to add one.',noMatch:'No gift matches. Try another word or choose “All”.',
+  cstat:(d,t)=>'· contents: '+d+'/'+t,
+  bannerImg:e=>'The wiki can’t be reached (<code>'+e+'</code>). Check your connection and open this file directly in your browser, then press “Reload images”.',
+  bannerCt:e=>'Couldn’t read the gift contents from the wiki (<code>'+e+'</code>). Open this file in a browser with Internet access, then press “Reload images”.'
+ }
+};
+let lang='fr';
+try{const sv=localStorage.getItem('lt2lang');lang=sv==='fr'||sv==='en'?sv:((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en')}catch(e){}
+const t=(k,...a)=>{const v=T[lang][k];return typeof v==='function'?v(...a):v};
+let bannerState=null;
+function showBanner(key,e){bannerState={key,e};banner.style.display='block';banner.innerHTML=t(key,e)}
+function hideBanner(){bannerState=null;banner.style.display='none'}
+function updCstat(){$('cstat').textContent=cState==='loading'?t('cstat',cDone,gifts.length):''}
+function applyLang(){
+ document.documentElement.lang=lang;document.title=t('title');
+ document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});
+ document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
+ document.querySelectorAll('[data-i18n-aria]').forEach(el=>{el.setAttribute('aria-label',t(el.dataset.i18nAria))});
+ document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.dataset.i18nTitle)});
+ $('langFr').setAttribute('aria-pressed',String(lang==='fr'));$('langEn').setAttribute('aria-pressed',String(lang==='en'));
+ if(bannerState)banner.innerHTML=t(bannerState.key,bannerState.e);
+ updCstat();updProgress();updTimeline();syncLb();updThemeBtn();updXmas();
+ if(curG){$('lbImg').alt=t('imgOf',curG.name)}
+}
+function setLang(l){
+ if(l===lang)return;lang=l;try{localStorage.setItem('lt2lang',l)}catch(e){}
+ applyLang();buildChips();render();
+ if(ct.open){const n=$('ctName').textContent;$('ctGrid').querySelectorAll('img').forEach(im=>{const a=im.closest('.cell')?.querySelector('a');if(a)im.alt=t('imgOf',a.textContent)})}
+}
+
+const fixedImages={
+ 'Gift of Adventure':'https://static.wikia.nocookie.net/lumber-tycoon-2/images/b/b9/AdvGiftStockImg.png/revision/latest?cb=20181214091722',
+ 'Sweet Gift':'https://static.wikia.nocookie.net/lumber-tycoon-2/images/d/d7/Dieyt.png/revision/latest?cb=20161225115502',
+ 'Happy Red Gift of Fun':'https://static.wikia.nocookie.net/lumber-tycoon-2/images/5/59/Polkagift.png/revision/latest?cb=20191202075300',
+ 'Acceptable Gift from Bob':'https://static.wikia.nocookie.net/lumber-tycoon-2/images/c/cd/Acceptableboxed.png/revision/latest?cb=20161226000114'
+};
+
+/* ---------- Chargement des images (inchangé dans le principe) ---------- */
+const thumbs=new Map(),tried=new Set(),live=new Map();
+let apiOk=null,busy=false;
+async function j(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+
+function paint(name,url){
+ (live.get(name)||[]).forEach(el=>{
+  el.img.onerror=()=>{el.img.remove();el.pic.classList.add('empty');el.pic.textContent='🎁';el.status.textContent=t('imgFail')};
+  el.img.src=url;
+  if(!el.pic.contains(el.img))el.pic.replaceChildren(el.img);
+  el.pic.classList.remove('empty');el.status.textContent=t('imgWiki');
+ });
+}
+function setImage(name,url){thumbs.set(norm(name),url);paint(name,url);
+ if(curG&&lb.open&&norm(curG.name)===norm(name)){$('lbImg').src=url;$('lbImg').style.display='block';$('lbEmpty').style.display='none'}}
+
+async function loadBatch(){
+ const names=gifts.map(g=>g.name);
+ for(let i=0;i<names.length;i+=40){
+  const chunk=names.slice(i,i+40);
+  const d=await j(API+'&prop=pageimages&piprop=thumbnail&pilimit=50&pithumbsize=320&titles='+encodeURIComponent(chunk.map(slug).join('|')));
+  apiOk=true;const q=d.query||{};
+  const map={};chunk.forEach(n=>map[norm(n)]=norm(n));
+  for(const list of [q.normalized||[],q.redirects||[]])for(const e of list)for(const k in map)if(map[k]===norm(e.from))map[k]=norm(e.to);
+  const byTitle={};Object.values(q.pages||{}).forEach(p=>{if(p.thumbnail?.source)byTitle[norm(p.title)]=p.thumbnail.source});
+  chunk.forEach(n=>{if(byTitle[map[norm(n)]])setImage(n,byTitle[map[norm(n)]])});
+ }
+}
+const BAD=/(logo|icon|wiki|favicon|button|arrow|stub|badge|avatar|robux|coin|star|infobox|template)/i;
+async function findInPage(name){
+ const d=await j(API+'&generator=images&gimlimit=40&prop=imageinfo&iiprop=url|size&iiurlwidth=320&titles='+encodeURIComponent(slug(name)));
+ const words=norm(name).split(' ').filter(w=>w.length>3&&!['gift','from','with'].includes(w));
+ const cands=Object.values(d.query?.pages||{}).filter(p=>p.imageinfo?.[0]&&/\.(png|jpe?g|webp|gif)$/i.test(p.title)&&!BAD.test(p.title)).map(p=>{
+  const ii=p.imageinfo[0],t=p.title.toLowerCase();
+  let s=Math.min((ii.width||0)*(ii.height||0),1e6)/1e6;
+  if(/gift|present|box/.test(t))s+=2;
+  words.forEach(w=>{if(t.includes(w))s+=1});
+  return {s,url:ii.thumburl||ii.url};
+ }).sort((a,b)=>b.s-a.s);
+ return cands[0]?.url||null;
+}
+async function loadDetails(){
+ const todo=gifts.map(g=>g.name).filter(n=>!fixedImages[n]&&!thumbs.has(norm(n))&&!tried.has(n));
+ let i=0;
+ const worker=async()=>{while(i<todo.length){const n=todo[i++];tried.add(n);
+  try{const u=await findInPage(n);if(u)setImage(n,u);else{(live.get(n)||[]).forEach(el=>el.status.textContent=t('imgNone'))}}catch(e){}}};
+ await Promise.all([worker(),worker(),worker(),worker()]);
+}
+async function loadAll(){
+ if(busy)return;busy=true;hideBanner();
+ try{await loadBatch();await loadDetails()}
+ catch(e){
+  console.warn(e);
+  if(apiOk!==true)showBanner('bannerImg',e.message)
+ }
+ busy=false;document.body.classList.add('imgdone');
+}
+
+/* ---------- Contenu des gifts (lu sur le wiki) ---------- */
+const contents=new Map();      // nom du gift -> {items:[...], from:'section'|'page'}
+const seedContents={'Fiery Gift of Lumber':['Fire Axe']};
+const giftNames=new Set(gifts.map(g=>norm(g.name)));
+const NS=/^(file|image|category|template|special|user|talk|help|wikipedia|w|c|fandom|mediawiki):/i;
+const STOP=/^(gifts?|christmas|defaultio|roblox|lumber tycoon 2|bob|santa|axes?|wood|items?|tools?|updates?|events?|lumberland|robux|money|plots?|land|trading|trade|game|players?|christmas event|loose items|placeables|vehicles|structures|stores?|trees?)$/i;
+const cleanTxt=t=>t.replace(/<[^>]*>/g,'').replace(/\{\{[^}]*\}\}/g,'').replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g,(m,a,b)=>b||a).replace(/'{2,}/g,'').trim();
+function okItem(n){const t=n.trim();return t.length>1&&t.length<45&&!NS.test(t)&&!STOP.test(t)&&!/^\d{4}$/.test(t)&&!/gift/i.test(t)&&!giftNames.has(norm(t))}
+function linksOf(txt){const out=[];const re=/\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|[^\]]*)?\]\]/g;let m;while((m=re.exec(txt)))if(okItem(m[1]))out.push(m[1].trim());return out}
+function bulletsOf(txt){const out=[];const re=/^[*#]+\s*(.+)$/gm;let m;while((m=re.exec(txt))){let t=cleanTxt(m[1]).split(/\s[-–—:(]\s?|\(/)[0].trim();if(okItem(t))out.push(t)}return out}
+function parseItems(wt){
+ const parts=wt.split(/^(={2,4})[ \t]*(.+?)[ \t]*\1[ \t]*$/gm);
+ const want=/content|contain|item|loot|reward|drop|obtain|inside|prize|possible|unbox|open|receiv/i;
+ let found=[];
+ for(let i=1;i+2<parts.length;i+=3){
+  if(want.test(cleanTxt(parts[i+1]))){found=found.concat(linksOf(parts[i+2]),bulletsOf(parts[i+2]))}
+ }
+ let from='section';
+ if(!found.length){from='page';found=linksOf(wt)}
+ const seen=new Set(),items=[];
+ found.forEach(n=>{const k=norm(n);if(!seen.has(k)){seen.add(k);items.push(n)}});
+ return {items,from};
+}
+const descs=new Map();   // nom du gift -> description
+function parseDesc(wt){
+ const m=/^[ \t]*\|[ \t]*(description|desc|quote|flavou?r(?:text)?|tagline|blurb|text)[ \t]*=[ \t]*(.+)$/im.exec(wt);
+ if(m){const t=cleanTxt(m[2]);if(t.length>3)return t}
+ let t=wt;for(let k=0;k<6;k++)t=t.replace(/\{\{[^{}]*\}\}/g,'');
+ const line=t.replace(/\[\[(?:File|Image|Category)[^\]]*\]\]/gi,'').split('\n').map(l=>l.trim()).find(l=>l&&!/^[=*#|!{}:;<_]/.test(l));
+ if(!line)return '';
+ const c=cleanTxt(line),sent=c.match(/^.{20,220}?[.!?](\s|$)/);
+ return (sent?sent[0]:c.slice(0,200)).trim();
+}
+function titleMap(chunk,q){
+ const map={};chunk.forEach(n=>map[norm(n)]=norm(n));
+ for(const list of [q.normalized||[],q.redirects||[]])for(const e of list)for(const k in map)if(map[k]===norm(e.from))map[k]=norm(e.to);
+ return map;
+}
+async function loadContents(){
+ if(cState==='loading')return;cState='loading';cDone=0;contents.clear();descs.clear();
+ for(const g in seedContents)contents.set(g,{items:seedContents[g],from:'section'});
+ updCstat();
+ try{
+  const names=gifts.map(g=>g.name);
+  for(let i=0;i<names.length;i+=20){
+   const chunk=names.slice(i,i+20);
+   const d=await j(API+'&formatversion=2&prop=revisions&rvprop=content&rvslots=main&titles='+encodeURIComponent(chunk.map(slug).join('|')));
+   const q=d.query||{},map=titleMap(chunk,q),byTitle={};
+   (q.pages||[]).forEach(p=>{const c=p.revisions?.[0]?.slots?.main?.content;if(c)byTitle[norm(p.title)]=c});
+   chunk.forEach(n=>{
+    const wt=byTitle[map[norm(n)]];
+    if(wt){descs.set(n,parseDesc(wt));const r=parseItems(wt);const seed=seedContents[n]||[];
+     const items=[...new Set([...seed,...r.items])];
+     if(items.length)contents.set(n,{items,from:seed.length?'section':r.from})}
+   });
+   cDone=Math.min(names.length,i+20);updCstat();
+   render();
+  }
+  cState='done';updCstat();render();
+ }catch(e){
+  console.warn(e);cState='error';updCstat();
+  showBanner('bannerCt',e.message);
+ }
+ render();
+}
+
+/* ---------- Affichage ---------- */
+const years=[...new Set(gifts.map(g=>g.year))].sort((a,b)=>b-a);
+function buildChips(){
+ chips.innerHTML='';
+ [['',t('all')],['fav',t('favs')],['owned',t('ownedChip')],['missing',t('missingChip')],...years.map(y=>[String(y),String(y)])].forEach(([v,l])=>{
+  const b=document.createElement('button');b.type='button';b.className='chip';b.innerHTML=(/^\d{4}$/.test(v)?'<i class="dot" style="background:'+yc(+v)+'"></i>':'')+l;b.setAttribute('aria-pressed',String(v===yearFilter));
+  b.onclick=()=>{yearFilter=v;buildChips();render()};chips.append(b);
+ });
+}
+
+/* ---------- Collection, frise, partage ---------- */
+function renderOwnBtn(btn,name){
+ if(!btn)return;const on=!!name&&owned.has(name);
+ btn.setAttribute('aria-pressed',String(on));btn.querySelector('.box').textContent=on?'✓':'';btn.querySelector('.lab').textContent=t('own');
+ if(name)btn.setAttribute('aria-label',t('own')+' : '+name);
+}
+function syncLb(){renderOwnBtn($('lbOwn'),curG?curG.name:'')}
+function updProgress(){
+ const n=gifts.filter(g=>owned.has(g.name)).length,tot=gifts.length;
+ $('progTxt').textContent=t('prog',n,tot);$('progFill').style.width=(tot?n/tot*100:0)+'%';
+ const pb=$('progbar');pb.setAttribute('aria-valuemax',String(tot));pb.setAttribute('aria-valuenow',String(n));pb.setAttribute('aria-label',t('prog',n,tot));
+}
+const tlYears=[...years].reverse(),tlEl=$('tl'),tlCols=[];
+function buildTimeline(){
+ tlEl.innerHTML='';tlCols.length=0;
+ const max=Math.max(...tlYears.map(y=>gifts.filter(g=>g.year===y).length));
+ tlYears.forEach(y=>{
+  const n=gifts.filter(g=>g.year===y).length;
+  const b=document.createElement('button');b.type='button';b.className='tlc';b.style.setProperty('--yc',yc(y));
+  b.innerHTML='<span class="tln">'+n+'</span><span class="tlbar" style="height:'+Math.round(10+n/max*62)+'px"><i class="tlown"></i></span><span class="tly"><b class="y4">'+y+'</b><b class="y2" aria-hidden="true">’'+String(y).slice(2)+'</b></span>';
+  b.onclick=()=>{yearFilter=yearFilter===String(y)?'':String(y);buildChips();render()};
+  tlEl.append(b);tlCols.push({y,n,b,own:b.querySelector('.tlown')});
+ });
+}
+function updTimeline(){
+ tlCols.forEach(c=>{
+  const o=gifts.filter(g=>g.year===c.y&&owned.has(g.name)).length;
+  c.own.style.height=(c.n?o/c.n*100:0)+'%';
+  c.b.setAttribute('aria-pressed',String(yearFilter===String(c.y)));c.b.setAttribute('aria-label',t('tlAria',c.y,c.n,o));
+ });
+}
+function yearInfo(list){const k=list.filter(g=>owned.has(g.name)).length;return t('gifts',list.length)+(k?' · '+k+' ✓':'')}
+function updYearCounts(){document.querySelectorAll('.year-head span[data-y]').forEach(sp=>{sp.textContent=yearInfo(shownList.filter(g=>g&&String(g.year)===sp.dataset.y))})}
+function toggleOwned(name){
+ owned.has(name)?owned.delete(name):owned.add(name);saveOwned();
+ if(yearFilter==='owned'||yearFilter==='missing'){render();syncLb();return}
+ const card=[...out.querySelectorAll('.tag')].find(c=>c.dataset.g===name);
+ if(card){card.classList.toggle('owned',owned.has(name));renderOwnBtn(card.querySelector('.own'),name)}
+ syncLb();updProgress();updTimeline();updYearCounts();
+}
+function itemHitsOf(g,q){const c=contents.get(g.name);return q&&c?c.items.filter(i=>i.toLowerCase().includes(q)):[]}
+
+/* Liens partageables : l'état de la vue est dans l'adresse (#...) */
+function stateParams(withLang){
+ const p=new URLSearchParams(),q=search.value.trim();
+ if(yearFilter)p.set('y',yearFilter);if(sortMode!=='year')p.set('s',sortMode);if(q)p.set('q',q);if(viewMode!=='grid')p.set('v',viewMode);
+ if(lb.open&&curG)p.set('g',curG.name);if(withLang)p.set('l',lang);
+ return p.toString();
+}
+function writeHash(){try{const h=stateParams(false);history.replaceState(null,'',h?'#'+h:location.pathname+location.search)}catch(e){}}
+function applyHash(){
+ const p=new URLSearchParams(location.hash.slice(1)),y=p.get('y')||'';
+ yearFilter=(['fav','owned','missing'].includes(y)||years.map(String).includes(y))?y:'';
+ sortMode=p.get('s')==='name'?'name':'year';viewMode=p.get('v')==='list'?'list':'grid';search.value=p.get('q')||'';
+ const l=p.get('l');if(l==='fr'||l==='en')lang=l;
+ return p.get('g')||'';
+}
+async function copyText(txt){
+ try{await navigator.clipboard.writeText(txt);return true}catch(e){}
+ try{const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0';document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}
+}
+const toast=$('toast');let toastT;
+function toastMsg(m){
+ toast.textContent=m;
+ try{if(!toast.matches(':popover-open'))toast.showPopover()}catch(e){toast.classList.add('show')}
+ clearTimeout(toastT);toastT=setTimeout(()=>{try{toast.hidePopover()}catch(e){}toast.classList.remove('show')},1900);
+}
+async function copyOrAsk(txt,okMsg){(await copyText(txt))?toastMsg(okMsg):prompt(t('copyManual'),txt)}
+function listText(){
+ const names=a=>gifts.map(g=>g.name).filter(n=>a.has(n)).sort((x,y)=>x.localeCompare(y));
+ const f=names(favs),o=names(owned);
+ return t('listTitle')+'\n'+t('listFavs')+' ('+f.length+') : '+(f.join(', ')||t('none'))+'\n'+t('listOwned')+' ('+o.length+'/'+gifts.length+') : '+(o.join(', ')||t('none'));
+}
+function setSortUI(){$('byYear').setAttribute('aria-pressed',String(sortMode==='year'));$('byName').setAttribute('aria-pressed',String(sortMode==='name'))}
+function setViewUI(){document.body.classList.toggle('view-list',viewMode==='list');$('vGrid').setAttribute('aria-pressed',String(viewMode==='grid'));$('vList').setAttribute('aria-pressed',String(viewMode==='list'))}
+
+/* ---------- Thème clair / sombre ---------- */
+let theme=document.documentElement.dataset.theme==='light'?'light':'dark';
+function setTheme(th,save){
+ theme=th;document.documentElement.dataset.theme=th;
+ const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=th==='light'?'#b97d43':'#0f2a22';
+ if(save){try{localStorage.setItem('lt2theme',th)}catch(e){}}
+ updThemeBtn();
+}
+function updThemeBtn(){
+ const b=$('themeBtn');if(!b)return;
+ const label=t(theme==='light'?'toDark':'toLight');
+ b.textContent=theme==='light'?'🌙':'☀️';b.setAttribute('aria-label',label);b.title=label;
+}
+/* ---------- Compte à rebours avant Noël (25 décembre) ---------- */
+function updXmas(){
+ const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ let target=new Date(now.getFullYear(),11,25);if(today>target)target=new Date(now.getFullYear()+1,11,25);
+ const d=Math.round((target-today)/864e5);
+ $('xmas').textContent=d===0?t('xmasToday'):d===1?t('xmasTomorrow'):t('xmasDays',d);
+}
+/* ---------- Installation ---------- */
+let deferredInstall=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installBtn').hidden=false});
+addEventListener('appinstalled',()=>{deferredInstall=null;$('installBtn').hidden=true});
+$('installBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;$('installBtn').hidden=true};
+/* ---------- Sauvegarde / restauration ---------- */
+const bk=$('bk'),byNorm=new Map(gifts.map(g=>[norm(g.name),g.name]));let pendingBk=null;
+const cleanList=a=>[...new Set(a.map(n=>typeof n==='string'?byNorm.get(norm(n)):undefined).filter(Boolean))];
+$('bkBtn').onclick=()=>{pendingBk=null;$('bkInfo').textContent='';$('bkChoice').hidden=true;bk.showModal()};
+$('bkClose').onclick=()=>bk.close();
+bk.addEventListener('click',e=>{if(e.target===bk)bk.close()});
+/* ---------- PDF stylé (sans librairie) ---------- */
+const PDF_T={
+ fr:{title:'Ma collection de gifts',tag:'ROBLOX · LUMBER TYCOON 2',own:'Obtenus',fav:'Favoris',miss:'À trouver',coll:'Collection',date:'Exporté le ',cont:'suite',
+  foot:'Pour restaurer ta collection : Sauvegarde > Importer, puis choisis ce PDF.',page:'Page '},
+ en:{title:'My gifts collection',tag:'ROBLOX · LUMBER TYCOON 2',own:'Owned',fav:'Favorites',miss:'To find',coll:'Collection',date:'Exported on ',cont:'cont.',
+  foot:'To restore your collection: Backup > Import, then choose this PDF.',page:'Page '}
+};
+const HW=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+const HB=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584];
+const WINMAP={'’':146,'‘':145,'“':147,'”':148,'–':150,'—':151,'…':133,'•':149,'œ':156,'Œ':140,'€':128};
+const pdfWA=s=>{let o='';for(const ch of String(s)){const c=ch.charCodeAt(0);if(WINMAP[ch])o+=String.fromCharCode(WINMAP[ch]);else if((c>=32&&c<127)||(c>=160&&c<256))o+=ch;else if(c>=32)o+='?'}return o};
+const pdfEsc=s=>s.replace(/[\\()]/g,'\\$&');
+const pdfW=(s,sz,bold)=>{const A=bold?HB:HW;let w=0;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);w+=(c>=32&&c<127?A[c-32]:556)}return w*sz/1000};
+const pdfFit=(s,sz,bold,max)=>{s=pdfWA(s);if(pdfW(s,sz,bold)<=max)return s;while(s.length>1&&pdfW(s+'...',sz,bold)>max)s=s.slice(0,-1);return s.trimEnd()+'...'};
+const pdfRGB=h=>{h=h.replace('#','');return [0,2,4].map(i=>(parseInt(h.substr(i,2),16)/255).toFixed(3)).join(' ')};
+const pdfLum=h=>{h=h.replace('#','');const [r,g,b]=[0,2,4].map(i=>parseInt(h.substr(i,2),16));return (0.299*r+0.587*g+0.114*b)/255};
+
+function buildPdf(data){
+ const L=PDF_T[lang]||PDF_T.fr;
+ const PW=595,PH=842,MX=40,CW=PW-MX*2;
+ const pages=[];let ops;
+ const fy=(y,h=0)=>(PH-y-h).toFixed(2);
+ const rect=(x,y,w,h,c)=>ops.push(pdfRGB(c)+' rg '+x.toFixed(2)+' '+fy(y,h)+' '+w.toFixed(2)+' '+h.toFixed(2)+' re f');
+ const rr=(x,y,w,h,r,c,stroke)=>{
+  r=Math.min(r,w/2,h/2);const k=r*0.5523,X=x,Y=PH-y-h;
+  const p=[`${(X+r).toFixed(2)} ${Y.toFixed(2)} m`,`${(X+w-r).toFixed(2)} ${Y.toFixed(2)} l`,
+   `${(X+w-r+k).toFixed(2)} ${Y.toFixed(2)} ${(X+w).toFixed(2)} ${(Y+r-k).toFixed(2)} ${(X+w).toFixed(2)} ${(Y+r).toFixed(2)} c`,
+   `${(X+w).toFixed(2)} ${(Y+h-r).toFixed(2)} l`,
+   `${(X+w).toFixed(2)} ${(Y+h-r+k).toFixed(2)} ${(X+w-r+k).toFixed(2)} ${(Y+h).toFixed(2)} ${(X+w-r).toFixed(2)} ${(Y+h).toFixed(2)} c`,
+   `${(X+r).toFixed(2)} ${(Y+h).toFixed(2)} l`,
+   `${(X+r-k).toFixed(2)} ${(Y+h).toFixed(2)} ${X.toFixed(2)} ${(Y+h-r+k).toFixed(2)} ${X.toFixed(2)} ${(Y+h-r).toFixed(2)} c`,
+   `${X.toFixed(2)} ${(Y+r).toFixed(2)} l`,
+   `${X.toFixed(2)} ${(Y+r-k).toFixed(2)} ${(X+r-k).toFixed(2)} ${Y.toFixed(2)} ${(X+r).toFixed(2)} ${Y.toFixed(2)} c h`].join(' ');
+  ops.push(stroke?pdfRGB(c)+' RG '+stroke+' w '+p+' S':pdfRGB(c)+' rg '+p+' f');
+ };
+ const tri=(x1,y1,x2,y2,x3,y3,c)=>ops.push(pdfRGB(c)+' rg '+x1.toFixed(2)+' '+fy(y1)+' m '+x2.toFixed(2)+' '+fy(y2)+' l '+x3.toFixed(2)+' '+fy(y3)+' l h f');
+ const txt=(s,x,y,sz,c,bold,font)=>{
+  const f=font||(bold?'F2':'F1');
+  ops.push('BT /'+f+' '+sz+' Tf '+pdfRGB(c)+' rg '+x.toFixed(2)+' '+fy(y)+' Td ('+(font?s:pdfEsc(pdfWA(s)))+') Tj ET');
+ };
+ const txtR=(s,xr,y,sz,c,bold)=>{s=pdfWA(s);txt(s,xr-pdfW(s,sz,bold),y,sz,c,bold)};
+ const newPage=first=>{
+  ops=[];pages.push(ops);
+  rect(0,0,PW,PH,'#f6f8f3');
+  if(first){
+   rect(0,0,PW,128,'#0f2a22');
+   for(let x=-10;x<PW+20;x+=22)tri(x,128,x+11,110,x+22,128,'#163a2f');
+   for(let x=-21;x<PW+20;x+=22)tri(x,128,x+11,118,x+22,128,'#1f4d3c');
+   rect(0,128,PW,4,'#f2b632');
+   txt(L.tag,MX,36,9,'#f2b632',true);
+   txt(L.title,MX,70,27,'#ffffff',true);
+   txt(L.date+new Date(data.exported).toLocaleDateString(lang==='en'?'en-US':'fr-FR'),MX,92,10,'#bcd3c6');
+   /* petit cadeau */
+   rect(470,64,60,46,'#d7263d');rect(464,52,72,15,'#b91d31');rect(493,52,14,58,'#f2b632');
+   rr(477,34,22,20,9,'#f2b632');rr(501,34,22,20,9,'#f2b632');rr(494,43,12,10,3,'#d89a14');
+  }else{
+   rect(0,0,PW,26,'#0f2a22');rect(0,26,PW,3,'#f2b632');
+   txt(L.title,MX,17,9,'#ffffff',true);txtR(L.tag,PW-MX,17,8,'#f2b632',true);
+  }
+ };
+ const sorted=[...gifts].sort((a,b)=>a.year-b.year||a.name.localeCompare(b.name));
+ const ownedSet=new Set(data.owned),favSet=new Set(data.favs);
+ const total=gifts.length,nOwned=sorted.filter(g=>ownedSet.has(g.name)).length,nFav=sorted.filter(g=>favSet.has(g.name)).length;
+
+ newPage(true);
+ /* cartes de stats */
+ const cw=(CW-20)/3;
+ [[L.own,nOwned,'#1f8f5a'],[L.fav,nFav,'#d7263d'],[L.miss,total-nOwned,'#d89a14']].forEach((s,i)=>{
+  const x=MX+i*(cw+10);
+  rr(x,148,cw,60,10,'#3b2a1a',null);rr(x,146,cw,60,10,'#ffffff');rr(x,146,cw,60,10,'#dcc59d',1.2);
+  rr(x+12,160,6,32,3,s[2]);
+  txt(String(s[1]),x+28,186,26,s[2],true);
+  txt(s[0].toUpperCase(),x+28+pdfW(String(s[1]),26,true)+8,184,8.5,'#5b6b62',true);
+ });
+ /* progression */
+ const pct=total?Math.round(nOwned/total*100):0;
+ txt(L.coll+' : '+nOwned+' / '+total,MX,230,11,'#0f2a22',true);
+ txtR(pct+' %',PW-MX,230,11,'#1f8f5a',true);
+ rr(MX,238,CW,12,6,'#dcc59d');
+ if(nOwned)rr(MX,238,Math.max(12,CW*nOwned/total),12,6,'#1f8f5a');
+
+ let y=272;const BOT=PH-46;
+ const years=[...new Set(sorted.map(g=>g.year))];
+ const colW=(CW-10)/2,RH=22,GAP=4;
+ for(const yr of years){
+  const list=sorted.filter(g=>g.year===yr);
+  const col=YC[yr]||'#c0834a',dark=pdfLum(col)>0.55;
+  const have=list.filter(g=>ownedSet.has(g.name)).length;
+  const head=cont=>{
+   rr(MX,y,CW,26,8,col);
+   const tc=dark?'#0f2a22':'#ffffff';
+   txt(String(yr)+(cont?'  ('+L.cont+')':''),MX+14,y+18,14,tc,true);
+   txtR(have+' / '+list.length,PW-MX-14,y+17,10.5,tc,true);
+   y+=26+8;
+  };
+  if(y+26+8+RH>BOT){newPage(false);y=46}
+  head(false);
+  for(let i=0;i<list.length;i+=2){
+   if(y+RH>BOT){newPage(false);y=46;head(true)}
+   [list[i],list[i+1]].forEach((g,j)=>{
+    if(!g)return;
+    const x=MX+j*(colW+10),own=ownedSet.has(g.name),fv=favSet.has(g.name);
+    rr(x,y,colW,RH,6,'#ffffff');rr(x,y,colW,RH,6,own?'#a8d8bd':'#e4d3b0',0.8);
+    if(own){rr(x+7,y+5.5,11,11,3,'#1f8f5a');txt('4',x+8.6,y+14.3,8.5,'#ffffff',false,'F3')}
+    else rr(x+7,y+5.5,11,11,3,'#8fa197',0.9);
+    txt(pdfFit(g.name,9.5,own,colW-26-(fv?24:10)),x+25,y+14.6,9.5,own?'#0f2a22':'#4b5d54',own);
+    if(fv)txt('\\252',x+colW-20,y+15,10.5,'#d7263d',false,'F3');
+   });
+   y+=RH+GAP;
+  }
+  y+=10;
+ }
+ /* pieds de page */
+ const N=pages.length;
+ pages.forEach((p,i)=>{
+  ops=p;rect(MX,PH-38,CW,0.8,'#dcc59d');
+  txt(L.foot,MX,PH-24,7.5,'#5b6b62');
+  txtR(L.page+(i+1)+' / '+N,PW-MX,PH-24,7.5,'#5b6b62',true);
+ });
+
+ /* assemblage du fichier */
+ const payload='LT2GIFTS-DATA:'+JSON.stringify(data).replace(/[\u007f-\uffff]/g,c=>'\\u'+('0000'+c.charCodeAt(0).toString(16)).slice(-4))+':END-LT2GIFTS';
+ const objs=[];
+ objs[1]='<</Type/Catalog/Pages 2 0 R/LT2Data 7 0 R>>';
+ const kids=pages.map((_,i)=>(8+i*2)+' 0 R').join(' ');
+ objs[2]='<</Type/Pages/Kids['+kids+']/Count '+N+'>>';
+ objs[3]='<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>';
+ objs[4]='<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold/Encoding/WinAnsiEncoding>>';
+ objs[5]='<</Type/Font/Subtype/Type1/BaseFont/ZapfDingbats>>';
+ objs[6]='<</Title ('+pdfEsc(pdfWA(L.title+' - Lumber Tycoon 2'))+')/Creator (LT2 Gifts)/Producer (LT2 Gifts)>>';
+ objs[7]='<</Length '+payload.length+'>>\nstream\n'+payload+'\nendstream';
+ pages.forEach((p,i)=>{
+  const c=p.join('\n');
+  objs[8+i*2]='<</Type/Page/Parent 2 0 R/MediaBox[0 0 '+PW+' '+PH+']/Resources<</Font<</F1 3 0 R/F2 4 0 R/F3 5 0 R>>>>/Contents '+(9+i*2)+' 0 R>>';
+  objs[9+i*2]='<</Length '+c.length+'>>\nstream\n'+c+'\nendstream';
+ });
+ let out='%PDF-1.4\n%\u00e2\u00e3\u00cf\u00d3\n';const offs=[];
+ for(let i=1;i<objs.length;i++){offs[i]=out.length;out+=i+' 0 obj\n'+objs[i]+'\nendobj\n'}
+ const xr=out.length;
+ out+='xref\n0 '+objs.length+'\n0000000000 65535 f \n';
+ for(let i=1;i<objs.length;i++)out+=String(offs[i]).padStart(10,'0')+' 00000 n \n';
+ out+='trailer\n<</Size '+objs.length+'/Root 1 0 R/Info 6 0 R>>\nstartxref\n'+xr+'\n%%EOF';
+ const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;
+ return u;
+}
+$('bkExport').onclick=()=>{
+ const data={app:'lt2-gifts',version:1,exported:new Date().toISOString(),favs:[...favs],owned:[...owned]};
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([buildPdf(data)],{type:'application/pdf'}));
+ a.download='lt2-gifts-'+data.exported.slice(0,10)+'.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+ toastMsg(t('bkExported'));
+};
+$('bkImport').onclick=()=>$('bkFile').click();
+$('bkFile').onchange=async e=>{
+ const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{
+  const buf=await f.arrayBuffer(),u=new Uint8Array(buf);let d;
+  if(u[0]===0x25&&u[1]===0x50&&u[2]===0x44&&u[3]===0x46){
+   const m=new TextDecoder('latin1').decode(u).match(/LT2GIFTS-DATA:([\s\S]*?):END-LT2GIFTS/);
+   if(!m)throw new Error('bad');d=JSON.parse(m[1]);
+  }else d=JSON.parse(new TextDecoder().decode(u));
+  if(!d||d.app!=='lt2-gifts'||!Array.isArray(d.favs)||!Array.isArray(d.owned))throw new Error('bad');
+  pendingBk={favs:cleanList(d.favs),owned:cleanList(d.owned)};
+  $('bkInfo').textContent=t('bkFound',pendingBk.owned.length,pendingBk.favs.length);$('bkChoice').hidden=false;
+ }catch(err){pendingBk=null;$('bkChoice').hidden=true;$('bkInfo').textContent=t('bkBad')}
+};
+function applyBk(replace){
+ if(!pendingBk)return;
+ favs=replace?new Set(pendingBk.favs):new Set([...favs,...pendingBk.favs]);
+ owned=replace?new Set(pendingBk.owned):new Set([...owned,...pendingBk.owned]);
+ saveFavs();saveOwned();pendingBk=null;render();syncLb();bk.close();toastMsg(t('bkDone'));
+}
+$('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true);
+
+function makeCard(g,q){
+ const card=document.createElement('article');card.className='tag';card.style.setProperty('--yc',yc(g.year));card.dataset.g=g.name;
+ const fav=document.createElement('button');fav.type='button';fav.className='fav';
+ const setFav=()=>{const on=favs.has(g.name);fav.textContent=on?'♥':'♡';fav.classList.toggle('on',on);fav.setAttribute('aria-pressed',String(on));fav.setAttribute('aria-label',on?t('favRemove',g.name):t('favAdd',g.name))};
+ setFav();fav.onclick=e=>{e.stopPropagation();favs.has(g.name)?favs.delete(g.name):favs.add(g.name);saveFavs();setFav();if(yearFilter==='fav')render()};
+ card.append(fav);
+ const pic=document.createElement('button');pic.type='button';pic.className='pic empty';pic.textContent='🎁';pic.setAttribute('aria-label',t('zoom',g.name));
+ const img=document.createElement('img');img.alt=t('imgOf',g.name);img.loading='lazy';img.referrerPolicy='no-referrer';
+ const status=document.createElement('div');status.className='status';status.textContent=t('imgSearch');
+ if(!live.has(g.name))live.set(g.name,[]);live.get(g.name).push({img,pic,status});
+ pic.onclick=()=>openLb(g,pic.classList.contains('empty')?'':img.src);
+ const known=fixedImages[g.name]||thumbs.get(norm(g.name));if(known)paint(g.name,known),thumbs.set(norm(g.name),known);
+ const info=document.createElement('div');
+ const d=document.createElement('p');d.className='desc';
+ if(descs.has(g.name)&&descs.get(g.name))d.textContent=descs.get(g.name);
+ else if(descs.has(g.name)||cState==='done'||cState==='error'){d.textContent=t('descNone');d.classList.add('none')}
+ else{d.textContent=t('descLoad');d.classList.add('none')}
+ const nm=document.createElement('h3');nm.className='name';nm.textContent=g.name;
+ d.style.marginTop='4px';
+ info.append(nm,d);
+ const hits=itemHitsOf(g,q);
+ if(hits.length){const h=document.createElement('p');h.className='hit';h.textContent=t('contains')+' : '+hits.slice(0,3).join(', ')+(hits.length>3?'…':'');info.append(h)}
+ const own=document.createElement('button');own.type='button';own.className='own';own.innerHTML='<span class="box" aria-hidden="true"></span><span class="lab"></span>';
+ renderOwnBtn(own,g.name);own.onclick=e=>{e.stopPropagation();toggleOwned(g.name)};info.append(own);
+ card.classList.toggle('owned',owned.has(g.name));
+ card.append(pic,info);return card;
+}
+function render(){
+ const q=search.value.trim().toLowerCase();
+ writeHash();updProgress();updTimeline();
+ const pass=g=>!yearFilter||(yearFilter==='fav'?favs.has(g.name):yearFilter==='owned'?owned.has(g.name):yearFilter==='missing'?!owned.has(g.name):String(g.year)===yearFilter);
+ const shown=gifts.filter(g=>(g.name.toLowerCase().includes(q)||itemHitsOf(g,q).length>0)&&pass(g));
+ out.innerHTML='';live.clear();shownList=[];
+ count.textContent=t('countOf',shown.length,gifts.length);
+ if(!shown.length){out.innerHTML='<div class="empty-msg">'+(!q&&yearFilter==='fav'?t('noFav'):!q&&yearFilter==='owned'?t('noOwned'):!q&&yearFilter==='missing'?t('allDone'):t('noMatch'))+'</div>';return}
+ if(sortMode==='year'){
+  years.forEach(y=>{
+   const list=shown.filter(g=>g.year===y).sort((a,b)=>a.name.localeCompare(b.name));if(!list.length)return;
+   const h=document.createElement('div');h.className='year-head';h.innerHTML='<h2 style="--yc:'+yc(y)+'">'+y+'</h2><span data-y="'+y+'">'+yearInfo(list)+'</span>';
+   const grid=document.createElement('div');grid.className='grid';list.forEach(g=>grid.append(makeCard(g,q)));
+   out.append(h,grid);
+  });
+ }else{
+  const grid=document.createElement('div');grid.className='grid';grid.style.marginTop='20px';
+  [...shown].sort((a,b)=>a.name.localeCompare(b.name)).forEach(g=>grid.append(makeCard(g,q)));out.append(grid);
+ }
+ shownList=[...out.querySelectorAll('.tag')].map(c=>gifts.find(x=>x.name===c.dataset.g));
+}
+
+/* ---------- Contenu d'un gift en images ---------- */
+const itemImgs=new Map();   // objet normalisé -> url ('' si aucune)
+async function loadItemImages(items,onImg){
+ const need=items.filter(n=>!itemImgs.has(norm(n)));
+ items.forEach(n=>{if(itemImgs.get(norm(n)))onImg(n,itemImgs.get(norm(n)))});
+ try{
+  for(let i=0;i<need.length;i+=40){
+   const chunk=need.slice(i,i+40);
+   const d=await j(API+'&prop=pageimages&piprop=thumbnail&pilimit=50&pithumbsize=240&titles='+encodeURIComponent(chunk.map(slug).join('|')));
+   const q=d.query||{},map=titleMap(chunk,q),byTitle={};
+   Object.values(q.pages||{}).forEach(p=>{if(p.thumbnail?.source)byTitle[norm(p.title)]=p.thumbnail.source});
+   chunk.forEach(n=>{const u=byTitle[map[norm(n)]];if(u){itemImgs.set(norm(n),u);onImg(n,u)}});
+  }
+ }catch(e){console.warn(e)}
+ const rest=need.filter(n=>!itemImgs.get(norm(n)));let k=0;
+ const worker=async()=>{while(k<rest.length){const n=rest[k++];try{const u=await findInPage(n);itemImgs.set(norm(n),u||'');if(u)onImg(n,u)}catch(e){itemImgs.set(norm(n),'')}}};
+ await Promise.all([worker(),worker(),worker()]);
+}
+const ct=$('ct');
+function openContents(g){
+ const c=contents.get(g.name);if(!c)return;
+ $('ctName').textContent=g.name;$('ctYear').textContent=g.year;
+ const grid=$('ctGrid');grid.innerHTML='';const cells=new Map();
+ c.items.forEach(it=>{
+  const cell=document.createElement('div');cell.className='cell';
+  const pic=document.createElement('div');pic.className='cpic empty';pic.textContent='📦';
+  const nm=document.createElement('div');nm.className='cname';
+  const a=document.createElement('a');a.href=base+encodeURIComponent(slug(it));a.target='_blank';a.rel='noopener';a.textContent=it;nm.append(a);
+  cell.append(pic,nm);grid.append(cell);cells.set(norm(it),pic);
+ });
+ ct.showModal();
+ loadItemImages(c.items,(n,url)=>{
+  const pic=cells.get(norm(n));if(!pic||!pic.isConnected)return;
+  const img=document.createElement('img');img.alt=t('imgOf',n);img.referrerPolicy='no-referrer';
+  img.onload=()=>{pic.classList.remove('empty');pic.replaceChildren(img)};img.src=url;
+ });
+}
+$('ctClose').onclick=()=>ct.close();
+ct.addEventListener('click',e=>{if(e.target===ct)ct.close()});
+
+/* ---------- Visionneuse ---------- */
+const lb=$('lb');
+function openLb(g,src){
+ $('lbImg').style.display=src?'block':'none';$('lbEmpty').style.display=src?'none':'block';
+ if(src)$('lbImg').src=src;else $('lbImg').removeAttribute('src');
+ const c=contents.get(g.name),b=$('lbContents');
+ b.style.display=c&&c.items.length?'inline-block':'none';b.onclick=()=>{lb.close();openContents(g)};
+ $('lbImg').alt=t('imgOf',g.name);$('lbName').textContent=g.name;$('lbYear').textContent=g.year;$('lbWiki').href=base+encodeURIComponent(slug(g.name));curG=g;syncLb();if(!lb.open)lb.showModal();writeHash()}
+$('lbClose').onclick=()=>lb.close();
+lb.addEventListener('close',writeHash);
+$('lbOwn').onclick=()=>{if(curG)toggleOwned(curG.name)};
+$('lbLink').onclick=()=>copyOrAsk(location.href.split('#')[0]+'#'+stateParams(true),t('copied'));
+lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
+function step(d){if(!curG||!shownList.length)return;let i=shownList.findIndex(x=>x&&x.name===curG.name);if(i<0)i=0;const g=shownList[(i+d+shownList.length)%shownList.length];if(g)openLb(g,imgFor(g))}
+$('lbPrev').onclick=()=>step(-1);$('lbNext').onclick=()=>step(1);
+lb.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)});
+let tx=null;lb.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+lb.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>60)step(dx<0?1:-1)});
+
+/* ---------- Événements ---------- */
+let timer;search.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(render,120)});
+function setSort(m){sortMode=m;setSortUI();render()}
+function setView(m){viewMode=m;setViewUI();writeHash()}
+$('byYear').onclick=()=>setSort('year');$('byName').onclick=()=>setSort('name');
+$('themeBtn').onclick=()=>setTheme(theme==='light'?'dark':'light',true);
+$('vGrid').onclick=()=>setView('grid');$('vList').onclick=()=>setView('list');
+$('shareBtn').onclick=()=>copyOrAsk(location.href.split('#')[0]+'#'+stateParams(true),t('copied'));
+$('listBtn').onclick=()=>copyOrAsk(listText(),t('listCopied'));
+$('langFr').onclick=()=>setLang('fr');$('langEn').onclick=()=>setLang('en');
+$('rand').onclick=()=>{const l=shownList.length?shownList:gifts;const g=l[Math.floor(Math.random()*l.length)];if(g)openLb(g,imgFor(g))};
+$('retry').onclick=()=>{document.body.classList.remove('imgdone');tried.clear();thumbs.clear();cState='idle';hideBanner();render();loadAll();loadContents()};
+const topBtn=$('top');
+addEventListener('scroll',()=>{topBtn.classList.toggle('show',scrollY>700)},{passive:true});
+topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+const hashGift=()=>{const n=applyHash();return n};
+function openFromHash(n){if(!n)return;const g=gifts.find(x=>norm(x.name)===norm(n));if(g)openLb(g,imgFor(g))}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)updXmas()});
+try{matchMedia('(prefers-color-scheme: light)').addEventListener('change',e=>{let sv=null;try{sv=localStorage.getItem('lt2theme')}catch(x){}if(sv!=='light'&&sv!=='dark')setTheme(e.matches?'light':'dark',false)})}catch(e){}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+const g0=hashGift();buildTimeline();applyLang();setSortUI();setViewUI();buildChips();render();loadAll();loadContents();openFromHash(g0);
+addEventListener('hashchange',()=>{const n=applyHash();applyLang();setSortUI();setViewUI();buildChips();render();if(lb.open&&!n)lb.close();openFromHash(n)});
+</script></body></html>

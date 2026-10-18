@@ -1,0 +1,16 @@
+{
+  "name": "Lumber Tycoon 2 — Galerie des gifts",
+  "short_name": "LT2 Gifts",
+  "description": "Tous les gifts de Lumber Tycoon 2, de 2015 à 2025.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f2a22",
+  "theme_color": "#0f2a22",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
