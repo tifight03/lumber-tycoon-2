@@ -1331,7 +1331,7 @@ function openSug(){
 $('sugBtn').onclick=openSug;
 /* ---------- Place d'échange ---------- */
 const MKT={
-fr:{giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'Aucun gift ne correspond.',giftRemove:'Retirer le gift',edit:'✏️ Modifier',save:'Enregistrer',cancel:'Annuler',saved:'Annonce modifiée !',saveFail:'Modification refusée (règles non à jour ou compte banni).',editedTag:'(modifiée)',btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
+fr:{renew:'🔁 Renouveler',renewed:'Annonce renouvelée : elle remonte en tête.',renewFail:'Renouvellement impossible.',expTag:'⏳ Expirée',expIn:n=>'⏳ expire dans '+n+(n>1?' jours':' jour'),repToast:p=>'💬 '+p+' a répondu à ton annonce',giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'Aucun gift ne correspond.',giftRemove:'Retirer le gift',edit:'✏️ Modifier',save:'Enregistrer',cancel:'Annuler',saved:'Annonce modifiée !',saveFail:'Modification refusée (règles non à jour ou compte banni).',editedTag:'(modifiée)',btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
  L_swap:['Je donne','Je veux en échange'],L_buy:['Je cherche','Mon offre'],L_sell:['Je vends','Prix'],note:'Détails (facultatif)',pub:'Publier',
  mineT:'📌 Mes annonces (3 max) et épingles',listT:'Annonces',fAll:'Toutes',fSwap:'Échanges',fBuy:'J’achète',fSell:'Je vends',search:'Rechercher…',
  friendPh:'Pseudo de ton ami',add:'Ajouter',back:'← Amis',msgPh:'Message privé…',send:'Envoyer',close:'Fermer',blockedT:'🚫 Bloqués',unblock:'Débloquer',reportsT:'🚩 Signalements',
@@ -1344,7 +1344,7 @@ fr:{giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'A
  accFail:'Impossible d’accepter.',pinned:'Annonce épinglée 📌',pinFail:'Épinglage impossible.',fail:'Échec.',err:'Erreur.',sendFail:'Envoi impossible.',msgOff:'Messages indisponibles.',frErr:'Chargement des amis impossible.',
  reported:'Signalement envoyé, merci.',blocked:p=>p+' est bloqué.',noF:'Pas encore d’amis.',reqToast:p=>'➕ '+p+' veut t’ajouter en ami',msgToast:p=>'💬 '+p+' t’a écrit',dismiss:'Ignorer',delPost:'Supprimer l’annonce',
  loading:'Erreur de chargement.',report:'🚩 Signaler',block:'🚫 Bloquer'},
-en:{giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gift matches.',giftRemove:'Remove the gift',edit:'✏️ Edit',save:'Save',cancel:'Cancel',saved:'Listing updated!',saveFail:'Edit refused (rules not updated or account banned).',editedTag:'(edited)',btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
+en:{renew:'🔁 Renew',renewed:'Listing renewed: it’s back on top.',renewFail:'Could not renew.',expTag:'⏳ Expired',expIn:n=>'⏳ expires in '+n+(n>1?' days':' day'),repToast:p=>'💬 '+p+' replied to your listing',giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gift matches.',giftRemove:'Remove the gift',edit:'✏️ Edit',save:'Save',cancel:'Cancel',saved:'Listing updated!',saveFail:'Edit refused (rules not updated or account banned).',editedTag:'(edited)',btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
  L_swap:['I give','I want in return'],L_buy:['I’m looking for','My offer'],L_sell:['I’m selling','Price'],note:'Details (optional)',pub:'Publish',
  mineT:'📌 My listings (3 max) and pins',listT:'Listings',fAll:'All',fSwap:'Swaps',fBuy:'Buying',fSell:'Selling',search:'Search…',
  friendPh:'Your friend’s username',add:'Add',back:'← Friends',msgPh:'Private message…',send:'Send',close:'Close',blockedT:'🚫 Blocked',unblock:'Unblock',reportsT:'🚩 Reports',
@@ -1359,7 +1359,7 @@ en:{giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gif
  loading:'Loading error.',report:'🚩 Report',block:'🚫 Block'}};
 const mt=(k,...a)=>{const v=(MKT[lang]||MKT.fr)[k];return typeof v==='function'?v(...a):v};
 const mkD=$('mk'),mkSay=x=>{$('mkMsg').textContent=x||''},mkE=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-const MK_DAY2=1728e5;
+const MK_DAY2=1728e5,MK_DAY=864e5,MK_EXP=30*864e5;
 let mkPosts=[],mkMine=[],mkPinned=[],mkPinIds=new Set(),mkBlocked=new Map(),mkAsk=new Map(),mkChatUnsub=null,mkChatDoc=null,mkChatPeer=null;
 let mkReqUnsub=null,mkFrUnsub=null,mkReqCnt=0,mkUnread=new Set(),mkSeen=false,mkReqSeen=-1;
 const mkNeed=()=>{if(!fbUser){openAcc(mt('login'));return false}if(!fbUser.emailVerified){mkSay(at('needVerify'));return false}return true};
@@ -1368,16 +1368,17 @@ function mkApply(){
  mkD.querySelectorAll('[data-kp]').forEach(e=>e.placeholder=mt(e.dataset.kp));
  $('mkType').onchange();mkBadge();if(mkD.open)mkRender();
 }
-function mkBadge(){const n=mkReqCnt+mkUnread.size,b=n?' 🔴 '+n:'';$('mkBtn').textContent=mt('btn')+b;$('mkTF').textContent=mt('tabF')+b}
+var mkRepUnsub=[],mkRepNew=new Map();
+function mkBadge(){const f=mkReqCnt+mkUnread.size,r=mkRepNew?[...mkRepNew.values()].reduce((a,b)=>a+b,0):0,n=f+r;$('mkBtn').textContent=mt('btn')+(n?' 🔴 '+n:'');$('mkTF').textContent=mt('tabF')+(f?' 🔴 '+f:'');$('mkTP').textContent=mt('tabP')+(r?' 🔴 '+r:'')}
 /* ---- lecture / non lus ---- */
 const mkGetR=fid=>{try{return +localStorage.getItem('lt2r_'+fbUser.uid+'_'+fid)||0}catch(e){return 0}};
 function mkSetR(fid){try{localStorage.setItem('lt2r_'+fbUser.uid+'_'+fid,String(Date.now()))}catch(e){}mkUnread.delete(fid);mkBadge()}
 function mkUnwatch(){
  if(mkReqUnsub){mkReqUnsub();mkReqUnsub=null}if(mkFrUnsub){mkFrUnsub();mkFrUnsub=null}
- mkReqCnt=0;mkReqSeen=-1;mkUnread=new Set();mkSeen=false;mkBadge();
+ mkRepStop();mkReqCnt=0;mkReqSeen=-1;mkUnread=new Set();mkSeen=false;mkBadge();
 }
 function mkWatch(){
- if(mkReqUnsub||!fb||!fbUser)return;const M=fb.m,me=fbUser.uid;
+ if(mkReqUnsub||!fb||!fbUser)return;const M=fb.m,me=fbUser.uid;mkRepWatch();
  mkReqUnsub=M.onSnapshot(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',me)),s=>{
   mkReqCnt=s.size;mkBadge();
   if(mkReqSeen>=0&&s.size>mkReqSeen){const c=s.docChanges().find(c=>c.type==='added');toastMsg(mt('reqToast',c?c.doc.data().fromPseudo:'?'))}
@@ -1403,7 +1404,7 @@ async function mkLoad(){
    const me=fbUser.uid,U=n=>M.collection(fb.db,'users',me,n);
    mkMine=(await M.getDocs(M.query(C,M.where('uid','==',me)))).docs.sort((a,b)=>b.data().created-a.data().created);
    const old=mkMine.filter(d=>d.data().done&&Date.now()-d.data().doneAt>MK_DAY2);
-   old.forEach(d=>M.deleteDoc(d.ref).catch(()=>{}));mkMine=mkMine.filter(d=>!old.includes(d));
+   old.forEach(d=>mkDelRef(d.ref).catch(()=>{}));mkMine=mkMine.filter(d=>!old.includes(d));
    const [pins,bl]=await Promise.all([M.getDocs(U('pins')),M.getDocs(U('blocks'))]);
    bl.docs.forEach(b=>mkBlocked.set(b.id,b.data().pseudo||''));
    const ds=await Promise.all(pins.docs.map(async p=>{let d=mkPosts.find(x=>x.id===p.id);if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',p.id));d=g.exists()?g:null}if(!d)M.deleteDoc(p.ref).catch(()=>{});return d}));
@@ -1416,11 +1417,12 @@ function mkCard(d,mine,pin){
  const p=d.data(),c=mkE('div','mk-card'+(mine||pin?' mk-pin':'')+(p.done?' mk-done':'')),h=mkE('div','mk-h'),L=mt('L_'+p.type)||mt('L_swap');
  h.append(mkE('b',null,(mine||pin?'📌 ':'')+(mt('T_'+p.type)||'')),mkE('span',null,' · '+p.pseudo));if(p.done)h.append(mkE('span','mk-tag',' '+mt('doneTag')));
  if(p.edited&&!p.done)h.append(mkE('span','bk-txt',' '+mt('editedTag')));
+ if(mine&&!p.done){const ex=mkExpTag(p);if(ex)h.append(ex)}
  c.append(h);if(p.gift&&mkGiftMap.get(norm(p.gift)))c.append(mkGiftView(p.gift));c.append(mkE('div',null,L[0]+' : '+p.give));
  if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
  if(p.note)c.append(mkE('div','bk-txt',p.note));
- const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt',mt('replies'));rp.hidden=true;
- b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden)mkReplies(d,rp);else mkOfferPins()};a.append(b1);
+ const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt',mt('replies')+(mine&&mkRepNew.get(d.id)?' 🔴 '+mkRepNew.get(d.id):''));rp.hidden=true;if(mine)b1.dataset.pid=d.id;
+ b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden){mkReplies(d,rp);if(mine){mkRepMark(d.id);b1.textContent=mt('replies')}}else mkOfferPins()};a.append(b1);
  if(!mine&&fbUser&&p.uid!==fbUser.uid){
   const bf=mkE('button','btn alt',mt('friend')),bp=mkE('button','btn alt',pin?mt('unpin'):mt('pin')),br=mkE('button','btn alt','🚩'),bb=mkE('button','btn alt','🚫');
   br.title=mt('report');bb.title=mt('block');
@@ -1428,14 +1430,15 @@ function mkCard(d,mine,pin){
   br.onclick=()=>mkReport('post',d.id,p.uid,p.pseudo,p.give+' / '+p.want+' / '+p.note);bb.onclick=()=>mkBlock(p.uid,p.pseudo);
   a.append(bf,bp,br,bb);
  }
- if(mine&&!p.done){const be=mkE('button','btn alt',mt('edit'));be.onclick=()=>mkEditStart(d);a.append(be);const bd=mkE('button','btn alt',mt('doneBtn'));bd.onclick=()=>mkDone(d);a.append(bd)}
- if(mine||isAdm){const b3=mkE('button','btn alt',mt('del'));b3.onclick=async()=>{if(!confirm(mt('delAsk')))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(b3)}
+ if(mine&&!p.done){const be=mkE('button','btn alt',mt('edit'));be.onclick=()=>mkEditStart(d);a.append(be);if(Date.now()-p.created>=MK_DAY){const bn=mkE('button','btn alt',mt('renew'));bn.onclick=()=>mkRenew(d);a.append(bn)}const bd=mkE('button','btn alt',mt('doneBtn'));bd.onclick=()=>mkDone(d);a.append(bd)}
+ if(mine||isAdm){const b3=mkE('button','btn alt',mt('del'));b3.onclick=async()=>{if(!confirm(mt('delAsk')))return;try{await mkDelRef(d.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(b3)}
  c.append(a,rp);return c;
 }
 function mkRender(){
  const f=$('mkFilter').value,q=$('mkQ').value.trim().toLowerCase(),me=fbUser&&fbUser.uid,now=Date.now();
- const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo+' '+(p.gift||'')).toLowerCase().includes(q))});
- $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...mkPinned.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+mkPinned.length);
+ const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&now-p.created<=MK_EXP&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo+' '+(p.gift||'')).toLowerCase().includes(q))});
+ const pn=mkPinned.filter(d=>now-d.data().created<=MK_EXP);
+ $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...pn.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+pn.length);
  $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt',mt('none'))]));
 }
 async function mkReplies(d,box){
@@ -1520,6 +1523,43 @@ $('mkPub').onclick=async()=>{
   mkEditEnd();mkSay(mt('published'));mkLoad()}
  catch(e){mkSay(mt('pubFail'))}
 };
+/* ---- expiration, renouvellement, notifications de réponses ---- */
+function mkExpTag(p){
+ const left=Math.ceil((MK_EXP-(Date.now()-p.created))/MK_DAY);
+ if(left<=0)return mkE('span','mk-tag',' '+mt('expTag'));
+ if(left<=5)return mkE('span','bk-txt',' '+mt('expIn',left));
+ return null;
+}
+async function mkRenew(d){
+ try{await fb.m.updateDoc(d.ref,{created:Date.now()});mkSay(mt('renewed'));mkLoad()}
+ catch(e){mkSay(mt('renewFail'))}
+}
+async function mkDelRef(ref){
+ const M=fb.m;
+ try{const rs=await M.getDocs(M.collection(ref,'replies'));await Promise.all(rs.docs.map(r=>M.deleteDoc(r.ref).catch(()=>{})))}catch(e){}
+ await M.deleteDoc(ref);
+}
+const mkRepKey=id=>'lt2rr_'+id;
+const mkRepGet=id=>{try{return +localStorage.getItem(mkRepKey(id))||0}catch(e){return 0}};
+function mkRepMark(id){try{localStorage.setItem(mkRepKey(id),String(Date.now()))}catch(e){}mkRepNew.delete(id);mkBadge()}
+function mkRepStop(){mkRepUnsub.forEach(u=>{try{u()}catch(e){}});mkRepUnsub=[];mkRepNew=new Map()}
+function mkRepWatch(){
+ if(mkRepUnsub.length||!fb||!fbUser)return;
+ const M=fb.m,me=fbUser.uid;
+ [0,1,2].forEach(i=>{
+  const id=me+'_'+i;let first=true,st=null;
+  try{st=localStorage.getItem(mkRepKey(id));if(st===null)localStorage.setItem(mkRepKey(id),String(Date.now()))}catch(e){}
+  const un=M.onSnapshot(M.query(M.collection(fb.db,'posts',id,'replies'),M.orderBy('created','desc'),M.limit(30)),snap=>{
+   const seen=mkRepGet(id),fresh=snap.docs.map(d=>d.data()).filter(x=>x.uid!==me&&x.created>seen&&!mkBlocked.has(x.uid));
+   const prev=mkRepNew.get(id)||0;
+   if(fresh.length)mkRepNew.set(id,fresh.length);else mkRepNew.delete(id);
+   if(!first&&fresh.length>prev)toastMsg(mt('repToast',fresh[0].pseudo));
+   first=false;mkBadge();
+   document.querySelectorAll('[data-pid="'+id+'"]').forEach(b=>{b.textContent=mt('replies')+(fresh.length?' 🔴 '+fresh.length:'')});
+  },()=>{});
+  mkRepUnsub.push(un);
+ });
+}
 async function mkDone(d){try{await fb.m.updateDoc(d.ref,{done:true,doneAt:Date.now()});mkLoad()}catch(e){mkSay(mt('fail'))}}
 /* ---- épingles ---- */
 async function mkPin(d){
@@ -1545,7 +1585,7 @@ async function mkLoadReports(){
   $('mkRep').replaceChildren(...s.docs.map(r=>{const x=r.data(),c=mkE('div','mk-card'),a=mkE('div','mk-act'),ig=mkE('button','btn alt',mt('dismiss'));
    c.append(mkE('div',null,'🚩 '+x.byPseudo+' → '+x.pseudo+' ('+x.kind+')'),mkE('div','bk-txt',x.text));
    ig.onclick=async()=>{try{await M.deleteDoc(r.ref);mkLoadReports()}catch(e){}};a.append(ig);
-   if(x.kind==='post'){const dp=mkE('button','btn alt',mt('delPost'));dp.onclick=async()=>{try{await M.deleteDoc(M.doc(fb.db,'posts',x.postId));await M.deleteDoc(r.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(dp)}
+   if(x.kind==='post'){const dp=mkE('button','btn alt',mt('delPost'));dp.onclick=async()=>{try{await mkDelRef(M.doc(fb.db,'posts',x.postId));await M.deleteDoc(r.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(dp)}
    c.append(a);return c}));
  }catch(e){}
 }
