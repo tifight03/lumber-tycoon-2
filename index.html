@@ -262,6 +262,16 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 @media(max-width:520px){.hero{padding-top:68px}}
 .stay{display:flex;align-items:center;gap:10px;margin:8px 2px;font-weight:700;font-size:14px;cursor:pointer}
 .stay input{width:20px;height:20px;accent-color:var(--ribbon)}
+.sugbox{max-height:calc(100vh - 56px);overflow-y:auto;text-align:left}
+.sugbox h3{text-align:center}
+.sug-ta{resize:vertical;min-height:140px;font-weight:600;line-height:1.4}
+.sug-count{text-align:right;font-size:12px;opacity:.7;margin:0}
+.sug-item{background:#ffffffaa;border:2px solid var(--bark);border-radius:14px;padding:10px 12px;margin:10px 0}
+.sug-head{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline}
+.sug-name{font-weight:800}
+.sug-mail{font-size:13px;font-weight:700;color:#7a1b10;word-break:break-all}
+.sug-date{font-size:12px;opacity:.7;width:100%}
+.sug-body{margin:8px 0 4px;white-space:pre-wrap;word-break:break-word;font-weight:600;line-height:1.4}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="light"] body{color:#123127;background:
  radial-gradient(circle,#0f2a2214 1.2px,#0000 1.8px) 0 0/54px 54px,
@@ -321,7 +331,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <section class="dash">
   <div class="dash-top">
    <div class="prog"><span id="progTxt"></span><div class="progbar" id="progbar" role="progressbar" aria-valuemin="0"><i id="progFill"></i></div></div>
-   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
+   <span class="mbtn"><button id="shareBtn" class="dbtn" type="button" data-i18n="share">🔗 Partager</button><button id="bkBtn" class="dbtn" type="button" data-i18n="bkBtn">⬇ Télécharger ma liste</button><button id="sugBtn" class="dbtn" type="button"></button><button id="installBtn" class="dbtn" type="button" data-i18n="install" hidden>📲 Installer</button></span>
   </div>
   <p class="tl-title" data-i18n="tlTitle"></p>
   <div class="tl" id="tl" role="group" data-i18n-aria="tlGroup" aria-label="Gifts par année"></div>
@@ -343,6 +353,22 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
  <h3 id="ctName"></h3><div><span class="yr" id="ctYear"></span></div>
  <div class="cgrid" id="ctGrid"></div>
  <div class="actions"><button class="btn alt" id="ctClose" type="button" data-i18n="close">Fermer</button></div>
+</div></dialog>
+
+<dialog id="sug"><div class="lb sugbox">
+ <h3 id="sugTitle"></h3>
+ <p class="bk-txt" id="sugText"></p>
+ <div id="sugForm">
+  <textarea class="acc-in sug-ta" id="sugTa" rows="6" maxlength="1000"></textarea>
+  <p class="bk-txt sug-count" id="sugCount"></p>
+  <div class="actions"><button class="btn" id="sugSend" type="button"></button></div>
+ </div>
+ <div id="sugInbox" hidden>
+  <div class="actions"><button class="btn alt" id="sugRefresh" type="button"></button></div>
+  <div id="sugList"></div>
+ </div>
+ <p class="bk-txt" id="sugMsg" role="status"></p>
+ <div class="actions"><button class="btn alt" id="sugClose" type="button" autofocus data-i18n="close">Fermer</button></div>
 </div></dialog>
 
 <dialog id="acc"><div class="lb">
@@ -908,7 +934,7 @@ $('bkMerge').onclick=()=>applyBk(false);$('bkReplace').onclick=()=>applyBk(true)
 const FIREBASE_CONFIG={apiKey:'AIzaSyBR66ZKwTASN-BpnV4EKbTysuwIoLqw9R8',authDomain:'lt2-gift.firebaseapp.com',projectId:'lt2-gift',appId:'1:9437134338:web:eab0b48f7179cf643a311b'};
 const cloudOn=()=>!/COLLE/.test(FIREBASE_CONFIG.apiKey+FIREBASE_CONFIG.projectId);
 const ACC_T={
- fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
+ fr:{btn:'👤 Se connecter / Créer un compte',btnIn:p=>'👤 '+p,stay:'Rester connecté',promptSug:'Connecte-toi ou crée un compte pour envoyer une suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Suggestions reçues',sugTitle:'Suggestions & remarques',sugTitleAdmin:'Suggestions reçues',sugText:'Une idée pour améliorer le site, un bug, une remarque ? Écris-la ici, elle sera envoyée au créateur du site.',sugPh:'Écris ta suggestion ou ta remarque ici…',sugSend:'Envoyer',sugSent:'Merci ! Ta suggestion a bien été envoyée.',sugShort:'Écris au moins quelques mots.',sugFail:'Impossible pour le moment. Vérifie ta connexion et réessaie.',sugWait:'Attends quelques secondes avant d’envoyer un autre message.',inboxEmpty:'Aucune suggestion pour le moment.',inboxRefresh:'↻ Actualiser',inboxN:n=>n+(n>1?' messages':' message'),del:'Supprimer',delAsk:'Supprimer ce message ?',promptFav:'Connecte-toi ou crée un compte pour ajouter des favoris et enregistrer ta collection.',imp:'⬆ Importer un PDF',title:'Mon compte',login:'Se connecter',signup:'Créer mon compte',pseudo:'Pseudo',email:'Adresse mail',pass:'Mot de passe (6 caractères min.)',
   forgot:'Mot de passe oublié ?',goSignup:'Pas de compte ? Crée-en un',goLogin:'Déjà un compte ? Connecte-toi',back:'← Retour à la connexion',sendReset:'Envoyer le mail de réinitialisation',
   resetSent:'Mail envoyé ! Regarde ta boîte de réception (et tes spams).',logout:'Se déconnecter',
   textOut:'Crée un compte pour enregistrer automatiquement tes favoris et tes gifts obtenus, et les retrouver sur tous tes appareils.',
@@ -919,7 +945,7 @@ const ACC_T={
   e:{'auth/email-already-in-use':'Cette adresse mail a déjà un compte.','auth/invalid-email':'Adresse mail invalide.','auth/weak-password':'Mot de passe trop court (6 caractères minimum).',
    'auth/invalid-credential':'Mail ou mot de passe incorrect.','auth/wrong-password':'Mail ou mot de passe incorrect.','auth/user-not-found':'Mail ou mot de passe incorrect.',
    'auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion internet.',def:'Une erreur est survenue. Réessaie.'}},
- en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
+ en:{btn:'👤 Log in / Sign up',btnIn:p=>'👤 '+p,stay:'Stay logged in',promptSug:'Log in or create an account to send a suggestion.',sugBtn:'💬 Suggestions',sugBtnAdmin:'📥 Received suggestions',sugTitle:'Suggestions & feedback',sugTitleAdmin:'Received suggestions',sugText:'An idea to improve the site, a bug, a remark? Write it here, it will be sent to the site’s creator.',sugPh:'Write your suggestion or remark here…',sugSend:'Send',sugSent:'Thanks! Your suggestion has been sent.',sugShort:'Write at least a few words.',sugFail:'Not possible right now. Check your connection and try again.',sugWait:'Wait a few seconds before sending another message.',inboxEmpty:'No suggestions yet.',inboxRefresh:'↻ Refresh',inboxN:n=>n+(n>1?' messages':' message'),del:'Delete',delAsk:'Delete this message?',promptFav:'Log in or create an account to add favorites and save your collection.',imp:'⬆ Import a PDF',title:'My account',login:'Log in',signup:'Create my account',pseudo:'Username',email:'Email address',pass:'Password (6 characters min.)',
   forgot:'Forgot password?',goSignup:'No account? Create one',goLogin:'Already have an account? Log in',back:'← Back to log in',sendReset:'Send the reset email',
   resetSent:'Email sent! Check your inbox (and spam).',logout:'Log out',
   textOut:'Create an account to automatically save your favorites and owned gifts and find them on all your devices.',
@@ -933,9 +959,9 @@ const ACC_T={
 };
 const at=(k,...a)=>{const v=(ACC_T[lang]||ACC_T.fr)[k];return typeof v==='function'?v(...a):v};
 const accDlg=$('acc'),accMsg=m=>{$('accMsg').textContent=m||''};
-let fb=null,fbUser=null,accMode='login',pushT=0,authKnown=false,accReason='';
+let fb=null,fbUser=null,accMode='login',pushT=0,authKnown=false,accReason='',isAdm=false;
 const accName=u=>u?(u.displayName||(u.email||'').split('@')[0]):'';
-function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn')}
+function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn');$('sugBtn').textContent=isAdm?at('sugBtnAdmin'):at('sugBtn')}
 function renderAcc(){
  const m=fbUser?'in':accMode,on=cloudOn();
  $('accTitle').textContent=at('title');
@@ -966,7 +992,8 @@ async function pushNow(){
  try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid),{pseudo:fbUser.displayName||'',favs:[...favs],owned:[...owned],updated:Date.now()})}catch(e){}
 }
 async function onUser(u){
- fbUser=u;authKnown=true;updAccBtn();if(accDlg.open)renderAcc();
+ fbUser=u;authKnown=true;if(!u)isAdm=false;updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();
+ if(u)checkAdmin();
  if(!u){cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
  try{
   const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
@@ -983,11 +1010,11 @@ async function onUser(u){
  }catch(e){}
 }
 function openAcc(reason){accReason=reason||'';accMode='login';accMsg('');renderAcc();if(!accDlg.open)accDlg.showModal();if(cloudOn()&&!fb)loadFb()}
-function needAuth(){
+function needAuth(r){
  if(!cloudOn()||fbUser)return false;
  let hint='';try{hint=localStorage.getItem('lt2uid')||''}catch(e){}
  if(!authKnown&&hint)return false;
- openAcc(at('promptFav'));return true;
+ openAcc(r||at('promptFav'));return true;
 }
 $('accBtn').onclick=()=>openAcc('');
 $('accImp').onclick=()=>{accDlg.close();openBk()};
@@ -1022,8 +1049,64 @@ $('accGo').onclick=async()=>{
  }catch(e){const E=at('e');accMsg(E[e&&e.code]||E.def)}
  finally{$('accGo').disabled=false}
 };
+/* ---------- Suggestions ---------- */
+const sugDlg=$('sug'),sugMsg=m=>{$('sugMsg').textContent=m||''};let lastSug=0;
+async function checkAdmin(){
+ if(!fb||!fbUser)return;
+ let ok=false;
+ try{await fb.m.getDocs(fb.m.query(fb.m.collection(fb.db,'suggestions'),fb.m.limit(1)));ok=true}catch(e){}
+ isAdm=ok;updAccBtn();
+ if(sugDlg.open){renderSug();if(isAdm)loadInbox()}
+}
+function renderSug(){
+ $('sugTitle').textContent=isAdm?at('sugTitleAdmin'):at('sugTitle');
+ $('sugText').textContent=at('sugText');$('sugText').hidden=isAdm;
+ $('sugForm').hidden=isAdm;$('sugInbox').hidden=!isAdm;
+ $('sugTa').placeholder=at('sugPh');$('sugSend').textContent=at('sugSend');$('sugRefresh').textContent=at('inboxRefresh');
+ $('sugCount').textContent=$('sugTa').value.length+' / 1000';
+}
+async function loadInbox(){
+ const L=$('sugList'),M=fb&&fb.m;if(!M)return;
+ try{
+  const snap=await M.getDocs(M.query(M.collection(fb.db,'suggestions'),M.orderBy('created','desc'),M.limit(100)));
+  L.textContent='';sugMsg(at('inboxN',snap.size));
+  if(snap.empty){sugMsg('');L.textContent=at('inboxEmpty');return}
+  snap.forEach(d=>{
+   const x=d.data(),it=document.createElement('div');it.className='sug-item';
+   const h=document.createElement('div');h.className='sug-head';
+   const n=document.createElement('span');n.className='sug-name';n.textContent='👤 '+(x.pseudo||'—');
+   const m=document.createElement('span');m.className='sug-mail';m.textContent='✉ '+(x.email||'');
+   const dt=document.createElement('span');dt.className='sug-date';dt.textContent=new Date(x.created||0).toLocaleString(lang==='en'?'en-US':'fr-FR',{dateStyle:'short',timeStyle:'short'});
+   h.append(n,m,dt);
+   const b=document.createElement('div');b.className='sug-body';b.textContent=x.text||'';
+   const del=document.createElement('button');del.type='button';del.className='linkb';del.textContent=at('del');
+   del.onclick=async()=>{if(!confirm(at('delAsk')))return;try{await M.deleteDoc(M.doc(fb.db,'suggestions',d.id));it.remove()}catch(e){sugMsg(at('sugFail'))}};
+   it.append(h,b,del);L.append(it);
+  });
+ }catch(e){sugMsg(at('sugFail'))}
+}
+function openSug(){sugMsg('');renderSug();if(!sugDlg.open)sugDlg.showModal();if(cloudOn()&&!fb)loadFb();if(isAdm)loadInbox()}
+$('sugBtn').onclick=openSug;
+$('sugClose').onclick=()=>sugDlg.close();
+sugDlg.addEventListener('click',e=>{if(e.target===sugDlg)sugDlg.close()});
+$('sugRefresh').onclick=loadInbox;
+$('sugTa').addEventListener('input',()=>{$('sugCount').textContent=$('sugTa').value.length+' / 1000'});
+$('sugTa').addEventListener('focus',()=>{if(needAuth(at('promptSug')))$('sugTa').blur()});
+$('sugSend').onclick=async()=>{
+ sugMsg('');
+ if(!fbUser){openAcc(at('promptSug'));return}
+ const text=$('sugTa').value.trim();
+ if(text.length<3){sugMsg(at('sugShort'));return}
+ if(Date.now()-lastSug<15000){sugMsg(at('sugWait'));return}
+ $('sugSend').disabled=true;
+ try{
+  await fb.m.addDoc(fb.m.collection(fb.db,'suggestions'),{uid:fbUser.uid,pseudo:accName(fbUser),email:fbUser.email||'',text:text.slice(0,1000),created:Date.now()});
+  lastSug=Date.now();$('sugTa').value='';$('sugCount').textContent='0 / 1000';sugMsg(at('sugSent'));
+ }catch(e){sugMsg(at('sugFail'))}
+ finally{$('sugSend').disabled=false}
+};
 updAccBtn();setTimeout(updAccBtn,0);
-['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc()},0)));
+['langFr','langEn'].forEach(id=>$(id).addEventListener('click',()=>setTimeout(()=>{updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug()},0)));
 if(cloudOn())loadFb();
 
 function makeCard(g,q){
