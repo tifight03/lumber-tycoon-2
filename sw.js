@@ -1,7 +1,7 @@
 /* Service worker — Lumber Tycoon 2, galerie des gifts
    - la page et les icônes sont gardées pour ouvrir le site hors ligne ;
    - les réponses du wiki, les images et les polices sont gardées au fil de l'eau. */
-const V = 'lt2-v8';
+const V = 'lt2-v9';
 const SHELL = V + '-shell', RUNTIME = V + '-runtime';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 const API_HOST = 'lumber-tycoon-2.fandom.com';

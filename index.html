@@ -258,6 +258,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .linkb{background:none;border:0;color:inherit;text-decoration:underline;font:inherit;cursor:pointer;padding:6px 0}
 .acc-top{position:absolute;top:12px;left:12px;z-index:3;max-width:calc(100% - 78px);min-height:42px;padding:6px 16px;border-radius:999px;border:3px solid var(--bark);background:var(--gold);color:var(--bark);font:800 13px/1.15 var(--body);cursor:pointer;box-shadow:0 4px 0 var(--bark);text-align:left}
 .acc-top:active{transform:translateY(2px);box-shadow:0 2px 0 var(--bark)}
+.adm-badge{display:inline-block;margin-left:4px;background:var(--ribbon);color:#fff;font:800 10px/1 var(--body);letter-spacing:.6px;padding:3px 8px;border-radius:999px;border:2px solid #ffffff66;vertical-align:middle;white-space:nowrap}
 .hero{padding-top:70px}
 @media(max-width:520px){.hero{padding-top:68px}}
 .stay{display:flex;align-items:center;gap:10px;margin:8px 2px;font-weight:700;font-size:14px;cursor:pointer}
@@ -961,7 +962,7 @@ const at=(k,...a)=>{const v=(ACC_T[lang]||ACC_T.fr)[k];return typeof v==='functi
 const accDlg=$('acc'),accMsg=m=>{$('accMsg').textContent=m||''};
 let fb=null,fbUser=null,accMode='login',pushT=0,authKnown=false,accReason='',isAdm=false;
 const accName=u=>u?(u.displayName||(u.email||'').split('@')[0]):'';
-function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn');$('sugBtn').textContent=isAdm?at('sugBtnAdmin'):at('sugBtn')}
+function updAccBtn(){$('accBtn').textContent=fbUser?at('btnIn',accName(fbUser)):at('btn');if(fbUser&&isAdm){const b=document.createElement('span');b.className='adm-badge';b.textContent='👑 ADMIN';$('accBtn').append(' ',b)}$('sugBtn').textContent=isAdm?at('sugBtnAdmin'):at('sugBtn')}
 function renderAcc(){
  const m=fbUser?'in':accMode,on=cloudOn();
  $('accTitle').textContent=at('title');
