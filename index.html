@@ -484,7 +484,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
    <textarea id="mkNote" class="acc-in" rows="3" maxlength="300" placeholder="Détails (facultatif)"></textarea>
    <div class="actions"><button class="btn" id="mkPub" type="button">Publier</button></div>
   </div>
-  <h4 id="mkMineT" hidden>📌 Mes annonces (3 max)</h4><div id="mkMineBox"></div>
+  <h4 id="mkMineT" hidden>📌 Mes annonces (3 max) et épingles</h4><div id="mkMineBox"></div>
   <h4>Annonces</h4>
   <select id="mkFilter" class="acc-in"><option value="">Toutes</option><option value="swap">Échanges</option><option value="buy">J’achète</option><option value="sell">Je vends</option></select>
   <div id="mkList"></div>
@@ -1156,7 +1156,7 @@ async function ensureUsername(u){
 async function onUser(u){
  fbUser=u;authKnown=true;if(!u)isAdm=false;updAccBtn();if(accDlg.open)renderAcc();if($('sug').open)renderSug();
  if(u&&await checkBan(u))return;
- if(u){checkAdmin();ensureUsername(u);loadMine();checkWarnings(u)}
+ if(u){checkAdmin();mkWatch();ensureUsername(u);loadMine();checkWarnings(u)}
  if(!u){resetInbox();cloudPush=()=>{};try{localStorage.removeItem('lt2uid')}catch(e){}return}
  try{
   const snap=await fb.m.getDoc(fb.m.doc(fb.db,'users',u.uid));
@@ -1237,7 +1237,7 @@ function checkAdmin(){
   updAccBtn();if(accDlg.open)renderAcc();if(sugDlg.open)renderSug();
  },()=>{unsubInbox=null;isAdm=false;inboxDocs=[];unread=0;updAccBtn()});
 }
-function resetInbox(){if(unsubInbox){unsubInbox();unsubInbox=null}isAdm=false;inboxDocs=[];unread=0;myDocs=[];myNew=0;newReplyIds=new Set()}
+function resetInbox(){if(typeof mkUnwatch==='function')mkUnwatch();if(unsubInbox){unsubInbox();unsubInbox=null}isAdm=false;inboxDocs=[];unread=0;myDocs=[];myNew=0;newReplyIds=new Set()}
 async function loadMine(){
  if(!fb||!fbUser)return;
  try{
@@ -1326,7 +1326,7 @@ $('sugBtn').onclick=openSug;
 /* ---------- Place d'échange ---------- */
 const mkD=$('mk'),mkSay=m=>{$('mkMsg').textContent=m||''},mkE=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const MK_T={swap:'🔄 Échange',buy:'🛒 J’achète',sell:'💰 Je vends'},MK_L={swap:['Je donne','Je veux en échange'],buy:['Je cherche','Mon offre'],sell:['Je vends','Prix']};
-let mkPosts=[],mkMine=[],mkChatUnsub=null,mkChatDoc=null;
+let mkPosts=[],mkMine=[],mkChatUnsub=null,mkChatDoc=null,mkPinIds=new Set(),mkPinned=[],mkAsk=new Map();
 const mkNeed=()=>{if(!fbUser){openAcc('Connecte-toi pour utiliser la place d’échange.');return false}if(!fbUser.emailVerified){mkSay(at('needVerify'));return false}return true};
 async function mkLoad(){
  if(!fb){mkSay('Connexion en cours, réessaie dans un instant.');return}
@@ -1334,23 +1334,29 @@ async function mkLoad(){
  try{
   const s=await M.getDocs(M.query(C,M.orderBy('created','desc'),M.limit(60)));mkPosts=s.docs;
   mkMine=fbUser?(await M.getDocs(M.query(C,M.where('uid','==',fbUser.uid)))).docs.sort((a,b)=>b.data().created-a.data().created):[];
+  mkPinned=[];mkPinIds=new Set();
+  if(fbUser){
+   const ps=await M.getDocs(M.collection(fb.db,'users',fbUser.uid,'pins'));
+   const ds=await Promise.all(ps.docs.map(async p=>{let d=mkPosts.find(x=>x.id===p.id);if(!d){const g=await M.getDoc(M.doc(fb.db,'posts',p.id));d=g.exists()?g:null}if(!d)M.deleteDoc(p.ref).catch(()=>{});return d}));
+   mkPinned=ds.filter(d=>d&&d.data().uid!==fbUser.uid).sort((a,b)=>b.data().created-a.data().created);mkPinIds=new Set(mkPinned.map(d=>d.id));
+  }
   mkRender();
  }catch(e){mkSay('Impossible de charger les annonces.')}
 }
-function mkCard(d,mine){
- const p=d.data(),c=mkE('div','mk-card'+(mine?' mk-pin':'')),h=mkE('div','mk-h'),L=MK_L[p.type]||MK_L.swap;
- h.append(mkE('b',null,(mine?'📌 ':'')+(MK_T[p.type]||'')),mkE('span',null,' · '+p.pseudo));c.append(h,mkE('div',null,L[0]+' : '+p.give));
+function mkCard(d,mine,pin){
+ const p=d.data(),c=mkE('div','mk-card'+(mine||pin?' mk-pin':'')),h=mkE('div','mk-h'),L=MK_L[p.type]||MK_L.swap;
+ h.append(mkE('b',null,(mine||pin?'📌 ':'')+(MK_T[p.type]||'')),mkE('span',null,' · '+p.pseudo));c.append(h,mkE('div',null,L[0]+' : '+p.give));
  if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
  if(p.note)c.append(mkE('div','bk-txt',p.note));
  const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt','💬 Réponses');rp.hidden=true;
- b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden)mkReplies(d,rp)};a.append(b1);
- if(!mine&&fbUser&&p.uid!==fbUser.uid){const b2=mkE('button','btn alt','➕ Ami');b2.onclick=()=>mkSendReq(p.uid,p.pseudo);a.append(b2)}
- if(mine||isAdm){const b3=mkE('button','btn alt','🗑️');b3.onclick=async()=>{if(!confirm('Supprimer cette annonce ?'))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay('Échec de la suppression.')}};a.append(b3)}
+ b1.onclick=()=>{rp.hidden=!rp.hidden;if(!rp.hidden)mkReplies(d,rp);else mkOfferPins()};a.append(b1);
+ if(!mine&&fbUser&&p.uid!==fbUser.uid){const b2=mkE('button','btn alt','➕ Ami');b2.onclick=()=>mkSendReq(p.uid,p.pseudo);const b4=mkE('button','btn alt',pin?'📍 Retirer l’épingle':'📌 Épingler');b4.onclick=()=>pin?mkUnpin(d):mkPin(d);a.append(b2,b4)}
+ if(mine||isAdm){const b3=mkE('button','btn alt','🗑️ Supprimer');b3.onclick=async()=>{if(!confirm('Supprimer cette annonce ?'))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay('Échec de la suppression.')}};a.append(b3)}
  c.append(a,rp);return c;
 }
 function mkRender(){
- const f=$('mkFilter').value,me=fbUser&&fbUser.uid,rest=mkPosts.filter(d=>d.data().uid!==me&&(!f||d.data().type===f));
- $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)));$('mkMineT').hidden=!mkMine.length;
+ const f=$('mkFilter').value,me=fbUser&&fbUser.uid,rest=mkPosts.filter(d=>d.data().uid!==me&&!mkPinIds.has(d.id)&&(!f||d.data().type===f));
+ $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...mkPinned.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+mkPinned.length);
  $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt','Aucune annonce pour le moment.')]));
 }
 async function mkReplies(d,box){
@@ -1363,7 +1369,7 @@ async function mkReplies(d,box){
   if(!s.docs.length)box.append(mkE('p','bk-txt','Aucune réponse.'));
   const inp=mkE('input','acc-in'),go=mkE('button','btn','Envoyer'),row=mkE('div','mk-row');inp.maxLength=300;inp.placeholder='Ta réponse…';
   go.onclick=async()=>{if(!mkNeed())return;const t=inp.value.trim();if(!t)return;
-   try{await M.addDoc(M.collection(d.ref,'replies'),{uid:fbUser.uid,pseudo:accName(fbUser),text:t,created:Date.now()});mkReplies(d,box)}catch(e){mkSay('Envoi impossible.')}};
+   try{await M.addDoc(M.collection(d.ref,'replies'),{uid:fbUser.uid,pseudo:accName(fbUser),text:t,created:Date.now()});if(d.data().uid!==fbUser.uid&&!mkPinIds.has(d.id))mkAsk.set(d.id,d);mkReplies(d,box)}catch(e){mkSay('Envoi impossible.')}};
   row.append(inp,go);box.append(row);
  }catch(e){box.replaceChildren(mkE('p','bk-txt','Erreur de chargement.'))}
 }
@@ -1377,6 +1383,16 @@ $('mkPub').onclick=async()=>{
   ['mkGive','mkWant','mkNote'].forEach(i=>$(i).value='');$('mkForm').hidden=true;mkSay('Annonce publiée !');mkLoad()}
  catch(e){mkSay('Publication refusée (règles non à jour ou compte banni).')}
 };
+async function mkPin(d){
+ if(!mkNeed())return;
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id),{postId:d.id,created:Date.now()});mkAsk.delete(d.id);mkSay('Annonce épinglée 📌');await mkLoad()}
+ catch(e){mkSay('Épinglage impossible.')}
+}
+async function mkUnpin(d){try{await fb.m.deleteDoc(fb.m.doc(fb.db,'users',fbUser.uid,'pins',d.id));await mkLoad()}catch(e){mkSay('Échec.')}}
+async function mkOfferPins(){
+ const l=[...mkAsk.values()];mkAsk.clear();
+ for(const d of l){if(mkPinIds.has(d.id))continue;if(confirm('Épingler l’annonce de '+d.data().pseudo+' pour la retrouver facilement ?'))await mkPin(d)}
+}
 async function mkSendReq(uid,pseudo){
  if(!mkNeed())return;const M=fb.m;
  try{await M.setDoc(M.doc(fb.db,'friendReqs',fbUser.uid+'_'+uid),{from:fbUser.uid,to:uid,fromPseudo:accName(fbUser),created:Date.now()});mkSay('Demande envoyée à '+pseudo+'.')}
@@ -1412,13 +1428,27 @@ $('mkSend').onclick=async()=>{const t=$('mkTxt').value.trim();if(!t||!mkChatDoc|
 function mkBack(){if(mkChatUnsub){mkChatUnsub();mkChatUnsub=null}mkChatDoc=null;$('mkChat').hidden=true;$('mkFr').hidden=false;$('mkReq').hidden=false}
 function mkTab(t){
  if(t==='f'&&!fbUser){openAcc('Connecte-toi pour utiliser les amis.');return}
+ if(t==='f')mkOfferPins();
  $('mkP').hidden=t!=='p';$('mkF').hidden=t!=='f';mkSay('');if(t==='f')mkFriends();
 }
 $('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
 $('mkTP').onclick=()=>mkTab('p');$('mkTF').onclick=()=>mkTab('f');
 $('mkNewB').onclick=()=>{if(mkNeed())$('mkForm').hidden=!$('mkForm').hidden};
-$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkClose').onclick=()=>mkD.close();mkD.addEventListener('close',mkBack);
+$('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkClose').onclick=()=>mkD.close();mkD.addEventListener('close',()=>{mkBack();mkOfferPins()});
 $('mkType').onchange=()=>{const L=MK_L[$('mkType').value];$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};$('mkType').onchange();
+/* notifications : demandes d'ami */
+let mkReqUnsub=null,mkReqN=-1;
+function mkBadge(n){$('mkBtn').textContent='🔄 Échanges'+(n?' 🔴 '+n:'');$('mkTF').textContent='👥 Amis'+(n?' 🔴 '+n:'')}
+function mkUnwatch(){if(mkReqUnsub){mkReqUnsub();mkReqUnsub=null}mkReqN=-1;mkBadge(0)}
+function mkWatch(){
+ if(mkReqUnsub||!fb||!fbUser)return;const M=fb.m;
+ mkReqUnsub=M.onSnapshot(M.query(M.collection(fb.db,'friendReqs'),M.where('to','==',fbUser.uid)),s=>{
+  const n=s.size;mkBadge(n);
+  if(mkReqN>=0&&n>mkReqN){const d=s.docChanges().find(c=>c.type==='added');toastMsg('➕ '+(d?d.doc.data().fromPseudo:'Quelqu’un')+' veut t’ajouter en ami')}
+  mkReqN=n;if(!$('mkF').hidden&&mkD.open&&!mkChatDoc)mkFriends();
+ },()=>{mkReqUnsub=null});
+}
+if(fb&&fbUser)mkWatch();
 
 $('sugClose').onclick=()=>sugDlg.close();
 sugDlg.addEventListener('click',e=>{if(e.target===sugDlg)sugDlg.close()});
@@ -1686,6 +1716,7 @@ $('delGo').onclick=async()=>{
   const name=(u.displayName||'').toLowerCase(),b=M.writeBatch(db);
   const sq=await M.getDocs(M.query(M.collection(db,'suggestions'),M.where('uid','==',uid)));
   sq.docs.forEach(d=>b.delete(d.ref));
+  (await M.getDocs(M.collection(db,'users',uid,'pins'))).docs.forEach(d=>b.delete(d.ref));
   b.delete(M.doc(db,'users',uid));for(let i=0;i<3;i++)b.delete(M.doc(db,'posts',uid+'_'+i));
   if(/^[a-z0-9_.-]{3,20}$/.test(name)){const un=await M.getDoc(M.doc(db,'usernames',name));if(un.exists()&&un.data().uid===uid)b.delete(M.doc(db,'usernames',name))}
   await b.commit();
