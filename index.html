@@ -50,7 +50,12 @@ h1{font:400 clamp(2.4rem,9vw,5rem)/.95 var(--display);margin:14px 0 10px;color:v
 .meta button{border:2px solid #ffffff30;background:none;color:var(--snow);border-radius:10px;padding:5px 10px;font:800 13px var(--body);cursor:pointer}
 
 main{max-width:1180px;margin:auto;padding:8px 20px 60px}
-.banner{display:none;margin:16px 0;padding:14px 16px;border-radius:14px;background:#5a2118;border:2px solid var(--ribbon);color:#ffd9d2;font-weight:700}
+.banner{display:none;align-items:center;gap:14px;margin:16px 0;padding:14px 16px;border-radius:14px;background:#5a2118;border:2px solid var(--ribbon);color:#ffd9d2;font-weight:700}
+.wifi{flex:none;width:32px;height:32px}
+.wifi *{opacity:.15;animation:wifi 1.8s ease-in-out infinite}
+.wifi .w1{animation-delay:.25s}.wifi .w2{animation-delay:.5s}.wifi .w3{animation-delay:.75s}
+@keyframes wifi{0%{opacity:.15}25%,75%{opacity:1}100%{opacity:.15}}
+@media(prefers-reduced-motion:reduce){.wifi *{animation:none;opacity:1}}
 .banner code{background:#0004;padding:1px 6px;border-radius:6px}
 
 /* Titres d'année : un ruban */
@@ -404,6 +409,7 @@ const WIKI='https://lumber-tycoon-2.fandom.com';
 const API=WIKI+'/api.php?action=query&format=json&origin=*&redirects=1';
 const base=WIKI+'/wiki/';
 const $=id=>document.getElementById(id);
+const WIFI='<svg class="wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path class="w3" d="M2.5 9a14 14 0 0 1 19 0"/><path class="w2" d="M6 12.8a9 9 0 0 1 12 0"/><path class="w1" d="M9.3 16.4a4.4 4.4 0 0 1 5.4 0"/><circle class="w0" cx="12" cy="20" r="1.4" fill="currentColor" stroke="none"/></svg>';
 const out=$('out'),search=$('search'),count=$('count'),banner=$('banner'),chips=$('chips');
 const slug=s=>s.replace(/ /g,'_');
 const imgFor=g=>fixedImages[g.name]||thumbs.get(norm(g.name))||'';
@@ -448,8 +454,8 @@ const T={
   countOf:(n,t)=>n+(n>1?' gifts':' gift')+' sur '+t,gifts:n=>n+(n>1?' gifts':' gift'),
   noFav:'Aucun favori pour l’instant. Appuie sur le ♥ d’une carte pour l’ajouter.',noMatch:'Aucun gift ne correspond. Essaie un autre mot ou choisis « Toutes ».',
   cstat:(d,t)=>'· contenus : '+d+'/'+t,
-  bannerImg:e=>'Le wiki est injoignable (<code>'+e+'</code>). Vérifie ta connexion et ouvre ce fichier directement dans ton navigateur, puis appuie sur « Recharger les images ».',
-  bannerCt:e=>'Impossible de lire le contenu des gifts sur le wiki (<code>'+e+'</code>). Ouvre ce fichier dans ton navigateur avec Internet, puis appuie sur « Recharger les images ».'
+  bannerImg:e=>WIFI+'<span>Veuillez fournir une connexion internet.</span>',
+  bannerCt:e=>WIFI+'<span>Veuillez fournir une connexion internet.</span>'
  },
  en:{
   toLight:'Switch to light mode',toDark:'Switch to dark mode',
@@ -478,15 +484,15 @@ const T={
   countOf:(n,t)=>n+(n===1?' gift':' gifts')+' of '+t,gifts:n=>n+(n===1?' gift':' gifts'),
   noFav:'No favorites yet. Tap the ♥ on a card to add one.',noMatch:'No gift matches. Try another word or choose “All”.',
   cstat:(d,t)=>'· contents: '+d+'/'+t,
-  bannerImg:e=>'The wiki can’t be reached (<code>'+e+'</code>). Check your connection and open this file directly in your browser, then press “Reload images”.',
-  bannerCt:e=>'Couldn’t read the gift contents from the wiki (<code>'+e+'</code>). Open this file in a browser with Internet access, then press “Reload images”.'
+  bannerImg:e=>WIFI+'<span>Please provide an internet connection.</span>',
+  bannerCt:e=>WIFI+'<span>Please provide an internet connection.</span>'
  }
 };
 let lang='fr';
 try{const sv=localStorage.getItem('lt2lang');lang=sv==='fr'||sv==='en'?sv:((navigator.language||'fr').toLowerCase().startsWith('fr')?'fr':'en')}catch(e){}
 const t=(k,...a)=>{const v=T[lang][k];return typeof v==='function'?v(...a):v};
 let bannerState=null;
-function showBanner(key,e){bannerState={key,e};banner.style.display='block';banner.innerHTML=t(key,e)}
+function showBanner(key,e){bannerState={key,e};banner.style.display='flex';banner.innerHTML=t(key,e)}
 function hideBanner(){bannerState=null;banner.style.display='none'}
 function updCstat(){$('cstat').textContent=cState==='loading'?t('cstat',cDone,gifts.length):''}
 function applyLang(){
