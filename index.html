@@ -344,7 +344,7 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
 .mk-card{border:3px solid var(--bark);border-radius:12px;padding:10px;margin:8px 0;background:#ffffff14}
 .mk-pin{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
 .mk-h{margin-bottom:4px}.mk-act,.mk-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
-.mk-row .acc-in{flex:1;min-width:0}.mk-r{margin:4px 0;font-size:14px}.mk-x{border:0;background:none;cursor:pointer;font-size:15px}
+.mk-row .acc-in{flex:1;min-width:0}.mk-r{margin:4px 0;font-size:14px}.mk-gift{display:flex;gap:10px;align-items:center;margin:6px 0}.mk-gimg{width:64px;height:64px;flex:none;display:flex;align-items:center;justify-content:center;font-size:28px;border-radius:10px;border:3px solid var(--bark);background:#ffffff22;overflow:hidden}.mk-gimg img{width:100%;height:100%;object-fit:contain}.mk-pick{margin:8px 0}.mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;max-height:34vh;overflow-y:auto;margin:6px 0}.mk-gb{border:3px solid var(--bark);border-radius:10px;background:var(--snow);color:var(--bark);padding:4px;cursor:pointer;font:700 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;word-break:break-word}.mk-gb .mk-gimg{width:56px;height:56px;border-width:2px}.mk-x{border:0;background:none;cursor:pointer;font-size:15px}
 .mk-msgs{max-height:40vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin:8px 0}
 .mk-m{align-self:flex-start;background:#ffffff22;border-radius:12px;padding:6px 10px;max-width:80%;word-break:break-word}.mk-m.me{align-self:flex-end;background:var(--gold);color:var(--bark)}
 </style></head><body>
@@ -484,7 +484,9 @@ body:not(.imgdone) .pic.empty{background:linear-gradient(100deg,#f1e6d0 30%,#fff
    <select id="mkType" class="acc-in"><option value="swap" data-k="T_swap"></option><option value="buy" data-k="T_buy"></option><option value="sell" data-k="T_sell"></option></select>
    <input id="mkGive" class="acc-in" maxlength="80"><input id="mkWant" class="acc-in" maxlength="80">
    <textarea id="mkNote" class="acc-in" rows="3" maxlength="300" data-kp="note"></textarea>
-   <div class="actions"><button class="btn" id="mkPub" type="button" data-k="pub"></button></div>
+   <div class="mk-pick"><button class="btn alt" id="mkGiftB" type="button" data-k="giftPick"></button><div id="mkGiftSel"></div></div>
+   <div id="mkGiftBox" hidden><input id="mkGiftQ" class="acc-in" maxlength="40" data-kp="giftSearch"><div class="mk-grid" id="mkGiftGrid"></div></div>
+   <div class="actions"><button class="btn" id="mkPub" type="button" data-k="pub"></button><button class="btn alt" id="mkCancel" type="button" data-k="cancel" hidden></button></div>
   </div>
   <h4 id="mkMineT" data-k="mineT" hidden></h4><div id="mkMineBox"></div>
   <h4 data-k="listT"></h4>
@@ -673,7 +675,7 @@ function paint(name,url){
   el.pic.classList.remove('empty');el.status.textContent=t('imgWiki');
  });
 }
-function setImage(name,url){thumbs.set(norm(name),url);paint(name,url);
+function setImage(name,url){thumbs.set(norm(name),url);paint(name,url);mkFill(name,url);
  if(curG&&lb.open&&norm(curG.name)===norm(name)){$('lbImg').src=url;$('lbImg').style.display='block';$('lbEmpty').style.display='none'}}
 
 async function loadBatch(){
@@ -1329,7 +1331,7 @@ function openSug(){
 $('sugBtn').onclick=openSug;
 /* ---------- Place d'échange ---------- */
 const MKT={
-fr:{btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
+fr:{giftPick:'🎁 Choisir un gift',giftSearch:'Chercher un gift…',giftNone:'Aucun gift ne correspond.',giftRemove:'Retirer le gift',edit:'✏️ Modifier',save:'Enregistrer',cancel:'Annuler',saved:'Annonce modifiée !',saveFail:'Modification refusée (règles non à jour ou compte banni).',editedTag:'(modifiée)',btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'👥 Amis',newB:'＋ Nouvelle annonce',T_swap:'🔄 Échange',T_buy:'🛒 J’achète',T_sell:'💰 Je vends',
  L_swap:['Je donne','Je veux en échange'],L_buy:['Je cherche','Mon offre'],L_sell:['Je vends','Prix'],note:'Détails (facultatif)',pub:'Publier',
  mineT:'📌 Mes annonces (3 max) et épingles',listT:'Annonces',fAll:'Toutes',fSwap:'Échanges',fBuy:'J’achète',fSell:'Je vends',search:'Rechercher…',
  friendPh:'Pseudo de ton ami',add:'Ajouter',back:'← Amis',msgPh:'Message privé…',send:'Envoyer',close:'Fermer',blockedT:'🚫 Bloqués',unblock:'Débloquer',reportsT:'🚩 Signalements',
@@ -1342,7 +1344,7 @@ fr:{btn:'🔄 Échanges',title:'🔄 Place d’échange',tabP:'Annonces',tabF:'�
  accFail:'Impossible d’accepter.',pinned:'Annonce épinglée 📌',pinFail:'Épinglage impossible.',fail:'Échec.',err:'Erreur.',sendFail:'Envoi impossible.',msgOff:'Messages indisponibles.',frErr:'Chargement des amis impossible.',
  reported:'Signalement envoyé, merci.',blocked:p=>p+' est bloqué.',noF:'Pas encore d’amis.',reqToast:p=>'➕ '+p+' veut t’ajouter en ami',msgToast:p=>'💬 '+p+' t’a écrit',dismiss:'Ignorer',delPost:'Supprimer l’annonce',
  loading:'Erreur de chargement.',report:'🚩 Signaler',block:'🚫 Bloquer'},
-en:{btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
+en:{giftPick:'🎁 Choose a gift',giftSearch:'Search a gift…',giftNone:'No gift matches.',giftRemove:'Remove the gift',edit:'✏️ Edit',save:'Save',cancel:'Cancel',saved:'Listing updated!',saveFail:'Edit refused (rules not updated or account banned).',editedTag:'(edited)',btn:'🔄 Trade',title:'🔄 Trading post',tabP:'Listings',tabF:'👥 Friends',newB:'＋ New listing',T_swap:'🔄 Swap',T_buy:'🛒 Buying',T_sell:'💰 Selling',
  L_swap:['I give','I want in return'],L_buy:['I’m looking for','My offer'],L_sell:['I’m selling','Price'],note:'Details (optional)',pub:'Publish',
  mineT:'📌 My listings (3 max) and pins',listT:'Listings',fAll:'All',fSwap:'Swaps',fBuy:'Buying',fSell:'Selling',search:'Search…',
  friendPh:'Your friend’s username',add:'Add',back:'← Friends',msgPh:'Private message…',send:'Send',close:'Close',blockedT:'🚫 Blocked',unblock:'Unblock',reportsT:'🚩 Reports',
@@ -1413,7 +1415,8 @@ async function mkLoad(){
 function mkCard(d,mine,pin){
  const p=d.data(),c=mkE('div','mk-card'+(mine||pin?' mk-pin':'')+(p.done?' mk-done':'')),h=mkE('div','mk-h'),L=mt('L_'+p.type)||mt('L_swap');
  h.append(mkE('b',null,(mine||pin?'📌 ':'')+(mt('T_'+p.type)||'')),mkE('span',null,' · '+p.pseudo));if(p.done)h.append(mkE('span','mk-tag',' '+mt('doneTag')));
- c.append(h,mkE('div',null,L[0]+' : '+p.give));
+ if(p.edited&&!p.done)h.append(mkE('span','bk-txt',' '+mt('editedTag')));
+ c.append(h);if(p.gift&&mkGiftMap.get(norm(p.gift)))c.append(mkGiftView(p.gift));c.append(mkE('div',null,L[0]+' : '+p.give));
  if(p.want)c.append(mkE('div',null,L[1]+' : '+p.want));
  if(p.note)c.append(mkE('div','bk-txt',p.note));
  const a=mkE('div','mk-act'),rp=mkE('div','mk-rep'),b1=mkE('button','btn alt',mt('replies'));rp.hidden=true;
@@ -1425,13 +1428,13 @@ function mkCard(d,mine,pin){
   br.onclick=()=>mkReport('post',d.id,p.uid,p.pseudo,p.give+' / '+p.want+' / '+p.note);bb.onclick=()=>mkBlock(p.uid,p.pseudo);
   a.append(bf,bp,br,bb);
  }
- if(mine&&!p.done){const bd=mkE('button','btn alt',mt('doneBtn'));bd.onclick=()=>mkDone(d);a.append(bd)}
+ if(mine&&!p.done){const be=mkE('button','btn alt',mt('edit'));be.onclick=()=>mkEditStart(d);a.append(be);const bd=mkE('button','btn alt',mt('doneBtn'));bd.onclick=()=>mkDone(d);a.append(bd)}
  if(mine||isAdm){const b3=mkE('button','btn alt',mt('del'));b3.onclick=async()=>{if(!confirm(mt('delAsk')))return;try{await fb.m.deleteDoc(d.ref);mkLoad()}catch(e){mkSay(mt('fail'))}};a.append(b3)}
  c.append(a,rp);return c;
 }
 function mkRender(){
  const f=$('mkFilter').value,q=$('mkQ').value.trim().toLowerCase(),me=fbUser&&fbUser.uid,now=Date.now();
- const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo).toLowerCase().includes(q))});
+ const rest=mkPosts.filter(d=>{const p=d.data();return p.uid!==me&&!mkPinIds.has(d.id)&&!mkBlocked.has(p.uid)&&!(p.done&&now-p.doneAt>MK_DAY2)&&(!f||p.type===f)&&(!q||(p.give+' '+p.want+' '+p.note+' '+p.pseudo+' '+(p.gift||'')).toLowerCase().includes(q))});
  $('mkMineBox').replaceChildren(...mkMine.map(d=>mkCard(d,true)),...mkPinned.map(d=>mkCard(d,false,true)));$('mkMineT').hidden=!(mkMine.length+mkPinned.length);
  $('mkList').replaceChildren(...(rest.length?rest.map(d=>mkCard(d,false)):[mkE('p','bk-txt',mt('none'))]));
 }
@@ -1453,14 +1456,68 @@ async function mkReplies(d,box){
   row.append(inp,go);box.append(row);
  }catch(e){box.replaceChildren(mkE('p','bk-txt',mt('loading')))}
 }
+/* ---- gift lié à l'annonce (image) + modification ---- */
+const mkGiftMap=new Map(gifts.map(g=>[norm(g.name),g.name]));
+var mkWait=new Map();
+let mkGift='',mkEditId='';
+function mkFill(name,url){
+ const k=norm(name),set=mkWait&&mkWait.get(k);if(!set)return;
+ set.forEach(w=>{const im=document.createElement('img');im.alt='';im.referrerPolicy='no-referrer';im.onerror=()=>w.replaceChildren(document.createTextNode('🎁'));im.src=url;w.replaceChildren(im)});
+ mkWait.delete(k);
+}
+function mkGiftImg(name){
+ const k=norm(name),u=imgFor({name:mkGiftMap.get(k)||name}),w=mkE('span','mk-gimg','🎁');
+ if(u)mkFill2(w,u);else{if(!mkWait.has(k))mkWait.set(k,new Set());mkWait.get(k).add(w)}
+ return w;
+}
+function mkFill2(w,u){const im=document.createElement('img');im.alt='';im.loading='lazy';im.referrerPolicy='no-referrer';im.onerror=()=>w.replaceChildren(document.createTextNode('🎁'));im.src=u;w.replaceChildren(im)}
+function mkGiftView(name){const g=mkGiftMap.get(norm(name)),w=mkE('div','mk-gift');w.append(mkGiftImg(g),mkE('b',null,g));return w}
+function mkGiftSel(){
+ const s=$('mkGiftSel');s.replaceChildren();if(!mkGift)return;
+ const w=mkGiftView(mkGift),x=mkE('button','mk-x','✕');x.type='button';x.title=mt('giftRemove');x.setAttribute('aria-label',mt('giftRemove'));
+ x.onclick=()=>{mkGift='';mkGiftSel()};w.append(x);s.append(w);
+}
+function mkGiftList(){
+ const q=norm($('mkGiftQ').value),box=$('mkGiftGrid');
+ const l=gifts.filter(g=>!q||norm(g.name).includes(q));
+ box.replaceChildren(...(l.length?l.map(g=>{const b=mkE('button','mk-gb');b.type='button';b.append(mkGiftImg(g.name),mkE('span',null,g.name));
+  b.onclick=()=>{mkGift=g.name;mkGiftSel();$('mkGiftBox').hidden=true};return b}):[mkE('p','bk-txt',mt('giftNone'))]));
+}
+$('mkGiftB').onclick=()=>{const b=$('mkGiftBox');b.hidden=!b.hidden;if(!b.hidden){mkGiftList();$('mkGiftQ').focus()}};
+$('mkGiftQ').oninput=mkGiftList;
+function mkFormReset(){
+ mkEditId='';['mkGive','mkWant','mkNote','mkGiftQ'].forEach(i=>$(i).value='');mkGift='';mkGiftSel();$('mkGiftBox').hidden=true;
+ $('mkPub').dataset.k='pub';$('mkPub').textContent=mt('pub');$('mkCancel').hidden=true;
+}
+function mkEditEnd(){mkFormReset();$('mkForm').hidden=true}
+function mkEditStart(d){
+ const p=d.data();mkFormReset();mkEditId=d.id;
+ $('mkType').value=p.type;$('mkType').onchange();
+ $('mkGive').value=p.give||'';$('mkWant').value=p.want||'';$('mkNote').value=p.note||'';
+ mkGift=(p.gift&&mkGiftMap.get(norm(p.gift)))||'';mkGiftSel();
+ $('mkPub').dataset.k='save';$('mkPub').textContent=mt('save');$('mkCancel').hidden=false;
+ $('mkForm').hidden=false;mkSay('');$('mkForm').scrollIntoView({block:'nearest'});
+}
+$('mkCancel').onclick=mkEditEnd;
+mkD.addEventListener('close',()=>{if(mkEditId)mkEditEnd()});
 $('mkPub').onclick=async()=>{
  if(!mkNeed())return;
  const give=$('mkGive').value.trim(),want=$('mkWant').value.trim(),note=$('mkNote').value.trim(),type=$('mkType').value;
  if(give.length<2){mkSay(mt('give2'));return}
+ if(mkEditId){
+  const d=mkMine.find(x=>x.id===mkEditId);if(!d){mkEditEnd();return}
+  const patch={type,give,want,note,edited:Date.now()};
+  if(mkGift)patch.gift=mkGift;else if(d.data().gift)patch.gift=fb.m.deleteField();
+  try{await fb.m.updateDoc(d.ref,patch);mkEditEnd();mkSay(mt('saved'));mkLoad()}
+  catch(e){mkSay(mt('saveFail'))}
+  return;
+ }
  const used=new Set(mkMine.map(d=>d.id)),slot=[0,1,2].find(i=>!used.has(fbUser.uid+'_'+i));
  if(slot==null){mkSay(mt('full3'));return}
- try{await fb.m.setDoc(fb.m.doc(fb.db,'posts',fbUser.uid+'_'+slot),{uid:fbUser.uid,pseudo:accName(fbUser),type,give,want,note,created:Date.now()});
-  ['mkGive','mkWant','mkNote'].forEach(i=>$(i).value='');$('mkForm').hidden=true;mkSay(mt('published'));mkLoad()}
+ const data={uid:fbUser.uid,pseudo:accName(fbUser),type,give,want,note,created:Date.now()};
+ if(mkGift)data.gift=mkGift;
+ try{await fb.m.setDoc(fb.m.doc(fb.db,'posts',fbUser.uid+'_'+slot),data);
+  mkEditEnd();mkSay(mt('published'));mkLoad()}
  catch(e){mkSay(mt('pubFail'))}
 };
 async function mkDone(d){try{await fb.m.updateDoc(d.ref,{done:true,doneAt:Date.now()});mkLoad()}catch(e){mkSay(mt('fail'))}}
@@ -1557,7 +1614,7 @@ function mkTab(t){
 }
 $('mkBtn').onclick=()=>{mkD.showModal();mkTab('p');mkLoad()};
 $('mkTP').onclick=()=>mkTab('p');$('mkTF').onclick=()=>mkTab('f');
-$('mkNewB').onclick=()=>{if(mkNeed())$('mkForm').hidden=!$('mkForm').hidden};
+$('mkNewB').onclick=()=>{if(!mkNeed())return;if(mkEditId){mkFormReset();$('mkForm').hidden=false;return}$('mkForm').hidden=!$('mkForm').hidden};
 $('mkBack').onclick=mkBack;$('mkFilter').onchange=mkRender;$('mkQ').oninput=mkRender;$('mkClose').onclick=()=>mkD.close();
 mkD.addEventListener('close',()=>{mkBack();mkOfferPins()});
 $('mkType').onchange=()=>{const L=mt('L_'+$('mkType').value);$('mkGive').placeholder=L[0];$('mkWant').placeholder=L[1]};
